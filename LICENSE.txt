@@ -1,0 +1,36 @@
+Kàrman Line is FLOSS. This grants you, the user, specific rights over it.
+
+This project is released as a whole under GPLv3. You will find a copy of this license in the same folder this file is in.
+
+Specifically, the source-code is released under GPLv3. Any non-source code file is released under CC-BY-SA v4 (Creative Commons Attribution-ShareAlike 4.0 International License). To view a copy of this license, visit http://creativecommons.org/licenses/by-sa/4.0/ or send a letter to Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.
+
+« Source-code » files designate all files used to compile the Kàrman Line executable or the testing binary in this project, with the exception of the following files/folders (including subdirectories):
+-libraries/
+This means for example that data files (such as those in data/) are not considered part of the source-code files, and as such are released under CC-BY-SA v4.
+
+For any claim and/or requirements, you may contact
+Wraitii (Lancelot de Ferrière le Vayer)
+lancelot.deferriere+KarmanLine@gmail.com
+You may also contact me at wraitii@wildfiregames.com, my official email address from the 0 A.D. project by Wildfire Games (play0ad.com) which I do recommend you check out.
+
+The libraries/ folder contains files used for compilation and linking, but not originally released as part of Kàrman Line, generally called "libraries". As such, they were released by their original author(s) under a variety of licences (all compatible with GPL3), see libraries/licenses.txt for more information.
+
+
+
+Following GPLv3 requirements, the following snippet is to be included at the top of any source-code file.
+
+Kàrman Line - FLOSS Space Game
+Copyright (C) <Year> <Your name>
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.

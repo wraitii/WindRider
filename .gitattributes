@@ -1,0 +1,5 @@
+*	text eol=lf
+*.gd	diff
+*.tscn	diff
+*.tres	diff
+*.godot	diff
