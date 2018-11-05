@@ -15,4 +15,4 @@ func _ready():
 #	pass
 
 func _pressed():
-	get_tree().change_scene("res://ingame.tscn")
+	get_tree().change_scene("res://source/game/ingame.tscn")

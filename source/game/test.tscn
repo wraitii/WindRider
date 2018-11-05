@@ -3,7 +3,6 @@
 [ext_resource path="res://Button.gd" type="Script" id=1]
 
 [node name="PanelContainer" type="PanelContainer"]
-
 anchor_left = 0.0
 anchor_top = 0.0
 anchor_right = 0.0
@@ -16,10 +15,8 @@ mouse_filter = 0
 mouse_default_cursor_shape = 0
 size_flags_horizontal = 1
 size_flags_vertical = 1
-_sections_unfolded = [ "Margin", "Rect" ]
 
-[node name="Label" type="Label" parent="." index="0"]
-
+[node name="Label" type="Label" parent="."]
 anchor_left = 0.0
 anchor_top = 0.0
 anchor_right = 0.0
@@ -41,14 +38,15 @@ percent_visible = 1.0
 lines_skipped = 0
 max_lines_visible = -1
 
-[node name="Button" type="Button" parent="." index="1"]
-
-anchor_left = 0.55
-anchor_top = 0.1
-anchor_right = 0.55
-anchor_bottom = 1.0
-margin_left = -42.0
-margin_right = -50.0
+[node name="Button" type="Button" parent="."]
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 7.0
+margin_top = 7.0
+margin_right = 993.0
+margin_bottom = 593.0
 rect_pivot_offset = Vector2( 0, 0 )
 rect_clip_content = false
 focus_mode = 2
@@ -64,6 +62,4 @@ text = "Start Game"
 flat = true
 align = 1
 script = ExtResource( 1 )
-_sections_unfolded = [ "Anchor", "Margin" ]
-
 

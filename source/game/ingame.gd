@@ -10,9 +10,7 @@ func _ready():
 	pass
 
 func _process(delta):
-	if Input.is_action_pressed("thrust"):
-		var ship = get_node("Ship")
-		ship.velocity.x = min(ship.velocity.x + 0.01, 1)
-		print('ship vel')
-		print(ship.velocity)
+	pass
+
+func _physics_process(state):
 	pass
