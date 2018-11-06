@@ -3,3 +3,4 @@
 *.tscn	diff
 *.tres	diff
 *.godot	diff
+*.dae -diff

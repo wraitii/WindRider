@@ -17,9 +17,6 @@ func parse_input():
 		commands.push_back('rotate_left')
 	if Input.is_action_pressed('ship_rotate_right'):
 		commands.push_back('rotate_right')
-
-	if Input.is_action_just_released('ship_dock'):
-		commands.push_back('dock')
 	
 	var ret = []
 	for comm in commands:

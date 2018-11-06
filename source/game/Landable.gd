@@ -1,9 +1,10 @@
 extends Area
 
 func _ready():
+	add_to_group('Landable', true)
 	pass
 
-const Docking = preload('res://source/game/comms/docking.gd')
+const Docking = preload('res://source/game/comms/Docking.gd')
 
 func on_received_chat(convo, sender, chatData):
 	if convo is Docking:

@@ -2,6 +2,9 @@ extends Node
 
 ## Communication
 ## Manages communications between any 2 entities
+## The purpose of this class is to be inherited
+## It should manage its own state - the state of the conversation
+## And acts as a signal-passer
 
 signal chat_sender(convo, receiver, chatData)
 signal chat_receiver(convo, sender, chatData)
@@ -21,8 +24,9 @@ class Chat:
 	var message = ""
 	var data = null
 
-func _ready():
-	pass
+func _init(s,r):
+	set_sender(s)
+	set_receiver(r)
 
 func set_sender(s):
 	sender = s

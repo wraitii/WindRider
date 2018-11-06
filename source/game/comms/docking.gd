@@ -14,15 +14,15 @@ enum Types {
 
 var docking_status = null
 
-func _ready():
-	pass
+func _init(s,r).(s,r):
+	return self
 
 class DockingChat:
 	var type = null;
 	func _init(t):
 		type = t
 
-func ask_for_docking():	
+func ask_for_docking():
 	send_to_receiver(Chat.new("May I land", DockingChat.new(ASK_DOCKING)))
 	return true
 
