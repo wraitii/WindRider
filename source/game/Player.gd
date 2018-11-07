@@ -3,16 +3,17 @@ extends Node
 var ship setget setCurrentShip, get_current_ship
 
 func _ready():
-	setCurrentShip(get_node("/root/InGameRoot/Ship"))
-	get_node('../Camera').followedShip = get_node("/root/InGameRoot/Ship")
+	ship = Core.gameState.playerShip
+	get_node('../Camera').followedShip = ship
+	get_node('../VelocityRadar').set_follower(ship)
 	pass
 
 func _process(delta):
 	if Input.is_action_just_released('switch_camera'):
 		get_node('../Camera').switch_mode()
 	if Input.is_action_just_released('ship_dock'):
-		if ship.target == null:
-			ship.target_best_landable();
+		if ship.navSystem.target == null:
+			ship.navSystem.target_closest_landable();
 		ship.dock()
 
 func setCurrentShip(s):
@@ -24,7 +25,7 @@ func get_current_ship():
 	return ship;
 
 func on_chat(convo, sender, chatData):
-	var chat = get_node('/root/InGameRoot/Chat')
+	var chat = get_node('../Chat')
 	if len(chat.text) >= 100:
 		chat.text = ""
 	chat.text += chatData.message + '\n'

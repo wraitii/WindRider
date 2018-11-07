@@ -1,0 +1,73 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://source/game/JumpZone.gd" type="Script" id=1]
+
+[sub_resource type="CylinderShape" id=1]
+
+margin = 0.04
+radius = 1.0
+height = 2.0
+
+[node name="JumpZone" type="Area"]
+input_ray_pickable = false
+input_capture_on_drag = false
+space_override = 0
+gravity_point = false
+gravity_distance_scale = 0.0
+gravity_vec = Vector3( 0, -1, 0 )
+gravity = 9.8
+linear_damp = 0.1
+angular_damp = 1.0
+priority = 0.0
+monitoring = true
+monitorable = true
+collision_layer = 1
+collision_mask = 1
+audio_bus_override = false
+audio_bus_name = "Master"
+reverb_bus_enable = false
+reverb_bus_name = "Master"
+reverb_bus_amount = 0.0
+reverb_bus_uniformity = 0.0
+script = ExtResource( 1 )
+
+[node name="CSGBox" type="CSGBox" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -10, 0, -25 )
+layers = 524289
+operation = 0
+use_collision = false
+snap = 0.001
+invert_faces = false
+width = 1.0
+height = 1.0
+depth = 50.0
+material = null
+
+[node name="CSGBox2" type="CSGBox" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 10, 0, -25 )
+layers = 1
+operation = 0
+use_collision = false
+snap = 0.001
+invert_faces = false
+width = 1.0
+height = 1.0
+depth = 50.0
+material = null
+
+[node name="CSGBox3" type="CSGBox" parent="."]
+layers = 1
+operation = 0
+use_collision = false
+snap = 0.001
+invert_faces = false
+width = 2.0
+height = 2.0
+depth = 2.0
+material = null
+
+[node name="CollisionShape" type="CollisionShape" parent="."]
+transform = Transform( 8, 0, 0, 0, -3.49691e-07, 8, 0, -8, -3.49691e-07, 0, 0, -1 )
+shape = SubResource( 1 )
+disabled = false
+

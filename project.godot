@@ -16,8 +16,14 @@ _global_script_class_icons={
 [application]
 
 config/name="Windrider"
-run/main_scene="res://source/game/test.tscn"
+run/main_scene="res://source/gui/MainMenu.tscn"
 config/icon="res://icon.png"
+
+[autoload]
+
+IO="*res://source/lib/IO.gd"
+A2V="*res://source/lib/ArrayToVectors.gd"
+Core="*res://source/Core.gd"
 
 [input]
 

@@ -3,7 +3,7 @@ extends Node
 func parse_input():
 	var commands = []
 	
-	var player = get_node('/root/InGameRoot/Player')
+	var player = get_node('../../Player')
 	if !player:
 		return
 	
