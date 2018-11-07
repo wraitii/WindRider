@@ -1,0 +1,40 @@
+Dynamic EV Nova like gameplay.
+
+So basically what we have is we want EV Nova, but we want dynamism in that world. This is hard to do.
+
+So what we need for a proper dynamic world is that ships change in a logical fashion, and that systems and races and things like that can still be recognized by some sort of Identity.
+So basically we'd need to have a galaxy, much akin to EV Nova's. Bigger. Slightly 3D perhaps (think Spore).
+Ensuite il faut des aires culturelles. Les systèmes/planètes appartiennent à des aires culturelles, complètement ou plus ou moins. Chaque planète ayant en plus ses caractéristiques propres (même si celles-ci sont aussi plus ou moins liés aux systèmes). Autrement dit ses préférences.
+En plus des aires culturelles, il y aura les civilisations/gouvernements. Ils peuvent recouper les aires culturelles, ou non. Dans le cas où ils ne les recouperaient pas, les systèmes changeront d'aire culturelle vers une aire culturelle proche, où dans certains cas (s'ils sont loin) pourront créer une nouvelle aire culturelle en fonction de leur caractéristiques propres - Système de Pops à la Vicky
+
+Une aire culturelle se caractérise par des goûts en terme de vaisseau et/ou d'attitude. Des aires culturelles pourront donc préférer les fighter agile, d'autre plutôt les gunships fortement armés. Elles préféreront aussi certain types d'armes ou de missions (des aires culturelles seront plutôt portés sur l'action, d'autre sur le commerce). Cela est à doubler avec l'attitude générale du gouvernement, qui peut-être une culture de guerrier, de marchand, plutôt neutre…
+Une aire culturelle a une emprise plus ou moins forte sur un système, pouvant aller de 100% (en gros tout le monde sur les planètes du système est de cette culture, donc les vaisseaux venant de là-bas suivront complètement les préférences de l'aire culturelle) à 0%: personne. En dessous d'un certain taux, je pense que !a ne devrait pas apparaître (genre vers 30%). Néanmoins les vaisseaux apparaissant doivent être à peu près représentatifs de leur système d'origine. Certains systèmes seront ainsi très hétéroclites.
+Par ailleurs, un système peut avoir plusieurs planètes, et une planète peut localement avoir des préférences particulières (de type de vaisseau en particulier, au sein d'une même aire culturelle). C'est plus pour le kiff et pas nécessaire a priori.
+Pour rentrer plus dans les détails, une aire culturelle va être un ensemble de préférence sur le design des vaisseaux et sur les armements à bord. Le choix des habitants de ces planètes en terme de vaisseau va donc dépendre de ce qui est disponible et de ce qui est recherché. Les critères seraient des trucs comme "plutôt carré ou rond, ovale, mono-bloc ou plutôt composé, gris, en métal, trituré, en couleur, l'agilité, la vitesse"… Pour les armes, ils préféreraient les dégâts purs ou la vitesse de tir…
+
+Les aires culturelles peuvent évoluent au cours du temps, par des changements légers et progressifs (qui peuvent être de convergence vers la préférence gouvernementale par défaut, mouvement de conservatisme, ou d'éloignement, mouvement avant-gardiste, ou simplement aléatoire) et par des virements rapides (changement d'époque). Un changement d'époque est en règle général lancé par (éventuellement suivi rapidement) d'évolutions importantes pour les constructeurs de vaisseaux spatiaux qui vont répondre à la demande. Une aire culturelle devrait avoir au moins un constructeur de vaisseau spatial (sauf si elle vient d'être crée, auquel cas il faudra lui en attribuer un). Celui ci construira des vaisseaux répondant aux demandes de l'aire culturelle, de sorte qu'on croise ses vaisseaux le plus souvent. Il pourra être à l'origine d'un changement d'époque. Un tel changement d'époque se produit quand la population a assez vu le domaine actuelle, ce qui doit être plus ou moins linéaire.
+
+Les constructeurs de vaisseaux spatiaux sont divers. Généralement, ils doivent toujours avoir au moins un modèle. Ils peuvent très grands, faire toutes les gammes, ou non. Ils auront aussi des caractéristiques propres, notamment en terme de design. Certains peuvent être d'affiliation gouvernementale, auquel cas ils seraient assez indépendants, ou d'aire culturelle, auquel cas cela varierait plus.
+Pour la création de leurs modèles, un système intelligent d'agencement de pièces et d'outfits disponibles. Les outfits sont aussi dynamiques, crées par des outfitters, avec un design et des propriétés, notamment en terme d'arme.
+La portée des outfitters et des shipyards sera gouvernementale et liée aux aires culturelles: toute aire culturelle achètera des vaisseaux de shipyards de son gouvernement, qui remplissent le mieux ses critères. Cela devrait faire que dans une aire culturelle, les vaisseaux se ressembleront sans être identique, on pourra différencier les aires culturelles et il y aura des évolutions à terme.
+
+En terme de qualité des vaisseaux (je parle gameplay), les caractéristiques devraient être globalement similaires dans un gouvernement, peut-être selon les outfitters quelques différences, des trucs plus chers/meilleurs au départ. Plus c'est vieux, moins c'est cher.
+Seul dans les outfitters ou les shipyards on peut acheter neuf, sinon on achète d'occasion des produits souvent plus anciens.
+
+Entre les gouvernements, pas de liens. Un gouvernement peut prendre un dessus technologique, et alors il y a des chances pour que dynamisme oblige il finisse par envahir les autres gouvernements. Néanmoins, ils peuvent imploser.
+
+Grand nombre de NPC non-procéduralement généré et vivant leur petite vie, achetant des trucs et tout. Peuvent parfois vous détruire. Le reste sera bouché par des trucs générés procédurellement (penser sim city 4)
+
+Tu n'es pas un héros, du moins au début, et il y a d'autres héros dans la galaxie (news). La réputation compte et le comportement des vaisseaux jouera selon.
+Pour éviter de tout perdre quand tu perds ton vaisseau, ce qui est chiant dans ce genre de jeu, tu poueras assurer ton vaisseau et tes outfits. Cela dépendra évidemment de ta réputation, de ton niveau de skill, ce sera fait à la négociation. Et les trucs illégaux sont impossibles à assurer. Ou presque. Direct je vois deux grands types d'assurance: les "50% du prix d'achat" et les "100% de la valeur actuelle".
+
+Il faut que les choses évoluent vite et en même temps pas trop.
+
+Gameplay en 3D, très futuriste et automatisé mais en même temps on laisse une bonne place pour le dogfighting en le valorisant par une bonne dose d'autopilote et de trajectoires.
+
+L’espace est vide, l’espace 3D, c’est chiant. Différents jeux ont différentes approches, mais pour moi la correction simple est de faire en sorte que le gros du gameplay soit pas dans l’espace, mais dans l’atmosphère et l’aire de gravité des planètes.
+Une planète aura des villes avec spatioports (potentiellement plusieurs - potentiellement de bords différents), des stations spatiales en orbites.
+Pour aller de planète en planète et de système en système, 2 solutions: le saut via l’hyperdrive dans le core des planètes; qui coûte un taux de Fuel X. Et le trajet en crie via moteurs traditionnels, qui coûte pas de fuel mais prend beaucoup beaucoup plus de temps (genre ½ ans à chaque fois) et requiert un outfit pour la cryo. L’idée étant que sinon tu crèverais de faim (et que la crie est le plus économiquement rentable).
+Dès lors, explorer les planètes sans hyperdrive est possible (et pas très très cher) mais couteux en temps: si un trip mets 2 ans crie, le monde aura pas mal changé d’ici ton retour. C’est un risque à prendre.
+Aussi la possibilité intéressante d’avoir des systèmes solaires éloignés sans hyperdrive, ce qui serait exponentiellement plus coûteux en temps et en argent (crie beaucoup plus poussé). Pour une expédition de ce genre, je pense qu’il faudrait considérer installer aussi un système de propulsion spécifique. Pourrait prendre 10-100 ans = tu reviens et tout à changé.
+Je garde l’idée de pouvoir descendre complètement sur la planète voir un peu ce qu’il s’y passe, mais pas pour tout de suite.
