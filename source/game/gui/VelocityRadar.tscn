@@ -41,33 +41,37 @@ flags = 4
 gradient = SubResource( 5 )
 width = 8
 
-[node name="VelocityRadar" type="Container"]
+[node name="VelocityRadar" type="Node2D"]
+script = ExtResource( 1 )
+velocity = Vector2( 0, 0 )
+maxSpeed = 10.0
+
+[node name="Container" type="Container" parent="."]
 anchor_left = 0.0
 anchor_top = 0.0
 anchor_right = 0.0
 anchor_bottom = 0.0
-margin_right = 100.0
-margin_bottom = 100.0
+margin_left = -64.0
+margin_top = -64.0
+margin_right = 64.0
+margin_bottom = 64.0
 rect_pivot_offset = Vector2( 0, 0 )
 rect_clip_content = true
 mouse_filter = 0
 mouse_default_cursor_shape = 0
 size_flags_horizontal = 1
 size_flags_vertical = 1
-script = ExtResource( 1 )
-velocity = Vector2( 0, 0 )
-maxSpeed = 10.0
 
-[node name="noise" type="Sprite" parent="."]
+[node name="noise" type="Sprite" parent="Container"]
 texture = SubResource( 2 )
 centered = false
 
-[node name="black" type="Sprite" parent="."]
+[node name="black" type="Sprite" parent="Container"]
 scale = Vector2( 1.03192, 128.495 )
 texture = SubResource( 4 )
 centered = false
 
-[node name="Sprite" type="Sprite" parent="."]
+[node name="Sprite" type="Sprite" parent="Container"]
 scale = Vector2( 1, 8 )
 texture = SubResource( 6 )
 

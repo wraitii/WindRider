@@ -172,8 +172,5 @@ lines_skipped = 0
 max_lines_visible = -1
 
 [node name="VelocityRadar" parent="." instance=ExtResource( 7 )]
-margin_left = 920.0
-margin_top = 496.0
-margin_right = 1020.0
-margin_bottom = 596.0
+position = Vector2( 871.175, 456.593 )
 
