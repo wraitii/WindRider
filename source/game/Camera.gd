@@ -18,17 +18,17 @@ func _process(delta):
 
 	match mode:
 		FOLLOW:
-			var pos = Vector3(-3.0,1.5,0);
+			var pos = Vector3(0,1.5,3.0);
 			var vec = trans.xform(pos)
 			transform.origin = vec
 			transform.basis = trans.basis
-			rotate_object_local(Vector3(0,1,0),-PI/2.0)
+			#rotate_object_local(Vector3(0,1,0),-PI/2.0)
 		FOLLOW_FROM_ABOVE:
 			var pos = Vector3(0.0,40.0,0);
 			var vec = trans.xform(pos)
 			transform.origin = vec
 			transform.basis = trans.basis
-			rotate_object_local(Vector3(0,1,0),-PI/2.0)
+			#rotate_object_local(Vector3(0,1,0),-PI/2.0)
 			rotate_object_local(Vector3(1,0,0),-PI/2.0)
 
 	return

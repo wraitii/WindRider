@@ -1,8 +1,7 @@
 [gd_scene load_steps=2 format=2]
 
-[ext_resource path="res://data/art/ships/Cycles.tscn" type="PackedScene" id=1]
+[ext_resource path="res://source/graphics/Ship.gd" type="Script" id=1]
 
 [node name="ShipGraphics" type="Spatial"]
-
-[node name="Cycles" parent="." instance=ExtResource( 1 )]
+script = ExtResource( 1 )
 

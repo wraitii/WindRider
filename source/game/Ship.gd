@@ -1,21 +1,21 @@
 extends RigidBody
 
-const Docking = preload('res://source/game/comms/Docking.gd')
 const NavSystem = preload('res://source/game/NavSystem.gd')
 
+const Docking = preload('res://source/game/comms/Docking.gd')
 const JumpZone = preload('res://source/game/JumpZone.gd')
 
-const default_orientation = Vector3(1,0,0)
+const Graphics = preload('res://source/graphics/Ship.tscn')
 
-export (String) var currentSystem;
+var currentSystem;
 
-export (float) var max_speed = 10.0
-export (float) var acceleration = 10.0
-export (float) var speed_friction
+export (String) var shipDataName;
 
 var dockingProcedure = null
 
+# subsystems shorthand
 var navSystem;
+var shipStats;
 
 signal got_chat(convo, sender, chatData)
 signal docking(dock)
@@ -23,34 +23,48 @@ signal docking(dock)
 func _init():
 	pass
 
-func _ready():
-	speed_friction = max_speed * 0.8
+func init(name):
 	navSystem = get_node('NavSystem');
+	shipStats = get_node('ShipStats')
+
+	shipDataName = name
+	var data = Core.shipsData.get(name)
+	shipStats.init(data)
+	
+	get_node('ShipGraphics').init(data)
+	print_tree()
 	pass
 
 func _process(delta):
 	pass
 
 func _integrate_forces(state):
-	if state.linear_velocity.length_squared() >= speed_friction*speed_friction:
+	var ms = shipStats.get('max_speed')
+	
+	if state.linear_velocity.length_squared() >= ms*ms*0.8*0.8:
 		state.linear_velocity *= 0.99;
 
-	if state.linear_velocity.length_squared() >= max_speed*max_speed:
-		state.linear_velocity = state.linear_velocity.normalized() * max_speed;
+	if state.linear_velocity.length_squared() >= ms*ms:
+		state.linear_velocity = state.linear_velocity.normalized() * ms;
 
-	set_angular_damp(min(0.7, state.angular_velocity.length_squared()))
+	set_angular_damp(
+		max(
+			min(0.7, state.angular_velocity.length_squared()),
+			0.4
+		)
+	)
 
 func thrust(delta):
 	var transform = get_transform()
-	var pushDir = transform.xform(default_orientation) - translation
+	var pushDir = transform.xform(Vector3(0,0,-1)) - translation
 
-	add_central_force(pushDir * acceleration)
+	add_central_force(pushDir * shipStats.get('acceleration'))
 
 func rotate_left(delta):
-	add_torque(Vector3(0,4,0))
+	add_torque(Vector3(0,shipStats.get('turn_rate'),0)/4.0)
 
 func rotate_right(delta):
-	add_torque(Vector3(0,-4,0))
+	add_torque(Vector3(0,-shipStats.get('turn_rate'),0)/4.0)
 	
 func dock():
 	if navSystem.target == null:

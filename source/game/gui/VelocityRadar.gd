@@ -17,7 +17,7 @@ func set_velocity(vel):
 
 func set_follower(f):
 	following = f;
-	maxSpeed = following.max_speed;
+	maxSpeed = following.shipStats.get('max_speed');
 
 func get_follower():
 	return following;

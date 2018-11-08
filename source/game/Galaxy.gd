@@ -1,5 +1,7 @@
 extends Node
 
+## Handles galaxy-related things.
+
 var systems = {} setget __no, systems
 
 func _init():
