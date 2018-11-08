@@ -8,6 +8,7 @@ const JumpZone = preload('res://source/game/JumpZone.gd')
 const Graphics = preload('res://source/graphics/Ship.tscn')
 
 var currentSystem;
+var dockedAt = null;
 
 export (String) var shipDataName;
 
@@ -66,15 +67,16 @@ func rotate_left(delta):
 func rotate_right(delta):
 	add_torque(Vector3(0,-shipStats.get('turn_rate'),0)/4.0)
 	
-func dock():
+func try_dock():
 	if navSystem.target == null:
 		return;
 	
 	if navSystem.target is JumpZone:
 		if navSystem.target.overlaps_body(self):
 			Core.jump(navSystem.target.jumpTo)
+			navSystem.target = null;
 		return
-	
+
 	if dockingProcedure != null:
 		dockingProcedure.try_docking()
 		return
@@ -82,8 +84,12 @@ func dock():
 	dockingProcedure = Docking.new(self, navSystem.target)
 	dockingProcedure.ask_for_docking()
 
+func do_dock(to):
+	dockedAt = to;
+	emit_signal('docking', to)	
+
 func on_received_chat(convo, sender, chatData):
 	emit_signal('got_chat', convo, sender, chatData)
 	if convo is Docking:
 		if chatData.data.type == Docking.DOCKING_NOW:
-			emit_signal('docking', sender)
+			do_dock(sender)

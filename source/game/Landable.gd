@@ -1,9 +1,15 @@
 extends Area
 
+var data;
+
 func _ready():
 	add_to_group('Landable', true)
 	pass
 
+func init(landableName):
+	data = Core.landablesData.get(landableName)
+	print(data)
+	
 const Docking = preload('res://source/game/comms/Docking.gd')
 
 func on_received_chat(convo, sender, chatData):

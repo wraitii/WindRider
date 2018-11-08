@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=2]
+[gd_scene load_steps=12 format=2]
 
 [ext_resource path="res://source/game/ingame.gd" type="Script" id=1]
 [ext_resource path="res://source/game/Camera.gd" type="Script" id=2]
@@ -7,6 +7,7 @@
 [ext_resource path="res://source/game/InGameInput.gd" type="Script" id=5]
 [ext_resource path="res://source/game/Speed.gd" type="Script" id=6]
 [ext_resource path="res://source/game/gui/VelocityRadar.tscn" type="PackedScene" id=7]
+[ext_resource path="res://source/game/gui/NavSystem.tscn" type="PackedScene" id=8]
 
 [sub_resource type="ImageTexture" id=1]
 
@@ -172,5 +173,11 @@ lines_skipped = 0
 max_lines_visible = -1
 
 [node name="VelocityRadar" parent="." instance=ExtResource( 7 )]
-position = Vector2( 871.175, 456.593 )
+position = Vector2( 949.685, 522.507 )
+
+[node name="NavSystem" parent="." instance=ExtResource( 8 )]
+margin_left = 873.0
+margin_top = 10.0
+margin_right = 1013.0
+margin_bottom = 90.0
 

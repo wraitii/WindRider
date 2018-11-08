@@ -30,6 +30,8 @@ func _parse_landables(sysData):
 
 	for landableDef in sysData['landables']:
 		var landable = Landable.instance()
+		landable.init(landableDef['name'])
+
 		self.add_child(landable)
 		var pos = landableDef['position']
 		landable.translate(Vector3(pos[0],pos[1],pos[2]))
