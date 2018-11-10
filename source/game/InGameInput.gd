@@ -13,9 +13,11 @@ func parse_input():
 	
 	if Input.is_action_pressed("ship_thrust"):
 		commands.push_back('thrust')
-	if Input.is_action_pressed('ship_rotate_left'):
+	if Input.is_action_pressed('ship_reverse'):
+		commands.push_back('reverse')
+	elif Input.is_action_pressed('ship_rotate_left'):
 		commands.push_back('rotate_left')
-	if Input.is_action_pressed('ship_rotate_right'):
+	elif Input.is_action_pressed('ship_rotate_right'):
 		commands.push_back('rotate_right')
 	
 	var ret = []

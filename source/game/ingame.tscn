@@ -173,11 +173,11 @@ lines_skipped = 0
 max_lines_visible = -1
 
 [node name="VelocityRadar" parent="." instance=ExtResource( 7 )]
-position = Vector2( 949.685, 522.507 )
+position = Vector2( 1190.3, 700.803 )
 
 [node name="NavSystem" parent="." instance=ExtResource( 8 )]
-margin_left = 873.0
-margin_top = 10.0
-margin_right = 1013.0
-margin_bottom = 90.0
+anchor_left = 0.9
+anchor_top = 0.05
+anchor_right = 0.9
+anchor_bottom = 0.05
 

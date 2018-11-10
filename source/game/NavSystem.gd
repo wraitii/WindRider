@@ -1,11 +1,19 @@
 extends Node
 
-var target = null;
+
+# Achtung: this is a reference to the actual node
+var targetNode = null;
 
 var ship = null;
 
 func _enter_tree():
 	ship = get_parent();
+
+func _exit_tree():
+	targetNode = null;
+
+func reset():
+	targetNode = null;
 
 func target_closest_landable():
 	var landables = get_tree().get_nodes_in_group('Landable')
@@ -15,4 +23,4 @@ func target_closest_landable():
 		if bestLandable[1] == null || dist <= bestLandable[1]:
 			bestLandable[0] = landable;
 			bestLandable[1] = dist;
-	target = bestLandable[0]
+	targetNode = bestLandable[0]

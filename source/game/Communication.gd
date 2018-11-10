@@ -42,12 +42,12 @@ func set_receiver(r):
 func get_receiver():
 	return receiver
 
-func send_to_sender(chat):
+func _send_to_sender(chat):
 	chats.push_back([sender, chat])
 	emit_signal("chat_sender", self, receiver, chat)
 	pass
 
-func send_to_receiver(chat):
+func _send_to_receiver(chat):
 	chats.push_back([receiver, chat])
 	emit_signal("chat_receiver", self, sender, chat)
 	pass

@@ -31,7 +31,6 @@ func jump(to):
 	if gameState.currentScene:
 		gameState.playerShip.get_parent().remove_child(gameState.playerShip)
 		gameState.currentScene.queue_free()
-	
 	gameState.playerShip.currentSystem = to
 	gameState.currentScene = InGame.instance()
 	get_node('/root').add_child(gameState.currentScene)
@@ -39,8 +38,18 @@ func jump(to):
 func dock(on):
 	if gameState.currentScene:
 		gameState.playerShip.get_parent().remove_child(gameState.playerShip)
+		get_node('/root').remove_child(gameState.currentScene)
 		gameState.currentScene.queue_free()
-	
+
 	gameState.currentScene = Docked.instance()
 	gameState.currentScene.init(on.data);
+	get_node('/root').add_child(gameState.currentScene)
+
+func undock():
+	if gameState.currentScene:
+#		gameState.playerShip.get_parent().remove_child(gameState.playerShip)
+		get_node('/root').remove_child(gameState.currentScene)
+		gameState.currentScene.queue_free()
+	
+	gameState.currentScene = InGame.instance()
 	get_node('/root').add_child(gameState.currentScene)

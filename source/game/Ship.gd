@@ -20,8 +20,10 @@ var shipStats;
 
 signal got_chat(convo, sender, chatData)
 signal docking(dock)
+signal undocking()
 
 func _init():
+	set_angular_damp(0.84);
 	pass
 
 func init(name):
@@ -43,17 +45,13 @@ func _integrate_forces(state):
 	var ms = shipStats.get('max_speed')
 	
 	if state.linear_velocity.length_squared() >= ms*ms*0.8*0.8:
-		state.linear_velocity *= 0.99;
+		var dec = state.linear_velocity.length_squared() - ms*ms*0.8*0.8;
+		dec /= ms*ms*0.2*0.2
+		dec *= 0.0005;
+		state.linear_velocity *= (1.0 - dec);
 
 	if state.linear_velocity.length_squared() >= ms*ms:
 		state.linear_velocity = state.linear_velocity.normalized() * ms;
-
-	set_angular_damp(
-		max(
-			min(0.7, state.angular_velocity.length_squared()),
-			0.4
-		)
-	)
 
 func thrust(delta):
 	var transform = get_transform()
@@ -62,31 +60,44 @@ func thrust(delta):
 	add_central_force(pushDir * shipStats.get('acceleration'))
 
 func rotate_left(delta):
-	add_torque(Vector3(0,shipStats.get('turn_rate'),0)/4.0)
+	add_torque(Vector3(0,shipStats.get('turn_rate'),0))
 
 func rotate_right(delta):
-	add_torque(Vector3(0,-shipStats.get('turn_rate'),0)/4.0)
-	
+	add_torque(Vector3(0,-shipStats.get('turn_rate'),0))
+
+func reverse(delta):
+	var reva = get_transform().basis.xform(Vector3(0,0,-1))
+	var cross = reva.cross(get_linear_velocity().normalized())
+	if cross.y > 0 && get_angular_velocity().length() < 1:
+		rotate_right(0);
+	elif cross.y < 0 && get_angular_velocity().length() < 1:
+		rotate_left(0);
+
 func try_dock():
-	if navSystem.target == null:
+	if navSystem.targetNode == null:
 		return;
 	
-	if navSystem.target is JumpZone:
-		if navSystem.target.overlaps_body(self):
-			Core.jump(navSystem.target.jumpTo)
-			navSystem.target = null;
+	if navSystem.targetNode is JumpZone:
+		if navSystem.targetNode.overlaps_body(self):
+			Core.jump(navSystem.targetNode.jumpTo)
+			navSystem.targetNode = null;
 		return
 
 	if dockingProcedure != null:
 		dockingProcedure.try_docking()
 		return
 
-	dockingProcedure = Docking.new(self, navSystem.target)
+	dockingProcedure = Docking.new(self, navSystem.targetNode)
 	dockingProcedure.ask_for_docking()
 
 func do_dock(to):
 	dockedAt = to;
+	dockingProcedure = null;
 	emit_signal('docking', to)	
+
+func undock():
+	dockedAt = null;
+	emit_signal('undocking')
 
 func on_received_chat(convo, sender, chatData):
 	emit_signal('got_chat', convo, sender, chatData)

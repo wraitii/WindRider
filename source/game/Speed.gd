@@ -8,6 +8,7 @@ func _process(delta):
 
 	if !ship: return
 	var txt = "Speed: " + str(ship.get_linear_velocity().length()) + "\n"
+	txt += "Rotation: " + str(ship.get_angular_velocity().length()) + "\n"
 	txt += "Velocity: " + str(ship.get_linear_velocity()) + "\n"
 	txt += "Pos: " + str(ship.translation)
 	text = txt

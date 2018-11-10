@@ -9,8 +9,8 @@ func _process(delta):
 	if !navSystem:
 		get_node('Targeting').text = 'Nav systems offline';
 		return
-	if !navSystem.target:
+	if !navSystem.targetNode:
 		get_node('Targeting').text = 'No nav target';
 		return
-	get_node('Targeting').text = 'Targeting: ' + navSystem.target.name;
+	get_node('Targeting').text = 'Targeting: ' + navSystem.targetNode.name;
 

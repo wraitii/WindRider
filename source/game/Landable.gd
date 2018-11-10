@@ -34,5 +34,9 @@ func dock(convo, requester, data):
 	if !self.overlaps_body(requester):
 		convo.too_far_away()
 		return;
+
+	if requester.get_linear_velocity().length_squared() > 5*5:
+		convo.send_to_sender("You are moving too fast to dock",Docking.DOCKING_TOO_FAST)
+		return;
 	
 	convo.dock()

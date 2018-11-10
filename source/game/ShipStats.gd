@@ -12,6 +12,7 @@ func init(data):
 	for component in data['components']:
 		_parse_component(component)
 	_compute_stats()
+	get_parent().set_mass(stats['empty_mass'])
 
 func get(s):
 	if !(s in stats):
@@ -73,5 +74,3 @@ func _compute_stats():
 		for item in statsList[stat]:
 			val = _parse_stat_value(val, item);
 		stats[stat] = val;
-	
-	print(stats)
