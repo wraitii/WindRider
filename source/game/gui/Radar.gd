@@ -9,10 +9,14 @@ func _process(delta):
 
 	for l in landables:
 		var pixel;
+		var id;
+		
 		if l is JumpZone:
-			continue
-		if l.data.name in radar:
-			pixel = radar[l.data.name]
+			id = l.jumpTo;
+		else: id = l.data.name
+			
+		if id in radar:
+			pixel = radar[id]
 		else:
 			pixel = Polygon2D.new()
 			pixel.polygon = [
@@ -24,6 +28,6 @@ func _process(delta):
 			pixel.scale = Vector2(3,3)
 			pixel.color = Color(1, 1, 0)
 			get_node('center').add_child(pixel)
-			radar[l.data.name] = pixel
+			radar[id] = pixel
 		var p = (l.translation - playerShip.translation)
 		pixel.position = Vector2(p.x, p.z)
