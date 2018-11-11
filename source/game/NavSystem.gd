@@ -16,7 +16,7 @@ func reset():
 	targetNode = null;
 
 func target_closest_landable():
-	var landables = get_tree().get_nodes_in_group('Landable')
+	var landables = get_tree().get_nodes_in_group('Landables')
 	var bestLandable = [null,null]
 	for landable in landables:
 		var dist = landable.translation.distance_squared_to(ship.translation)
