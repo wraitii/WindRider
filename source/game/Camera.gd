@@ -1,7 +1,5 @@
 extends Camera
 
-const MyClass = preload("Player.gd")
-
 enum CAMERA_STATES { FOLLOW, FOLLOW_FROM_ABOVE }
 export (CAMERA_STATES) var mode = FOLLOW;
 
@@ -27,7 +25,7 @@ func _process(delta):
 			var pos = Vector3(0.0,40.0,0);
 			var vec = trans.xform(pos)
 			transform.origin = vec
-			transform.basis = trans.basis
+			transform.basis = Basis()
 			#rotate_object_local(Vector3(0,1,0),-PI/2.0)
 			rotate_object_local(Vector3(1,0,0),-PI/2.0)
 

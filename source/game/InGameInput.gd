@@ -3,7 +3,7 @@ extends Node
 func parse_input():
 	var commands = []
 	
-	var player = get_node('../../Player')
+	var player = Core.player
 	if !player:
 		return
 	

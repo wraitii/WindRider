@@ -4,7 +4,7 @@ func _ready():
 	pass
 
 func _process(delta):
-	var ship = get_node('../Player').get_current_ship()
+	var ship = Core.player.get_current_ship()
 
 	if !ship: return
 	var txt = "Speed: " + str(ship.get_linear_velocity().length()) + "\n"

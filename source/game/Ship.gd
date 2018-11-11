@@ -20,10 +20,11 @@ var shipStats;
 
 signal got_chat(convo, sender, chatData)
 signal docking(dock)
-signal undocking()
+signal undocking(a)
 
 func _init():
-	set_angular_damp(0.84);
+	set_angular_damp(1.0);
+	add_to_group('Ships', true)
 	pass
 
 func init(name):
@@ -60,17 +61,17 @@ func thrust(delta):
 	add_central_force(pushDir * shipStats.get('acceleration'))
 
 func rotate_left(delta):
-	add_torque(Vector3(0,shipStats.get('turn_rate'),0))
+	add_torque(Vector3(0,shipStats.get('turn_rate')*25,0))
 
 func rotate_right(delta):
-	add_torque(Vector3(0,-shipStats.get('turn_rate'),0))
+	add_torque(Vector3(0,-shipStats.get('turn_rate')*25,0))
 
 func reverse(delta):
 	var reva = get_transform().basis.xform(Vector3(0,0,-1))
 	var cross = reva.cross(get_linear_velocity().normalized())
-	if cross.y > 0 && get_angular_velocity().length() < 1:
+	if cross.y > 0:
 		rotate_right(0);
-	elif cross.y < 0 && get_angular_velocity().length() < 1:
+	elif cross.y < 0:
 		rotate_left(0);
 
 func try_dock():
@@ -93,11 +94,11 @@ func try_dock():
 func do_dock(to):
 	dockedAt = to;
 	dockingProcedure = null;
-	emit_signal('docking', to)	
+	emit_signal('docking', to)
 
 func undock():
 	dockedAt = null;
-	emit_signal('undocking')
+	emit_signal('undocking', self)
 
 func on_received_chat(convo, sender, chatData):
 	emit_signal('got_chat', convo, sender, chatData)

@@ -3,12 +3,11 @@ extends Area
 var data;
 
 func _ready():
-	add_to_group('Landable', true)
+	add_to_group('Landables', true)
 	pass
 
 func init(landableName):
 	data = Core.landablesData.get(landableName)
-	print(data)
 	
 const Docking = preload('res://source/game/comms/Docking.gd')
 

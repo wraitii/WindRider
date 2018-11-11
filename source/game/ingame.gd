@@ -12,6 +12,11 @@ func _ready():
 	self.add_child(system)
 	
 	self.add_child(Core.gameState.playerShip)
+
+	get_node('Camera').followedShip = Core.gameState.playerShip
+	get_node('VelocityRadar').set_follower(Core.gameState.playerShip)
+	get_node('NavSystem').navSystem = Core.gameState.playerShip.navSystem
+
 	pass
 
 func _process(delta):

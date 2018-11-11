@@ -1,0 +1,29 @@
+extends Control
+
+const JumpZone = preload('../JumpZone.gd')
+var radar = {}
+
+func _process(delta):
+	var playerShip = Core.player.get_current_ship()
+	var landables = get_tree().get_nodes_in_group('Landables')
+	print_tree()
+	for l in landables:
+		var pixel;
+		if l is JumpZone:
+			continue
+		if l.data.name in radar:
+			pixel = radar[l.data.name]
+		else:
+			pixel = Polygon2D.new()
+			pixel.polygon = [
+				Vector2(-0.5,-0.5),
+				Vector2(0.5,-0.5),
+				Vector2(0.5,0.5),
+				Vector2(-0.5,0.5)
+			]
+			pixel.scale = Vector2(3,3)
+			pixel.color = Color(1, 1, 0)
+			get_node('center').add_child(pixel)
+			radar[l.data.name] = pixel
+		var p = (l.translation - playerShip.translation)
+		pixel.position = Vector2(p.x, p.z)

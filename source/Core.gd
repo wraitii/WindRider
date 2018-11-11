@@ -11,8 +11,10 @@ const GameStatus = preload('game/GameStatus.gd')
 const InGame = preload('game/ingame.tscn')
 const Docked = preload('game/Docked.tscn')
 
+const Player = preload('game/Player.tscn')
 const Ship = preload('game/Ship.tscn')
 
+var player = null;
 var galaxy = Galaxy.new()
 var shipsData = ShipDataManager.new()
 var componentsData = ComponentDataMgr.new()
@@ -22,6 +24,9 @@ var gameState = GameStatus.new()
 func startGame():
 	gameState.playerShip = Ship.instance()
 	gameState.playerShip.init('Cycles')
+	player = Player.instance()
+	player.setCurrentShip(gameState.playerShip)
+	get_node('/root').add_child(player)
 	
 	get_node('/root/MainMenu').queue_free()
 	jump('Sol')
