@@ -17,8 +17,8 @@ func setCurrentShip(s):
 	ship = s;
 	ship.connect('got_chat', self, 'on_chat')
 	ship.connect('docking', self, 'on_dock')
-	ship.connect('undocking', self, 'on_undock')
-	
+	ship.connect('jumping', self, 'on_jump')
+
 func get_current_ship():
 	return ship;
 
@@ -29,8 +29,9 @@ func on_chat(convo, sender, chatData):
 	chat.text += chatData.message + '\n'
 	pass
 
+func on_jump(from, to):
+	Core.gameState.jumpingFrom = from;
+	Core.jump()
+
 func on_dock(dock):
 	Core.dock(dock)
-
-func on_undock(a):
-	Core.undock()

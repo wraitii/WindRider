@@ -1,13 +1,13 @@
 extends Camera
 
 enum CAMERA_STATES { FOLLOW, FOLLOW_FROM_ABOVE }
-export (CAMERA_STATES) var mode = FOLLOW;
+export (CAMERA_STATES) var mode = CAMERA_STATES.FOLLOW;
 
 var followedShip = null;
 
 func _ready():
 	if !Core.gameState.cameraMode:
-		Core.gameState.cameraMode = FOLLOW
+		Core.gameState.cameraMode = CAMERA_STATES.FOLLOW
 	mode = Core.gameState.cameraMode;
 	_init_mode()
 	pass
@@ -19,13 +19,13 @@ func _process(delta):
 	var trans = followedShip.get_global_transform()
 
 	match mode:
-		FOLLOW:
+		CAMERA_STATES.FOLLOW:
 			var pos = Vector3(0,1.5,3.0);
 			var vec = trans.xform(pos)
 			transform.origin = vec
 			transform.basis = trans.basis
 			#rotate_object_local(Vector3(0,1,0),-PI/2.0)
-		FOLLOW_FROM_ABOVE:
+		CAMERA_STATES.FOLLOW_FROM_ABOVE:
 			var pos = Vector3(0.0,200.0,0);
 			var vec = trans.xform(pos)
 			transform.origin = vec
@@ -37,13 +37,13 @@ func _process(delta):
 func switch_mode():
 	mode = mode + 1;
 	if mode >= len(CAMERA_STATES):
-		mode = FOLLOW;
+		mode = CAMERA_STATES.FOLLOW;
 	_init_mode()
 
 func _init_mode():
 	Core.gameState.cameraMode = mode
 	match mode:
-		FOLLOW:
+		CAMERA_STATES.FOLLOW:
 			fov = 60
-		FOLLOW_FROM_ABOVE:
+		CAMERA_STATES.FOLLOW_FROM_ABOVE:
 			fov = 15

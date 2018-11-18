@@ -25,6 +25,7 @@ IO="*res://source/lib/IO.gd"
 A2V="*res://source/lib/ArrayToVectors.gd"
 DataMgr="*res://source/lib/DataMgr.gd"
 Core="*res://source/Core.gd"
+Enums="*res://source/game/Enums.gd"
 
 [debug]
 

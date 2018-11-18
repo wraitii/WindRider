@@ -42,3 +42,12 @@ texture_mode = 45
 sharp_limit = 2.0
 round_precision = 8
 
+[node name="playerCross" type="Line2D" parent="."]
+position = Vector2( -1.17493, 0 )
+points = PoolVector2Array( 0, 100, 200, 100, 100, 100, 100, 0, 100, 200 )
+width = 1.0
+default_color = Color( 0.356863, 0.345098, 0.344196, 1 )
+texture_mode = -1254884560
+sharp_limit = 2.0
+round_precision = 8
+

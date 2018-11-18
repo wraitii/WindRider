@@ -7,7 +7,7 @@ const JumpZone = preload('res://source/game/JumpZone.gd')
 
 const Graphics = preload('res://source/graphics/Ship.tscn')
 
-var currentSystem;
+var ID;
 var dockedAt = null;
 
 export (String) var shipDataName;
@@ -20,7 +20,8 @@ var shipStats;
 
 signal got_chat(convo, sender, chatData)
 signal docking(dock)
-signal undocking(a)
+signal jumping(ship, to)
+signal teleporting(ship, to, pos)
 
 func _init():
 	set_angular_damp(1.0);
@@ -28,6 +29,7 @@ func _init():
 	pass
 
 func init(name):
+	Core.outsideWorldSim.assign_id(self);
 	navSystem = get_node('NavSystem');
 	shipStats = get_node('ShipStats')
 
@@ -36,7 +38,6 @@ func init(name):
 	shipStats.init(data)
 	
 	get_node('ShipGraphics').init(data)
-	print_tree()
 	pass
 
 func _process(delta):
@@ -74,14 +75,25 @@ func reverse(delta):
 	elif cross.y < 0:
 		rotate_left(0);
 
+func teleport(to, pos):
+	navSystem.targetNode = null;
+	if self.is_inside_tree():
+		get_parent().remove_child(self)
+	emit_signal('teleporting', self, to, pos)
+	
+func do_jump(to):
+	navSystem.targetNode = null;
+	if self.is_inside_tree():
+		get_parent().remove_child(self)
+	emit_signal('jumping', self, to)
+
 func try_dock():
 	if navSystem.targetNode == null:
 		return;
 	
 	if navSystem.targetNode is JumpZone:
 		if navSystem.targetNode.overlaps_body(self):
-			Core.jump(navSystem.targetNode.jumpTo)
-			navSystem.targetNode = null;
+			do_jump(navSystem.targetNode.jumpTo)
 		return
 
 	if dockingProcedure != null:
@@ -94,11 +106,8 @@ func try_dock():
 func do_dock(to):
 	dockedAt = to;
 	dockingProcedure = null;
+	get_parent().remove_child(self)
 	emit_signal('docking', to)
-
-func undock():
-	dockedAt = null;
-	emit_signal('undocking', self)
 
 func on_received_chat(convo, sender, chatData):
 	emit_signal('got_chat', convo, sender, chatData)

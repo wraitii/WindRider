@@ -48,8 +48,6 @@ func _parse_jump_zones(sysData):
 
 		var jumpZone = JumpZone.instance()
 		
-		jumpZone.init(jumpTo)
-		
 		var dir = A2V._3(jumpTo['position']) - A2V._3(sysData['position'])
 		dir = dir.normalized()
 		
@@ -60,6 +58,9 @@ func _parse_jump_zones(sysData):
 		jumpZone.look_at_from_position(Vector3(pos[0],0.0,pos[1]), dir, up_dir)
 		# pretend systems are XY, not XZ aligned
 		jumpZone.rotate_object_local(Vector3(1,0,0),PI/2.0)
-		
+
+		jumpZone.init(jumpTo)
+		jumpZone.direction = dir
+
 		self.add_child(jumpZone)
 

@@ -3,7 +3,7 @@ extends "res://source/game/Communication.gd"
 # Docking
 ## Lets sender ask for docking at receiver
 
-enum Types {
+enum {
 	ASK_DOCKING,
 	DOCKING_OK,
 	DOCKING_REFUSED,
