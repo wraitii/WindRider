@@ -16,8 +16,6 @@ func _process(delta):
 func setCurrentShip(s):
 	ship = s;
 	ship.connect('got_chat', self, 'on_chat')
-	ship.connect('docking', self, 'on_dock')
-	ship.connect('jumping', self, 'on_jump')
 
 func get_current_ship():
 	return ship;
@@ -32,6 +30,3 @@ func on_chat(convo, sender, chatData):
 func on_jump(from, to):
 	Core.gameState.jumpingFrom = from;
 	Core.jump()
-
-func on_dock(dock):
-	Core.dock(dock)

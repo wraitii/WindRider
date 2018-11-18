@@ -34,30 +34,19 @@ func startGame():
 	get_node('/root').add_child(player)
 	
 	get_node('/root/MainMenu').queue_free()
-	jump()
+	reload_scene()
 	gameState.playerShip.global_translate(Vector3(0,0,0))
 
-func jump():
+func reload_scene():
 	if gameState.currentScene:
-		gameState.currentScene.queue_free()
-
-	gameState.currentScene = InGame.instance()
-	get_node('/root').add_child(gameState.currentScene)
-
-func dock(on):
-	if gameState.currentScene:
-		gameState.playerShip.get_parent().remove_child(gameState.playerShip)
-		get_node('/root').remove_child(gameState.currentScene)
-		gameState.currentScene.queue_free()
-
-	gameState.currentScene = Docked.instance()
-	gameState.currentScene.init(on.data);
-	get_node('/root').add_child(gameState.currentScene)
-
-func undock():
-	if gameState.currentScene:
-		get_node('/root').remove_child(gameState.currentScene)
 		gameState.currentScene.queue_free()
 	
-	gameState.currentScene = InGame.instance()
-	get_node('/root').add_child(gameState.currentScene)
+	var playerShipData = outsideWorldSim.ship(gameState.playerShip.ID);
+	print(playerShipData.data.dockedAt)
+	if playerShipData.data.dockedAt != null:
+		gameState.currentScene = Docked.instance()
+		gameState.currentScene.init(landablesData.get(playerShipData.data.dockedAt));
+		get_node('/root').add_child(gameState.currentScene)
+	else:
+		gameState.currentScene = InGame.instance()
+		get_node('/root').add_child(gameState.currentScene)

@@ -7,4 +7,4 @@ func init(l):
 	get_node('PlanetName').text = landableData.name
 
 func _on_Undock_pressed():
-	Core.gameState.playerShip.undock()
+	Core.gameState.playerShip.do_undock()

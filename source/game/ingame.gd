@@ -11,7 +11,9 @@ func _ready():
 	system.init(Core.galaxy.system(_system))
 	self.add_child(system)
 	
-	bring_in_all_arriving()
+	bring_in_all()
+	
+	Core.outsideWorldSim.connect('bring_in', self, 'bring_in')
 	
 	get_node('Camera').followedShip = Core.gameState.playerShip
 	get_node('VelocityRadar').set_follower(Core.gameState.playerShip)
@@ -19,13 +21,18 @@ func _ready():
 
 	pass
 
-func bring_in_all_arriving():
+func bring_in_all():
 	var ships = Core.outsideWorldSim.poll_all_arriving_at(_system);
 	for shipID in ships:
 		bring_in(shipID)
 	
 func bring_in(shipID):
 	var ship = Core.outsideWorldSim.ship(shipID)
+	if ship.data.dockedAt != null:
+		var landables = get_tree().get_nodes_in_group('Landables')
+		for l in landables:
+			if l.data.name == ship.data.dockedAt
+				l.deliver(ship.ship)
 	assert(ship.data.hyperNavigating != null)
 	match ship.data.hyperNavigating.method:
 		Enums.HYPERNAVMETHOD.JUMPING:

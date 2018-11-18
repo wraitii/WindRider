@@ -12,7 +12,5 @@ func deliver(obj):
 	if target == up:
 		up = Vector3(1,0,0)
 	obj.look_at_from_position(translation, target, up)
-	print('delivering')
-	print_tree()
-	get_node('/root').print_tree()
 	get_parent().get_parent().add_child(obj)
+	Core.outsideWorldSim.quit_hypernavigation(obj.ID);

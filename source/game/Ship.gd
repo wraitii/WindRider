@@ -19,7 +19,8 @@ var navSystem;
 var shipStats;
 
 signal got_chat(convo, sender, chatData)
-signal docking(dock)
+signal docking(ship, dock)
+signal undocking(ship)
 signal jumping(ship, to)
 signal teleporting(ship, to, pos)
 
@@ -104,10 +105,15 @@ func try_dock():
 	dockingProcedure.ask_for_docking()
 
 func do_dock(to):
-	dockedAt = to;
 	dockingProcedure = null;
-	get_parent().remove_child(self)
-	emit_signal('docking', to)
+	if self.is_inside_tree():
+		get_parent().remove_child(self)
+	emit_signal('docking', self, to.data.name)
+
+func do_undock():
+	if self.is_inside_tree():
+		get_parent().remove_child(self)
+	emit_signal('undocking', self)
 
 func on_received_chat(convo, sender, chatData):
 	emit_signal('got_chat', convo, sender, chatData)
