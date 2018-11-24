@@ -13,4 +13,3 @@ func deliver(obj):
 		up = Vector3(1,0,0)
 	obj.look_at_from_position(translation, target, up)
 	get_parent().get_parent().add_child(obj)
-	Core.outsideWorldSim.quit_hypernavigation(obj.ID);

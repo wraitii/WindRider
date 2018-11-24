@@ -5,51 +5,55 @@ export (String) var _system = null;
 const System = preload('System.tscn')
 
 func _ready():
-	_system = Core.gameState.currentSystem;
+	_system = Core.gameState.playerShip.currentSystem;
 
 	var system = System.instance()	
 	system.init(Core.galaxy.system(_system))
 	self.add_child(system)
 	
-	bring_in_all()
-	
-	Core.outsideWorldSim.connect('bring_in', self, 'bring_in')
-	
+	Core.outsideWorldSim.connect('bring_ship_in', self, 'bring_ship_in')
+
+	pass
+
+func _exit_tree():
+	Core.outsideWorldSim.disconnect('bring_ship_in', self, 'bring_ship_in')
+
+func _loaded_player_ship():
 	get_node('Camera').followedShip = Core.gameState.playerShip
 	get_node('VelocityRadar').set_follower(Core.gameState.playerShip)
 	get_node('NavSystem').navSystem = Core.gameState.playerShip.navSystem
 
-	pass
-
-func bring_in_all():
-	var ships = Core.outsideWorldSim.poll_all_arriving_at(_system);
-	for shipID in ships:
-		bring_in(shipID)
-	
-func bring_in(shipID):
+func bring_ship_in(shipID):
 	var ship = Core.outsideWorldSim.ship(shipID)
-	if ship.data.dockedAt != null:
+	if ship.docking != null:
+		assert(ship.docking.status == Enums.DOCKSTATUS.UNDOCKING)
 		var landables = get_tree().get_nodes_in_group('Landables')
 		for l in landables:
-			if l.data.name == ship.data.dockedAt
-				l.deliver(ship.ship)
-	assert(ship.data.hyperNavigating != null)
-	match ship.data.hyperNavigating.method:
-		Enums.HYPERNAVMETHOD.JUMPING:
-			var landables = get_tree().get_nodes_in_group('Landables')
-			for l in landables:
-				if !('jumpTo' in l):
-					continue
-				if l.jumpTo == ship.data.lastSystem:
-					l.deliver(ship.ship)
-		Enums.HYPERNAVMETHOD.TELEPORTING:
-			self.add_child(ship.ship)
-			ship.ship.translation = Vector3(
-				ship.data.hyperNavigating.data.position.x,
-				0,
-				ship.data.hyperNavigating.data.position.y
+			if l.data.name == ship.docking.dock:
+				l.deliver(ship)
+				break
+	elif ship.hyperNavigating != null:
+		match ship.hyperNavigating.method:
+			Enums.HYPERNAVMETHOD.JUMPING:
+				var landables = get_tree().get_nodes_in_group('Landables')
+				for l in landables:
+					print(l)
+					if !('jumpTo' in l):
+						continue
+					print(l.jumpTo)
+					print(ship.hyperNavigating.data.from)
+					if l.jumpTo == ship.hyperNavigating.data.from:
+						l.deliver(ship)
+						break
+			Enums.HYPERNAVMETHOD.TELEPORTING:
+				self.add_child(ship)
+				ship.translation = Vector3(
+					ship.hyperNavigating.data.position.x,
+					0,
+					ship.hyperNavigating.data.position.y
 			)
-			Core.outsideWorldSim.quit_hypernavigation(shipID);
+	if shipID == Core.gameState.playerShipID:
+		_loaded_player_ship()
 
 func _process(delta):
 	pass

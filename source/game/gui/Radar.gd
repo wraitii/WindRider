@@ -4,7 +4,7 @@ const JumpZone = preload('../JumpZone.gd')
 var radar = {}
 
 func _process(delta):
-	var playerShip = Core.player.get_current_ship()
+	var playerShip = Core.gameState.player.get_current_ship()
 	var landables = get_tree().get_nodes_in_group('Landables')
 
 	for l in landables:

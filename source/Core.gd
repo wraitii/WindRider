@@ -15,7 +15,6 @@ const Docked = preload('game/Docked.tscn')
 const Player = preload('game/Player.tscn')
 const Ship = preload('game/Ship.tscn')
 
-var player = null;
 var galaxy = Galaxy.new()
 var shipsData = ShipDataManager.new()
 var componentsData = ComponentDataMgr.new()
@@ -24,28 +23,30 @@ var gameState = GameStatus.new()
 var outsideWorldSim = OutsideWorldSim.new()
 
 func startGame():
-	gameState.currentSystem = 'Sol'
+	NodeHelpers.queue_delete(get_node('/root/MainMenu'))
+	
+	gameState.player = Player.instance()
 	gameState.playerShip = Ship.instance()
 	gameState.playerShip.init('Cycles')
-	gameState.playerShip.teleport('Sol', Vector2(100, 100))
+	gameState.playerShipID = gameState.playerShip.ID
 	
-	player = Player.instance()
-	player.setCurrentShip(gameState.playerShip)
-	get_node('/root').add_child(player)
-	
-	get_node('/root/MainMenu').queue_free()
-	reload_scene()
-	gameState.playerShip.global_translate(Vector3(0,0,0))
+	gameState.player.setCurrentShip(gameState.playerShip)
+	get_node('/root').add_child(gameState.player)
 
-func reload_scene():
-	if gameState.currentScene:
-		gameState.currentScene.queue_free()
-	
-	var playerShipData = outsideWorldSim.ship(gameState.playerShip.ID);
-	print(playerShipData.data.dockedAt)
-	if playerShipData.data.dockedAt != null:
+	gameState.playerShip.teleport('Sol', Vector2(100, 100))
+
+func unload_scene():
+	## May happen at the Start
+	if gameState.currentScene == null:
+		return
+	if gameState.playerShip != null && gameState.playerShip.is_inside_tree():
+		gameState.playerShip.get_parent().remove_child(gameState.playerShip)
+	NodeHelpers.queue_delete(gameState.currentScene)
+
+func load_scene():
+	if gameState.playerShip.dockedAt != null:
 		gameState.currentScene = Docked.instance()
-		gameState.currentScene.init(landablesData.get(playerShipData.data.dockedAt));
+		gameState.currentScene.init(landablesData.get(gameState.playerShip.dockedAt));
 		get_node('/root').add_child(gameState.currentScene)
 	else:
 		gameState.currentScene = InGame.instance()

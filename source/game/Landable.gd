@@ -8,6 +8,13 @@ func _ready():
 
 func init(landableName):
 	data = Core.landablesData.get(landableName)
+
+func deliver(obj):
+	obj.translation = translation
+	obj.translation.y = 0;
+	obj.linear_velocity = Vector3(0,0,0)
+	obj.angular_velocity = Vector3(0,0,0)
+	get_parent().get_parent().add_child(obj)
 	
 const Docking = preload('res://source/game/comms/Docking.gd')
 

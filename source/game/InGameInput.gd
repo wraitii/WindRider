@@ -3,7 +3,7 @@ extends Node
 func parse_input():
 	var commands = []
 	
-	var player = Core.player
+	var player = Core.gameState.player
 	if !player:
 		return
 	
