@@ -30,4 +30,4 @@ func _process(delta):
 			get_node('center').add_child(pixel)
 			radar[id] = pixel
 		var p = (l.translation - playerShip.translation)
-		pixel.position = Vector2(p.x, p.z)
+		pixel.position = Vector2(p.x, p.z) * 0.5
