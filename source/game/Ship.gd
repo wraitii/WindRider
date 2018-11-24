@@ -61,6 +61,12 @@ func _integrate_forces(state):
 
 	if state.linear_velocity.length_squared() >= ms*ms:
 		state.linear_velocity = state.linear_velocity.normalized() * ms;
+	
+	if translation.y >= 0.1:
+		add_central_force(Vector3(0,-10.0,0));
+	elif translation.y <= 0.1:
+		add_central_force(Vector3(0,10.0,0));
+	
 
 func thrust(delta):
 	var transform = get_transform()
@@ -171,7 +177,6 @@ func _teleport(to, pos):
 	if to != currentSystem:
 		hyperNavigating = HypernavigationData.teleport(to, pos)
 		_jump_out()
-
 	else:
 		translation = pos;
 
