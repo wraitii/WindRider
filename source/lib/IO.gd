@@ -13,6 +13,16 @@ static func list_dir(dirPath, ext = null):
 	dir.list_dir_begin()
 	var file_name = dir.get_next()
 	while (file_name != ""):
+		if file_name.begins_with('.'):
+			file_name = dir.get_next()
+			continue;		
+		if dir.current_is_dir():
+			var dret = list_dir(dirPath + file_name, ext)
+			for a in dret:
+				ret.push_back(file_name + '/' + a)
+			print(ret)
+			file_name = dir.get_next()
+			continue
 		if ext == null || file_name.ends_with(ext):
 			ret.push_back(file_name)
 		file_name = dir.get_next()

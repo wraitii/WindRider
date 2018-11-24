@@ -1,6 +1,7 @@
 extends Node
 
 const Component = preload('Component.gd')
+const WeaponSystem = preload('WeaponSystem.tscn')
 
 var shipData;
 
@@ -24,13 +25,20 @@ func _parse_component(compInfo):
 	if !cdata:
 		return
 	var comp = Component.new(cdata)
-	
 	self.add_child(comp)
+	
+	if 'weapons' in cdata:
+		_create_weapons(comp, cdata);	
 
+func _stat_order_value(a):
+	if 'order' in a:
+		return a['order']
+	return 0;
+	
 func _sort_stat(a, b):
 	# true if a<b
-	var aa = a['order'] || 0
-	var bb = b['order'] || 0
+	var aa = _stat_order_value(a)
+	var bb = _stat_order_value(b)
 	return aa <= bb
 
 func _get_stat_effect(stat):
@@ -74,3 +82,9 @@ func _compute_stats():
 		for item in statsList[stat]:
 			val = _parse_stat_value(val, item);
 		stats[stat] = val;
+
+func _create_weapons(comp, data):
+	for weap in data['weapons']:
+		var weapon = WeaponSystem.instance()
+		weapon.init(comp, get_parent(), weap)
+		get_parent().get_node('WeaponsSystem').add_child(weapon)

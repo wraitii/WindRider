@@ -6,10 +6,7 @@ func _process(delta):
 	pass
 
 func _physics_process(delta):
-
-	var playerCommands = get_node('InGameInput').parse_input()
-	if playerCommands:
-		commands += playerCommands
+	commands += Core.gameState.player.moveCommandProcess()
 	
 	for command in commands:
 		var ship = command[0]

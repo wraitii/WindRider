@@ -67,9 +67,14 @@ func ship_jumped(shipID, from):
 		if _shipIDsInSystem[from].empty():
 			_shipIDsInSystem.erase(from)
 	
-	if shipID == Core.gameState.playerShipID:
-		# so here we would simulate time passing.
-		ship(shipID)._do_unjump()
+	var ship = ship(shipID);
+	if ship.hyperNavigating.method == Enums.HYPERNAVMETHOD.TELEPORTING:
+		ship._do_unjump()
+		return;
+	
+	#if shipID == Core.gameState.playerShipID:
+	#	# so here we would simulate time passing.
+	#	ship(shipID)._do_unjump()
 
 func ship_undocked(shipID, at):
 	assert(shipID in _ships)

@@ -1,4 +1,4 @@
-extends Node
+extends Spatial
 
 ## Component
 ## Meta-class for ship components

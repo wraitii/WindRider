@@ -84,6 +84,22 @@ func reverse(delta):
 
 ##############################
 ##############################
+## Weapons system
+
+func start_firing():
+	var weapons = get_node('WeaponsSystem').get_children();
+	for weapon in weapons:
+		weapon.start_firing();
+	pass
+
+func stop_firing():
+	var weapons = get_node('WeaponsSystem').get_children();
+	for weapon in weapons:
+		weapon.stop_firing();
+	pass
+
+##############################
+##############################
 ## Jumping-related helpers
 
 var lastSystem = null;
@@ -140,7 +156,8 @@ class DockingData:
 
 func _jump_out():
 	navSystem.targetNode = null;
-	Core.unload_scene();
+	if ID == Core.gameState.playerShipID:
+		Core.unload_scene();
 	lastSystem = currentSystem
 	currentSystem = null
 	emit_signal('jumped', ID, lastSystem)
@@ -154,12 +171,15 @@ func _teleport(to, pos):
 	if to != currentSystem:
 		hyperNavigating = HypernavigationData.teleport(to, pos)
 		_jump_out()
+
 	else:
 		translation = pos;
 
 func _do_dock(to):
 	dockingProcedure = null;
-	Core.unload_scene()
+	if ID == Core.gameState.playerShipID:
+		Core.unload_scene();
+
 	docking = null
 	dockedAt = to;
 	emit_signal('docked', ID, dockedAt)
@@ -169,7 +189,8 @@ func _do_dock(to):
 
 func _do_undock():
 	assert(dockedAt != null)
-	Core.unload_scene()
+	if ID == Core.gameState.playerShipID:
+		Core.unload_scene();
 	docking = DockingData.undock(dockedAt)
 	dockedAt = null;
 	emit_signal('undocked', ID, docking.dock)

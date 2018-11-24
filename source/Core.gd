@@ -5,6 +5,7 @@ const Galaxy = preload('game/Galaxy.gd')
 const ComponentDataMgr = preload('game/ComponentDataMgr.gd')
 const ShipDataManager = preload('game/ShipDataManager.gd')
 const LandableDataMgr = preload('game/LandableDataMgr.gd')
+const ProjectileDataMgr = preload('game/ProjectileDataMgr.gd')
 
 const GameStatus = preload('game/GameStatus.gd')
 const OutsideWorldSim = preload('game/OutsideWorldSimulator.gd')
@@ -18,6 +19,7 @@ const Ship = preload('game/Ship.tscn')
 var galaxy = Galaxy.new()
 var shipsData = ShipDataManager.new()
 var componentsData = ComponentDataMgr.new()
+var projectilesData = ProjectileDataMgr.new()
 var landablesData = LandableDataMgr.new()
 var gameState = GameStatus.new()
 var outsideWorldSim = OutsideWorldSim.new()
@@ -33,7 +35,11 @@ func startGame():
 	gameState.player.setCurrentShip(gameState.playerShip)
 	get_node('/root').add_child(gameState.player)
 
-	gameState.playerShip.teleport('Sol', Vector2(100, 100))
+	gameState.playerShip.teleport('Sol', Vector2(0, 0))
+
+	var otherShip = Ship.instance()
+	otherShip.init('Cycles')
+	otherShip.teleport('Sol', Vector2(0, -50))
 
 func unload_scene():
 	## May happen at the Start
