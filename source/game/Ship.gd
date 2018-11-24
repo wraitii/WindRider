@@ -51,6 +51,9 @@ func init(name):
 func _process(delta):
 	pass
 
+func stat(stat):
+	return shipStats.get(stat)
+
 ##############################
 ##############################
 ## Physics

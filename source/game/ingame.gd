@@ -20,7 +20,6 @@ func _exit_tree():
 
 func _loaded_player_ship():
 	get_node('Camera').followedShip = Core.gameState.playerShip
-	get_node('VelocityRadar').set_follower(Core.gameState.playerShip)
 	get_node('NavSystem').navSystem = Core.gameState.playerShip.navSystem
 
 func bring_ship_in(shipID):
