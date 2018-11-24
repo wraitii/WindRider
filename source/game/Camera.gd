@@ -1,13 +1,13 @@
 extends Camera
 
 enum CAMERA_STATES { FOLLOW, FOLLOW_FROM_ABOVE }
-export (CAMERA_STATES) var mode = CAMERA_STATES.FOLLOW;
+export (CAMERA_STATES) var mode = CAMERA_STATES.FOLLOW_FROM_ABOVE;
 
 var followedShip = null;
 
 func _ready():
 	if !Core.gameState.cameraMode:
-		Core.gameState.cameraMode = CAMERA_STATES.FOLLOW
+		Core.gameState.cameraMode = CAMERA_STATES.FOLLOW_FROM_ABOVE
 	mode = Core.gameState.cameraMode;
 	_init_mode()
 	pass
