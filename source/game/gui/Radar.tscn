@@ -19,6 +19,7 @@ margin_left = 100.0
 margin_top = 100.0
 
 [node name="movementArrow" type="Line2D" parent="Radar/center"]
+visible = false
 points = PoolVector2Array( 0, 0, 50, 0, 45, 5, 50, 0, 45, -5 )
 width = 2.0
 default_color = Color( 0.317647, 0.760784, 0.431373, 0.313726 )
@@ -32,7 +33,6 @@ default_color = Color( 0.4, 0.501961, 1, 1 )
 texture_mode = 45
 
 [node name="playerCross" type="Line2D" parent="Radar"]
-position = Vector2( -1.17493, 0 )
 points = PoolVector2Array( 0, 100, 200, 100, 100, 100, 100, 0, 100, 200 )
 width = 1.0
 default_color = Color( 0.356863, 0.345098, 0.344196, 1 )

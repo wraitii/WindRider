@@ -1,35 +1,27 @@
 extends RigidBody
 
-const NavSystem = preload('res://source/game/NavSystem.gd')
+signal got_chat(convo, sender, chatData)
 
+const NavSystem = preload('res://source/game/NavSystem.gd')
 const Docking = preload('res://source/game/comms/Docking.gd')
 const JumpZone = preload('res://source/game/JumpZone.gd')
-
 const Graphics = preload('res://source/graphics/Ship.tscn')
 
 var ID;
 export (String) var shipDataName;
 
-
 var dockingProcedure = null
-
-var lastSystem = null;
-var currentSystem = null;
-var dockedAt = null;
-
-var hyperNavigating = null;
-var docking = null;
 
 # subsystems shorthand
 var navSystem;
 var shipStats;
 
-signal got_chat(convo, sender, chatData)
+## Ship caracteristics
+var shields = null;
+var armour = null;
 
-signal docked(ID, at)
-signal undocked(ID, from)
-signal jumped(ID, from)
-signal unjumped(ID, into)
+func stat(stat):
+	return shipStats.get(stat)
 
 func _init():
 	set_angular_damp(1.0);
@@ -45,14 +37,14 @@ func init(name):
 	var data = Core.shipsData.get(name)
 	shipStats.init(data)
 	
+	shields = stat('max_shields')
+	armour = stat('max_armour')
+	
 	get_node('ShipGraphics').init(data)
 	pass
 
 func _process(delta):
 	pass
-
-func stat(stat):
-	return shipStats.get(stat)
 
 ##############################
 ##############################
@@ -93,6 +85,16 @@ func reverse(delta):
 ##############################
 ##############################
 ## Jumping-related helpers
+
+var lastSystem = null;
+var currentSystem = null;
+var dockedAt = null;
+var hyperNavigating = null;
+var docking = null;
+signal docked(ID, at)
+signal undocked(ID, from)
+signal jumped(ID, from)
+signal unjumped(ID, into)
 
 class HypernavigationData:
 	var method = null;
