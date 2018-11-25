@@ -25,9 +25,14 @@ func _process(delta):
 
 func moveCommandProcess():
 	var commands = []
+
 	if Input.is_action_pressed("ship_thrust"):
 		commands.push_back('thrust')
-	if Input.is_action_pressed('ship_reverse'):
+
+	# commands related to rotation: not independent.
+	if Input.is_action_pressed("ship_aim_towards_target"):
+		commands.push_back('aim_towards_target')
+	elif Input.is_action_pressed('ship_reverse'):
 		commands.push_back('reverse')
 	elif Input.is_action_pressed('ship_rotate_left_small'):
 		commands.push_back('rotate_left_small')

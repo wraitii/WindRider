@@ -37,6 +37,11 @@ func pick_new_target():
 			continue
 		target(ship.ID)
 
+func get_active_target():
+	if targets.size() == 0:
+		return null;
+	return Core.outsideWorldSim.ship(targets.values()[0].targetID)
+
 func target(shipID):
 	if targets.size() > 0:
 		clear_targets()

@@ -112,6 +112,19 @@ func rotate_left_small(delta):
 func rotate_right_small(delta):
 	add_torque(Vector3(0,-shipStats.get('turn_rate')*5,0))
 
+func aim_towards_target(delta):
+	var target = targetingSystem.get_active_target();
+	if target == null:
+		target = navSystem.targetNode
+	if target == null:
+		return;
+
+	var cross = (target.transform.origin - transform.origin).cross(transform.basis.xform(Vector3(0,0,-1)))
+	if cross.y > 0:
+		rotate_right(0);
+	elif cross.y < 0:
+		rotate_left(0);
+
 func reverse(delta):
 	var reva = get_transform().basis.xform(Vector3(0,0,-1))
 	var cross = reva.cross(get_linear_velocity().normalized())
