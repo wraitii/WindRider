@@ -1,9 +1,10 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://source/game/Ship.gd" type="Script" id=1]
 [ext_resource path="res://source/graphics/Ship.tscn" type="PackedScene" id=2]
 [ext_resource path="res://source/game/NavSystem.gd" type="Script" id=3]
 [ext_resource path="res://source/game/ShipStats.gd" type="Script" id=4]
+[ext_resource path="res://source/game/TargetingSystem.gd" type="Script" id=5]
 
 [sub_resource type="SphereShape" id=1]
 
@@ -25,4 +26,7 @@ script = ExtResource( 3 )
 script = ExtResource( 4 )
 
 [node name="WeaponsSystem" type="Node" parent="."]
+
+[node name="TargetingSystem" type="Node" parent="."]
+script = ExtResource( 5 )
 

@@ -8,12 +8,15 @@ const JumpZone = preload('res://source/game/JumpZone.gd')
 const Graphics = preload('res://source/graphics/Ship.tscn')
 
 var ID;
-export (String) var shipDataName;
 
 var dockingProcedure = null
 
+var data;
+
 # subsystems shorthand
 var navSystem;
+var weaponsSystem;
+var targetingSystem;
 var shipStats;
 
 ## Ship caracteristics
@@ -29,14 +32,19 @@ func _init():
 	add_to_group('Ships', true)
 	pass
 
-func init(name):
+func _exit_tree():
+	print(get_signal_connection_list('tree_exiting'));
+
+func init(shipType):
 	Core.outsideWorldSim.assign_id(self);
 	navSystem = get_node('NavSystem');
+	weaponsSystem = get_node('WeaponsSystem');
+	targetingSystem = get_node('TargetingSystem');
 	shipStats = get_node('ShipStats')
-
-	shipDataName = name
-	var data = Core.shipsData.get(name)
+	
+	data = Core.shipsData.get(shipType)
 	shipStats.init(data)
+	targetingSystem.init(null, self);
 	
 	shields = stat('max_shields')
 	armour = stat('max_armour')

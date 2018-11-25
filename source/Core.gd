@@ -30,11 +30,11 @@ func startGame():
 	NodeHelpers.queue_delete(get_node('/root/MainMenu'))
 	
 	gameState.player = Player.instance()
-	gameState.playerShip = Ship.instance()
-	gameState.playerShip.init('Cycles')
-	gameState.playerShipID = gameState.playerShip.ID
+	var playerShip = Ship.instance()
+	playerShip = Ship.instance()
+	playerShip.init('Cycles')
+	gameState.player.ship = playerShip
 	
-	gameState.player.setCurrentShip(gameState.playerShip)
 	get_node('/root').add_child(gameState.player)
 
 	gameState.playerShip.teleport('Sol', Vector2(20, 0))

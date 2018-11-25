@@ -1,6 +1,8 @@
 extends Node
 
-var ship setget setCurrentShip, get_current_ship
+var ship setget set_current_ship, get_current_ship
+
+signal player_ship_changed(ship)
 
 func _process(delta):
 	if Input.is_action_just_released('switch_camera'):
@@ -12,6 +14,9 @@ func _process(delta):
 	if Input.is_action_just_released('ship_reset_systems'):
 		ship.dockingProcedure = null;
 		ship.navSystem.reset()
+
+	if Input.is_action_just_released('ship_next_target'):
+		ship.targetingSystem.pick_new_target()
 
 	if Input.is_action_just_pressed('ship_fire'):
 		ship.start_firing();
@@ -37,9 +42,12 @@ func moveCommandProcess():
 		ret.push_back([ship, c])
 	return ret;
 
-func setCurrentShip(s):
+func set_current_ship(s):
 	ship = s;
+	Core.gameState.playerShip = s;
+	emit_signal('player_ship_changed', ship)
 	ship.connect('got_chat', self, 'on_chat')
+	ship.targetingSystem.connect('lost_target', self, 'on_lost_target')
 
 func get_current_ship():
 	return ship;
@@ -51,6 +59,9 @@ func on_chat(convo, sender, chatData):
 	chat.text += chatData.message + '\n'
 	pass
 
-func on_jump(from, to):
-	Core.gameState.jumpingFrom = from;
-	Core.jump()
+func on_lost_target(target):
+	var chat = Core.gameState.currentScene.get_node('Chat')
+	if len(chat.text) >= 100:
+		chat.text = ""
+	chat.text += 'Target lost.' + '\n'
+	pass
