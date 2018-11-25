@@ -1,6 +1,7 @@
 extends RigidBody
 
-signal got_chat(convo, sender, chatData)
+# intended for the human player only
+signal add_chat_message(message)
 
 const NavSystem = preload('res://source/game/NavSystem.gd')
 const Docking = preload('res://source/game/comms/Docking.gd')
@@ -19,7 +20,15 @@ var weaponsSystem;
 var targetingSystem;
 var shipStats;
 
+# Navigation
+var lastSystem = null;
+var currentSystem = null;
+var dockedAt = null;
+var hyperNavigating = null;
+var docking = null;
+
 ## Ship caracteristics
+var hyperfuel = null
 var energy = null setget set_energy, get_energy;
 var shields = null setget set_shields, get_shields;
 var armour = null setget set_armour, get_armour;
@@ -46,10 +55,51 @@ func init(shipType):
 	shields = stat('max_shields')
 	armour = stat('max_armour')
 	energy = stat('max_energy')
+	hyperfuel = stat('max_hyperfuel')
 
 	get_node('ShipGraphics').init(data)
 	pass
 
+func serialize():
+	var ret = {}
+	ret.ID = ID
+	ret.data = data
+	ret.shields = shields
+	ret.armour = armour
+	ret.energy = energy
+	ret.hyperfuel = hyperfuel
+	ret.lastSystem = lastSystem
+	ret.currentSystem = currentSystem
+	ret.dockedAt = dockedAt
+	ret.hyperNavigating = hyperNavigating
+	ret.docking = docking
+	
+	return ret;
+
+func deserialize(ret):
+	ID = ret.ID
+	data = ret.data
+	
+	lastSystem = ret.lastSystem
+	currentSystem = ret.currentSystem
+	dockedAt = ret.dockedAt
+	hyperNavigating = ret.hyperNavigating
+	docking = ret.docking
+	
+	navSystem = get_node('NavSystem');
+	weaponsSystem = get_node('WeaponsSystem');
+	targetingSystem = get_node('TargetingSystem');
+	shipStats = get_node('ShipStats')
+	
+	shipStats.init(data)
+	targetingSystem.init(null, self);
+	get_node('ShipGraphics').init(data)
+	
+	shields = ret.shields
+	armour = ret.armour
+	energy = ret.energy
+	hyperfuel = ret.hyperfuel
+	
 func _process(delta):
 	pass
 
@@ -98,16 +148,16 @@ func thrust(delta):
 	add_central_force(pushDir * shipStats.get('acceleration'))
 
 func rotate_left(delta):
-	add_torque(Vector3(0,shipStats.get('turn_rate')*25,0))
+	add_torque(Vector3(0,shipStats.get('turn_rate')*10,0))
 
 func rotate_right(delta):
-	add_torque(Vector3(0,-shipStats.get('turn_rate')*25,0))
+	add_torque(Vector3(0,-shipStats.get('turn_rate')*10,0))
 
 func rotate_left_small(delta):
-	add_torque(Vector3(0,shipStats.get('turn_rate')*5,0))
+	add_torque(Vector3(0,shipStats.get('turn_rate')*2,0))
 
 func rotate_right_small(delta):
-	add_torque(Vector3(0,-shipStats.get('turn_rate')*5,0))
+	add_torque(Vector3(0,-shipStats.get('turn_rate')*2,0))
 
 func aim_towards_target(delta):
 	var target = targetingSystem.get_active_target();
@@ -185,11 +235,6 @@ func get_armour(): return armour;
 ##############################
 ## Jumping-related helpers
 
-var lastSystem = null;
-var currentSystem = null;
-var dockedAt = null;
-var hyperNavigating = null;
-var docking = null;
 signal docked(ID, at)
 signal undocked(ID, from)
 signal jumped(ID, from)
@@ -295,8 +340,15 @@ func _unjumping_done():
 ## External jumping interface
 
 func jump(to):
+	if hyperfuel < 100:
+		emit_signal('add_chat_message', 'Not enough fuel for Hyperjump')
+		return;
+	else:
+		hyperfuel -= 100;
 	_do_jump(to)
 
+## Teleporting is a bit of a special function anyways
+## Player can't trigger it.
 func teleport(to, pos):
 	_teleport(to, pos)
 
@@ -324,7 +376,7 @@ func try_dock():
 	dockingProcedure.ask_for_docking()
 
 func on_received_chat(convo, sender, chatData):
-	emit_signal('got_chat', convo, sender, chatData)
+	emit_signal('add_chat_message', chatData.message)
 	if convo is Docking:
 		if chatData.data.type == Docking.DOCKING_NOW:
 			dock(sender.data.name)

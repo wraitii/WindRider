@@ -26,7 +26,7 @@ var gameState = GameStatus.new()
 var outsideWorldSim = OutsideWorldSim.new()
 var damageMgr = DamageMgr.new()
 
-func startGame():
+func create_new_game():
 	NodeHelpers.queue_delete(get_node('/root/MainMenu'))
 	
 	gameState.player = Player.instance()
@@ -42,6 +42,12 @@ func startGame():
 	var otherShip = Ship.instance()
 	otherShip.init('Cycles')
 	otherShip.teleport('Sol', Vector2(0, -50))
+	gameState.save_game();
+
+func load_saved_game():
+	NodeHelpers.queue_delete(get_node('/root/MainMenu'))
+	gameState.load_save(get_node('/root'));
+	load_scene();
 
 func unload_scene():
 	## May happen at the Start

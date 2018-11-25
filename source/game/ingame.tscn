@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=2]
+[gd_scene load_steps=15 format=2]
 
 [ext_resource path="res://source/game/ingame.gd" type="Script" id=1]
 [ext_resource path="res://source/game/Camera.gd" type="Script" id=2]
@@ -9,6 +9,8 @@
 [ext_resource path="res://source/game/gui/ShipStatusGUI.tscn" type="PackedScene" id=7]
 [ext_resource path="res://source/game/gui/KestrelDriveRadar.tscn" type="PackedScene" id=8]
 [ext_resource path="res://source/game/gui/TargetingSystemGUI.gd" type="Script" id=9]
+[ext_resource path="res://source/game/gui/Chat.tscn" type="PackedScene" id=10]
+[ext_resource path="res://source/game/IngamePlayerCommands.gd" type="Script" id=11]
 
 [sub_resource type="ImageTexture" id=1]
 
@@ -46,15 +48,6 @@ margin_right = 40.0
 margin_bottom = 14.0
 text = "sjgifghsfglskf,g"
 script = ExtResource( 4 )
-
-[node name="Chat" type="Label" parent="."]
-anchor_left = 0.5
-anchor_top = 1.0
-anchor_right = 0.5
-anchor_bottom = 1.0
-margin_left = -300.0
-margin_top = -100.0
-margin_right = 300.0
 
 [node name="NavSystem" parent="." instance=ExtResource( 5 )]
 anchor_left = 1.0
@@ -100,4 +93,16 @@ margin_right = -240.0
 margin_bottom = 140.0
 alignment = 2
 script = ExtResource( 9 )
+
+[node name="Chat" parent="." instance=ExtResource( 10 )]
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+margin_left = -300.0
+margin_top = -120.0
+margin_right = 300.0
+margin_bottom = -20.0
+
+[node name="PlayerCommands" type="Node" parent="."]
+script = ExtResource( 11 )
 

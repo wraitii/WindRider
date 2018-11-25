@@ -27,6 +27,32 @@ var _shipIDsDockedAt = {
 
 signal bring_ship_in(ID)
 
+func get_ships_to_save():
+	var ret = []
+	for ship in _ships.values():
+		if ship == Core.gameState.playerShip:
+			ret.push_back(ship);
+	return ret;
+
+func deserialize_ship(ship):
+	_ships[ship.ID] = ship
+	if ids <= ship.ID:
+		ids = ship.ID + 1;
+
+	ship.connect('docked', self, 'ship_docked')
+	ship.connect('undocked', self, 'ship_undocked')
+	ship.connect('jumped', self, 'ship_jumped')
+	ship.connect('unjumped', self, 'ship_unjumped')
+	
+	if (ship.dockedAt):
+		if !(ship.dockedAt in _shipIDsDockedAt):
+			_shipIDsDockedAt[ship.dockedAt] = []
+		_shipIDsDockedAt[ship.dockedAt].push_back(ship.ID)
+	if (ship.currentSystem):
+		if !(ship.currentSystem in _shipIDsInSystem):
+			_shipIDsInSystem[ship.currentSystem] = []
+		_shipIDsInSystem[ship.currentSystem].push_back(ship.ID)
+
 var ids = 0;
 	
 func ship(ID):
