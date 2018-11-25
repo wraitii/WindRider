@@ -41,12 +41,16 @@ func _fire():
 			_fire_projectile();
 
 func _fire_projectile():
+	if ownerShip.energy < weaponData['firing_energy']:
+		return;
+	ownerShip.energy -= weaponData['firing_energy'];
+
 	var data = Core.projectilesData.get(weaponData.kind)
 	
 	var proj = Projectile.instance()
 	proj.init(data)
 	
 	var angle = ownerShip.transform.basis.xform(Vector3(0,0,-1))
-	proj.apply_central_impulse(ownerShip.linear_velocity + angle * 100);
-	proj.translation = ownerShip.translation + angle*2
+	proj.apply_central_impulse(ownerShip.linear_velocity + angle * 150);
+	proj.translation = ownerShip.translation + angle*4
 	Core.gameState.currentScene.add_child(proj)

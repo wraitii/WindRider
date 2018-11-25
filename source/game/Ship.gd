@@ -17,6 +17,7 @@ var navSystem;
 var shipStats;
 
 ## Ship caracteristics
+var energy = null setget set_energy, get_energy;
 var shields = null setget set_shields, get_shields;
 var armour = null setget set_armour, get_armour;
 
@@ -39,12 +40,18 @@ func init(name):
 	
 	shields = stat('max_shields')
 	armour = stat('max_armour')
-	
+	energy = stat('max_energy')
+
 	get_node('ShipGraphics').init(data)
 	pass
 
 func _process(delta):
 	pass
+
+func _physics_process(delta):
+	energy += stat('energy_gen') * delta
+	if energy > stat('max_energy'):
+		energy = stat('max_energy')
 
 ##############################
 ##############################
@@ -91,6 +98,12 @@ func rotate_left(delta):
 func rotate_right(delta):
 	add_torque(Vector3(0,-shipStats.get('turn_rate')*25,0))
 
+func rotate_left_small(delta):
+	add_torque(Vector3(0,shipStats.get('turn_rate')*5,0))
+
+func rotate_right_small(delta):
+	add_torque(Vector3(0,-shipStats.get('turn_rate')*5,0))
+
 func reverse(delta):
 	var reva = get_transform().basis.xform(Vector3(0,0,-1))
 	var cross = reva.cross(get_linear_velocity().normalized())
@@ -118,6 +131,13 @@ func stop_firing():
 ##############################
 ##############################
 ## Health
+
+func set_energy(e):
+	energy = e;
+	if energy < 0:
+		energy = 0;
+
+func get_energy(): return energy;
 
 func set_shields(s):
 	shields = s;

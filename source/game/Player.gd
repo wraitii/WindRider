@@ -24,6 +24,10 @@ func moveCommandProcess():
 		commands.push_back('thrust')
 	if Input.is_action_pressed('ship_reverse'):
 		commands.push_back('reverse')
+	elif Input.is_action_pressed('ship_rotate_left_small'):
+		commands.push_back('rotate_left_small')
+	elif Input.is_action_pressed('ship_rotate_right_small'):
+		commands.push_back('rotate_right_small')
 	elif Input.is_action_pressed('ship_rotate_left'):
 		commands.push_back('rotate_left')
 	elif Input.is_action_pressed('ship_rotate_right'):

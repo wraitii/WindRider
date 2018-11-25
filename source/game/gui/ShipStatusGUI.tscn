@@ -43,3 +43,15 @@ position = Vector2( -78, 0 )
 polygon = PoolVector2Array( 0, 8, 156, 8, 156, -8, 0, -8 )
 color = Color( 0.407843, 0.784314, 0.917647, 0.67451 )
 
+[node name="Energy" type="Line2D" parent="Container"]
+position = Vector2( 100, 100 )
+points = PoolVector2Array( -80, -10, 80, -10, 80, 10, -80, 10, -80, -10 )
+width = 2.0
+default_color = Color( 0.286275, 0.917647, 0.47451, 0.576471 )
+texture_mode = 0
+
+[node name="EnergyBar" type="Polygon2D" parent="Container/Energy"]
+position = Vector2( -78, 0 )
+polygon = PoolVector2Array( 0, 8, 156, 8, 156, -8, 0, -8 )
+color = Color( 0.407843, 0.917647, 0.572549, 0.67451 )
+

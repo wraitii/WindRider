@@ -37,7 +37,7 @@ func startGame():
 	gameState.player.setCurrentShip(gameState.playerShip)
 	get_node('/root').add_child(gameState.player)
 
-	gameState.playerShip.teleport('Sol', Vector2(0, 0))
+	gameState.playerShip.teleport('Sol', Vector2(20, 0))
 
 	var otherShip = Ship.instance()
 	otherShip.init('Cycles')
