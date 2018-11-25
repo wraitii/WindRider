@@ -1,8 +1,10 @@
 extends Node
 
+signal player_ship_changed(ship)
+
 var ship setget set_current_ship, get_current_ship
 
-signal player_ship_changed(ship)
+var credits = 0;
 
 func set_current_ship(s):
 	ship = s;

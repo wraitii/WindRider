@@ -33,6 +33,8 @@ func create_new_game():
 	gameState.galacticTime = GalacticTime.new(3065, 04, 12, 13, 48)
 	
 	gameState.player = Character.instance()
+	gameState.player.credits = 10000;
+	
 	var playerShip = Ship.instance()
 	playerShip = Ship.instance()
 	playerShip.init('Cycles')

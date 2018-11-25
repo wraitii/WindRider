@@ -1,16 +1,22 @@
-extends Container
+extends Control
 
-var navSystem = null;
+var system = null;
 
-func init(n):
-	navSystem = n;
+func _enter_tree():
+	Core.gameState.player.connect('player_ship_changed', self, '_on_player_ship_change')
+	_on_player_ship_change(Core.gameState.playerShip)
+
+func _on_player_ship_change(ship):
+	system = weakref(ship.navSystem);
 
 func _process(delta):
-	if !navSystem:
+	get_node('CurrentSystem').text = 'In ' + Core.gameState.playerShip.currentSystem;
+	
+	if !system.get_ref():
 		get_node('Targeting').text = 'Nav systems offline';
 		return
-	if !navSystem.targetNode:
+	if !system.get_ref().targetNode:
 		get_node('Targeting').text = 'No nav target';
 		return
-	get_node('Targeting').text = 'Targeting: ' + navSystem.targetNode.name;
+	get_node('Targeting').text = 'Targeting: ' + system.get_ref().targetNode.name;
 
