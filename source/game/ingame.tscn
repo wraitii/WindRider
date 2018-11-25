@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=2]
+[gd_scene load_steps=12 format=2]
 
 [ext_resource path="res://source/game/ingame.gd" type="Script" id=1]
 [ext_resource path="res://source/game/Camera.gd" type="Script" id=2]
@@ -7,6 +7,7 @@
 [ext_resource path="res://source/game/gui/NavSystem.tscn" type="PackedScene" id=5]
 [ext_resource path="res://source/game/gui/Radar.tscn" type="PackedScene" id=6]
 [ext_resource path="res://source/game/gui/ShipStatusGUI.tscn" type="PackedScene" id=7]
+[ext_resource path="res://source/game/gui/KestrelDriveRadar.tscn" type="PackedScene" id=8]
 
 [sub_resource type="ImageTexture" id=1]
 
@@ -79,4 +80,12 @@ margin_left = -120.0
 margin_right = -120.0
 grow_horizontal = 1
 grow_vertical = 1
+
+[node name="KestrelDriveRadar" parent="." instance=ExtResource( 8 )]
+anchor_top = 1.0
+anchor_bottom = 1.0
+margin_left = 20.0
+margin_top = -100.0
+margin_right = 20.0
+margin_bottom = -100.0
 

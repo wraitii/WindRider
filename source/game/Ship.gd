@@ -62,11 +62,22 @@ func _integrate_forces(state):
 	if state.linear_velocity.length_squared() >= ms*ms:
 		state.linear_velocity = state.linear_velocity.normalized() * ms;
 	
-	if translation.y >= 0.1:
-		add_central_force(Vector3(0,-10.0,0));
-	elif translation.y <= 0.1:
-		add_central_force(Vector3(0,10.0,0));
+	## Kestrel regulator AKA 'keeping you at y=0'
 	
+	if abs(translation.y) >= 0.1:
+		#var framesToZero = translation.y / (state.linear_velocity.y / state.get_step())
+		var kestrelVel = state.linear_velocity
+		kestrelVel.y = -translation.y / state.get_step() / 5.0;
+		state.linear_velocity = kestrelVel
+	
+	var up_dir = Vector3(0, 1, 0)
+	var cur_dir = state.transform.basis.xform(Vector3(0, 0, -1))
+	var target_dir = state.transform.origin + -up_dir * cur_dir.dot(up_dir) + cur_dir;
+	var rotation_angle = acos(cur_dir.y) - acos(target_dir.y)
+	var right_dir = cur_dir.cross(up_dir);
+	if abs(cur_dir.y) >= 0.001:
+		state.add_torque(rotation_angle*100.0*right_dir*mass);
+	#state.set_angular_velocity(up_dir * (rotation_angle / state.get_step()))
 
 func thrust(delta):
 	var transform = get_transform()
