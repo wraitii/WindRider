@@ -5,6 +5,7 @@ extends Node
 
 var data = {} setget __nos, __nog
 var kind;
+var own_path;
 
 # Fake getters
 func __nos(a):
@@ -13,10 +14,18 @@ func __nog():
 	pass
 
 func _init(k, path):
+	init(k, path)
+
+func init(k, path):
+	own_path = path;
 	kind = k
 	var files = IO.list_dir(path, '.json')
 	for f in files:
 		_load(path + f)
+
+func _reload():
+	data = {};
+	init(kind, own_path)
 
 func _unload(name):
 	data.erase(name);

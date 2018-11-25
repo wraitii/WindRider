@@ -96,7 +96,17 @@ margin_right = -20.0
 margin_bottom = 6.0
 text = "New"
 
+[node name="Reload" type="Button" parent="GUI"]
+anchor_top = 0.97
+anchor_right = 0.4
+anchor_bottom = 0.97
+margin_left = 20.0
+margin_top = -6.0
+margin_bottom = 6.0
+text = "Reload"
+
 [connection signal="text_changed" from="GUI/Code" to="." method="_on_Code_text_changed"]
 [connection signal="pressed" from="GUI/Validate" to="." method="_on_Validate_pressed"]
 [connection signal="pressed" from="GUI/Save" to="." method="_on_Save_pressed"]
 [connection signal="pressed" from="GUI/New" to="." method="_on_New_pressed"]
+[connection signal="pressed" from="GUI/Reload" to="." method="_on_Reload_pressed"]

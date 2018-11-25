@@ -37,9 +37,10 @@ func init():
 		if 'jump_zones' in data:
 			for jz in data['jump_zones']:
 				var target = Core.systemsMgr.get(jz['name'])
-				var dir = A2V._3(target.position) - A2V._3(data.position);
+				var dir = A2V._3(target.position) - system.translation;
 				var hl = HyperLink.instance()
-				hl.look_at_from_position(system.translation, dir.normalized(), Vector3(0,1,0))
+				print(dir);
+				hl.look_at_from_position(system.translation, A2V._3(target.position), Vector3(0,1,0))
 				hl.scale = Vector3(1,1,dir.length())
 				add_child(hl)
 		

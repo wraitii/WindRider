@@ -54,3 +54,7 @@ func _on_New_pressed():
 	get_node('GUI/Code').text = code;
 	get_node('GUI/SystemName').text = "New system";
 	currentSystem = { "name": null }
+
+func _on_Reload_pressed():
+	Core.systemsMgr._reload();
+	get_node('GalaxyView/GalaxyViewport/GalaxyMap/MapScript').init()
