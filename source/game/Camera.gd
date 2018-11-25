@@ -26,9 +26,9 @@ func _process(delta):
 			transform.basis = trans.basis
 			#rotate_object_local(Vector3(0,1,0),-PI/2.0)
 		CAMERA_STATES.FOLLOW_FROM_ABOVE:
-			var pos = Vector3(0.0,200.0,0);
-			var vec = trans.xform(pos)
-			transform.origin = vec
+			var pos = trans.origin
+			pos.y += 200.0
+			transform.origin = pos
 			transform.basis = Basis()
 			#rotate_object_local(Vector3(0,1,0),-PI/2.0)
 			rotate_object_local(Vector3(1,0,0),-PI/2.0)
