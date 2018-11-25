@@ -1,8 +1,12 @@
 extends Node
 
+## Convenience
 var currentScene = null;
 
+var galacticTime = null;
 var player = null;
+
+### Player Ship
 
 var playerShip = null setget set_player_ship, get_player_ship;
 var playerShipID = null setget set_player_ship_id, get_player_ship_id;
@@ -20,6 +24,8 @@ func set_player_ship_id(ID):
 
 func get_player_ship_id(): return playerShipID;
 
+
+### Other settings (might be taken out of this at some point?)
 var cameraMode = null;
 
 

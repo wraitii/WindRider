@@ -8,7 +8,7 @@ func _ready():
 	_system = Core.gameState.playerShip.currentSystem;
 
 	var system = System.instance()	
-	system.init(Core.galaxy.system(_system))
+	system.init(Core.systemsMgr.get(_system))
 	self.add_child(system)
 	
 	Core.outsideWorldSim.connect('bring_ship_in', self, 'bring_ship_in')

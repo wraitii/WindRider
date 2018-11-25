@@ -1,7 +1,7 @@
 extends Node
 ## Autoloaded at start, always present.
 
-const Galaxy = preload('game/Galaxy.gd')
+const SystemsMgr = preload('game/SystemsMgr.gd')
 const ComponentDataMgr = preload('game/ComponentDataMgr.gd')
 const ShipDataManager = preload('game/ShipDataManager.gd')
 const LandableDataMgr = preload('game/LandableDataMgr.gd')
@@ -17,7 +17,7 @@ const Docked = preload('game/Docked.tscn')
 const Player = preload('game/Player.tscn')
 const Ship = preload('game/Ship.tscn')
 
-var galaxy = Galaxy.new()
+var systemsMgr = SystemsMgr.new()
 var shipsData = ShipDataManager.new()
 var componentsData = ComponentDataMgr.new()
 var projectilesData = ProjectileDataMgr.new()

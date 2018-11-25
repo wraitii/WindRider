@@ -28,6 +28,18 @@ static func list_dir(dirPath, ext = null):
 		file_name = dir.get_next()
 	return ret
 
+static func read_whole_file(path):
+	var file = File.new()
+	if file.open(path, File.READ) != OK:
+		return null;
+	return file.get_as_text()
+
+static func save_text_to_file(path, data):
+	var file = File.new()
+	if file.open(path, File.WRITE) != OK:
+		return null;
+	file.store_string(data)
+
 # opens, parses JSON or returns null
 static func read_json(path):
 	var file = File.new()
@@ -37,6 +49,6 @@ static func read_json(path):
 	var json = JSON.parse(file.get_as_text())
 	if json.error != OK:
 		print("IO.read_json failure: " + path)
-		print(json.get_error_string)
+		print(json.get_error_string())
 		return null;
 	return json.result

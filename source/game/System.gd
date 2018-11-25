@@ -43,7 +43,7 @@ func _parse_jump_zones(sysData):
 
 	for jsd in sysData['jump_zones']:
 		var pos = jsd['position']
-		var jumpTo = Core.galaxy.system(jsd['name'])
+		var jumpTo = Core.systemsMgr.get(jsd['name'])
 		if !jumpTo: pass
 
 		var jumpZone = JumpZone.instance()

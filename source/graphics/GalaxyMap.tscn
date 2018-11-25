@@ -1,0 +1,22 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://source/graphics/GalaxyMap.gd" type="Script" id=1]
+
+[sub_resource type="Environment" id=1]
+
+background_mode = 1
+
+[node name="GalaxyMap" type="Spatial"]
+
+[node name="Camera" type="Camera" parent="."]
+transform = Transform( 0.810071, 0.300799, -0.503293, 0, 0.858377, 0.513019, 0.586331, -0.415582, 0.695347, -50, 50, 50 )
+environment = SubResource( 1 )
+projection = 1
+current = true
+fov = 90.3
+size = 200.0
+far = 1000.0
+
+[node name="MapScript" type="Spatial" parent="."]
+script = ExtResource( 1 )
+
