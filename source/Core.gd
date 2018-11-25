@@ -15,7 +15,7 @@ const DamageMgr = preload('game/DamageMgr.gd')
 const InGame = preload('game/ingame.tscn')
 const Docked = preload('game/Docked.tscn')
 
-const Player = preload('game/Player.tscn')
+const Character = preload('game/Character.tscn')
 const Ship = preload('game/Ship.tscn')
 
 var systemsMgr = SystemsMgr.new()
@@ -32,7 +32,7 @@ func create_new_game():
 	
 	gameState.galacticTime = GalacticTime.new(3065, 04, 12, 13, 48)
 	
-	gameState.player = Player.instance()
+	gameState.player = Character.instance()
 	var playerShip = Ship.instance()
 	playerShip = Ship.instance()
 	playerShip.init('Cycles')

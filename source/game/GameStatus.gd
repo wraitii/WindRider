@@ -31,7 +31,7 @@ var cameraMode = null;
 
 ### Serialization
 
-const Player = preload('Player.tscn')
+const Character = preload('Character.tscn')
 const Ship = preload('Ship.tscn')
 const GalacticTime = preload('GalacticTime.gd')
 
@@ -64,7 +64,7 @@ func load_save(root):
 		var ship = Ship.instance()
 		ship.deserialize(file.get_var())
 		Core.outsideWorldSim.deserialize_ship(ship)
-	player = Player.instance()
+	player = Character.instance()
 	player.ship = Core.outsideWorldSim.ship(playerShipID)
 	
 	root.add_child(player)
