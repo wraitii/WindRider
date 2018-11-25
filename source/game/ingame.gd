@@ -39,8 +39,6 @@ func bring_ship_in(shipID):
 					print(l)
 					if !('jumpTo' in l):
 						continue
-					print(l.jumpTo)
-					print(ship.hyperNavigating.data.from)
 					if l.jumpTo == ship.hyperNavigating.data.from:
 						l.deliver(ship)
 						break
