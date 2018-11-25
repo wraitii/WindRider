@@ -119,19 +119,27 @@ func aim_towards_target(delta):
 	if target == null:
 		return;
 
-	var cross = (target.transform.origin - transform.origin).cross(transform.basis.xform(Vector3(0,0,-1)))
-	if cross.y > 0:
+	var cross = (target.transform.origin - transform.origin).normalized().cross(transform.basis.xform(Vector3(0,0,-1)))
+	if cross.y > 0.1:
 		rotate_right(0);
-	elif cross.y < 0:
+	elif cross.y > 0:
+		rotate_right_small(0);
+	elif cross.y < -0.1:
 		rotate_left(0);
+	elif cross.y < 0:
+		rotate_left_small(0);
 
 func reverse(delta):
 	var reva = get_transform().basis.xform(Vector3(0,0,-1))
 	var cross = reva.cross(get_linear_velocity().normalized())
-	if cross.y > 0:
+	if cross.y > 0.1:
 		rotate_right(0);
-	elif cross.y < 0:
+	elif cross.y > 0:
+		rotate_right_small(0);
+	elif cross.y < -0.1:
 		rotate_left(0);
+	elif cross.y < 0:
+		rotate_left_small(0);
 
 ##############################
 ##############################
