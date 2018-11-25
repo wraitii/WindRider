@@ -57,5 +57,6 @@ func bring_ship_in(shipID):
 func _process(delta):
 	pass
 
-func _physics_process(state):
+func _physics_process(delta):
+	Core.gameState.galacticTime.add_time(delta*60*1000);
 	pass

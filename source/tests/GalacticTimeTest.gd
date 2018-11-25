@@ -41,3 +41,13 @@ func _init():
 
 	gt.add_time(2 * 3600*24*365*1000 + 189894*1000);
 	assert(gt.get_iso() == "2023-03-03 12:03")
+
+	gt.add_time(1045);
+	assert(gt.get_iso() == "2023-03-03 12:03")
+
+	gt.add_time(59000);
+	assert(gt.get_iso() == "2023-03-03 12:04")
+
+	for i in range(0, 3600):
+		gt.add_time(1/60.0 * 1000);
+	assert(gt.get_iso() == "2023-03-03 12:05")

@@ -8,6 +8,7 @@ func _process(delta):
 
 	if !ship: return
 	var txt = "FPS: " + str(Engine.get_frames_per_second()) + "\n"
+	txt += "Date: " + Core.gameState.galacticTime.get_iso() + "\n"
 	txt += "Speed: " + str(ship.get_linear_velocity().length()) + "\n"
 	txt += "Position: " + str(ship.translation) + "\n"
 	txt += "Rotation: " + str(ship.get_angular_velocity().length()) + "\n"

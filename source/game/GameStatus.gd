@@ -33,12 +33,15 @@ var cameraMode = null;
 
 const Player = preload('Player.tscn')
 const Ship = preload('Ship.tscn')
+const GalacticTime = preload('GalacticTime.gd')
 
 func save_game():
 	var file = File.new()
 	if file.open('user://save_game.wrdr', File.WRITE) != OK:
 		return null;
-
+	
+	file.store_var(galacticTime.serialize());
+	
 	file.store_var(playerShipID)
 	var ships = Core.outsideWorldSim.get_ships_to_save();
 	file.store_var(ships.size())
@@ -51,6 +54,9 @@ func load_save(root):
 	var file = File.new()
 	if file.open('user://save_game.wrdr', File.READ) != OK:
 		return null;
+
+	galacticTime = GalacticTime.new(0,0,0,0,0)
+	galacticTime.deserialize(file.get_var());
 
 	playerShipID = file.get_var()
 	var nbships = file.get_var()

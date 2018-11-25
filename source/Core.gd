@@ -7,6 +7,7 @@ const ShipDataManager = preload('game/ShipDataManager.gd')
 const LandableDataMgr = preload('game/LandableDataMgr.gd')
 const ProjectileDataMgr = preload('game/ProjectileDataMgr.gd')
 
+const GalacticTime = preload('game/GalacticTime.gd')
 const GameStatus = preload('game/GameStatus.gd')
 const OutsideWorldSim = preload('game/OutsideWorldSimulator.gd')
 const DamageMgr = preload('game/DamageMgr.gd')
@@ -28,6 +29,8 @@ var damageMgr = DamageMgr.new()
 
 func create_new_game():
 	NodeHelpers.queue_delete(get_node('/root/MainMenu'))
+	
+	gameState.galacticTime = GalacticTime.new(3065, 04, 12, 13, 48)
 	
 	gameState.player = Player.instance()
 	var playerShip = Ship.instance()
