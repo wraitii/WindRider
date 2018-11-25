@@ -17,8 +17,8 @@ var navSystem;
 var shipStats;
 
 ## Ship caracteristics
-var shields = null;
-var armour = null;
+var shields = null setget set_shields, get_shields;
+var armour = null setget set_armour, get_armour;
 
 func stat(stat):
 	return shipStats.get(stat)
@@ -114,6 +114,26 @@ func stop_firing():
 	for weapon in weapons:
 		weapon.stop_firing();
 	pass
+
+##############################
+##############################
+## Health
+
+func set_shields(s):
+	shields = s;
+	if shields < 0:
+		shields = 0;
+
+func get_shields(): return shields;
+
+func set_armour(a):
+	armour = a;
+	if armour < 0:
+		armour = 0;
+	if armour == 0:
+		NodeHelpers.queue_delete(self);
+
+func get_armour(): return armour;
 
 ##############################
 ##############################

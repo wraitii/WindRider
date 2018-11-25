@@ -9,6 +9,7 @@ const ProjectileDataMgr = preload('game/ProjectileDataMgr.gd')
 
 const GameStatus = preload('game/GameStatus.gd')
 const OutsideWorldSim = preload('game/OutsideWorldSimulator.gd')
+const DamageMgr = preload('game/DamageMgr.gd')
 
 const InGame = preload('game/ingame.tscn')
 const Docked = preload('game/Docked.tscn')
@@ -23,6 +24,7 @@ var projectilesData = ProjectileDataMgr.new()
 var landablesData = LandableDataMgr.new()
 var gameState = GameStatus.new()
 var outsideWorldSim = OutsideWorldSim.new()
+var damageMgr = DamageMgr.new()
 
 func startGame():
 	NodeHelpers.queue_delete(get_node('/root/MainMenu'))

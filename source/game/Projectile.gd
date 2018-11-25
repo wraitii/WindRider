@@ -15,4 +15,6 @@ func _physics_process(delta):
 		NodeHelpers.queue_delete(self)
 
 func _collide(body):
-	pass
+	## TODO: determine whether we hit.
+	Core.damageMgr.try_deal_damage(self, body)
+	NodeHelpers.queue_delete(self)
