@@ -72,9 +72,9 @@ func ship_jumped(shipID, from):
 		ship._do_unjump()
 		return;
 	
-	#if shipID == Core.gameState.playerShipID:
-	#	# so here we would simulate time passing.
-	#	ship(shipID)._do_unjump()
+	if shipID == Core.gameState.playerShipID:
+		# so here we would simulate time passing.
+		ship(shipID)._do_unjump()
 
 func ship_undocked(shipID, at):
 	assert(shipID in _ships)

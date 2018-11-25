@@ -32,9 +32,6 @@ func _init():
 	add_to_group('Ships', true)
 	pass
 
-func _exit_tree():
-	print(get_signal_connection_list('tree_exiting'));
-
 func init(shipType):
 	Core.outsideWorldSim.assign_id(self);
 	navSystem = get_node('NavSystem');
