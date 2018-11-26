@@ -1,16 +1,17 @@
 extends Node
 ## Autoloaded at start, always present.
 
-const SystemsMgr = preload('game/SystemsMgr.gd')
-const ComponentDataMgr = preload('game/ComponentDataMgr.gd')
-const ShipDataManager = preload('game/ShipDataManager.gd')
-const LandableDataMgr = preload('game/LandableDataMgr.gd')
-const ProjectileDataMgr = preload('game/ProjectileDataMgr.gd')
+const DataMgr = preload('lib/DataMgr.gd')
+
+const SocietyMgr = preload('game/mgr/SocietyMgr.gd')
+const SystemsMgr = preload('game/mgr/SystemsMgr.gd')
+const LandableMgr = preload('game/mgr/LandableMgr.gd')
+const OutsideWorldSim = preload('game/OutsideWorldSimulator.gd')
+
+const DamageMgr = preload('game/DamageMgr.gd')
 
 const GalacticTime = preload('game/GalacticTime.gd')
 const GameStatus = preload('game/GameStatus.gd')
-const OutsideWorldSim = preload('game/OutsideWorldSimulator.gd')
-const DamageMgr = preload('game/DamageMgr.gd')
 
 const InGame = preload('game/ingame.tscn')
 const Docked = preload('game/Docked.tscn')
@@ -18,17 +19,25 @@ const Docked = preload('game/Docked.tscn')
 const Character = preload('game/Character.tscn')
 const Ship = preload('game/Ship.tscn')
 
+var dataMgr = DataMgr.new();
+
+var societyMgr = SocietyMgr.new()
 var systemsMgr = SystemsMgr.new()
-var shipsData = ShipDataManager.new()
-var componentsData = ComponentDataMgr.new()
-var projectilesData = ProjectileDataMgr.new()
-var landablesData = LandableDataMgr.new()
-var gameState = GameStatus.new()
+var landablesData = LandableMgr.new()
 var outsideWorldSim = OutsideWorldSim.new()
+
+var gameState;
 var damageMgr = DamageMgr.new()
+
+func _init():
+	societyMgr.populate()
+	systemsMgr.populate()
+	landablesData.populate()
 
 func create_new_game():
 	NodeHelpers.queue_delete(get_node('/root/MainMenu'))
+	
+	gameState = GameStatus.new()
 	
 	gameState.galacticTime = GalacticTime.new(3065, 04, 12, 13, 48)
 	
@@ -51,6 +60,7 @@ func create_new_game():
 
 func load_saved_game():
 	NodeHelpers.queue_delete(get_node('/root/MainMenu'))
+	gameState = GameStatus.new();
 	gameState.load_save(get_node('/root'));
 	load_scene();
 

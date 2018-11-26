@@ -18,5 +18,5 @@ func _process(delta):
 	if !system.get_ref().targetNode:
 		get_node('Targeting').text = 'No nav target';
 		return
-	get_node('Targeting').text = 'Targeting: ' + system.get_ref().targetNode.name;
+	get_node('Targeting').text = 'Targeting: ' + system.get_ref().targetNode.ID;
 

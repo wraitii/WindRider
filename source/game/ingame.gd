@@ -27,7 +27,7 @@ func bring_ship_in(shipID):
 		assert(ship.docking.status == Enums.DOCKSTATUS.UNDOCKING)
 		var landables = get_tree().get_nodes_in_group('Landables')
 		for l in landables:
-			if l.data.name == ship.docking.dock:
+			if l.data.ID == ship.docking.dock:
 				l.deliver(ship)
 				break
 	elif ship.hyperNavigating != null:

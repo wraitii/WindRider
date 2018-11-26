@@ -26,7 +26,7 @@ func _process(delta):
 		
 		if l is JumpZone:
 			id = l.jumpTo;
-		else: id = l.data.name
+		else: id = l.data.ID
 			
 		if id in radar:
 			pixel = radar[id]

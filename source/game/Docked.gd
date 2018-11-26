@@ -5,7 +5,7 @@ var landableData
 func init(l):
 	Core.gameState.save_game();
 	landableData = l;
-	get_node('PlanetName').text = landableData.name
+	get_node('PlanetName').text = landableData.ID
 	_check_hyperfuel();
 	
 func _on_Undock_pressed():

@@ -1,13 +1,13 @@
 extends Spatial
 
-var systemName : String;
+var ID : String;
 
 const Star = preload('Star.tscn')
 const Landable = preload('Landable.tscn')
 const JumpZone = preload('JumpZone.tscn')
 
 func init(systemData):
-	systemName = systemData.name;
+	ID = systemData.ID;
 	_parse_stars(systemData)
 	_parse_landables(systemData)
 	_parse_jump_zones(systemData)
@@ -30,7 +30,7 @@ func _parse_landables(sysData):
 
 	for landableDef in sysData['landables']:
 		var landable = Landable.instance()
-		landable.init(landableDef['name'])
+		landable.init(landableDef['ID'])
 
 		self.add_child(landable)
 		var pos = landableDef['position']
@@ -43,7 +43,7 @@ func _parse_jump_zones(sysData):
 
 	for jsd in sysData['jump_zones']:
 		var pos = jsd['position']
-		var jumpTo = Core.systemsMgr.get(jsd['name'])
+		var jumpTo = Core.systemsMgr.get(jsd['ID'])
 		if !jumpTo: pass
 
 		var jumpZone = JumpZone.instance()

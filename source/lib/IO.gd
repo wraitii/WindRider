@@ -2,6 +2,7 @@ extends Node
 
 ## Brand new full-cost abstraction
 
+## Returns all files in the folder, prepending subdirectories.
 # returns null in case of error
 static func list_dir(dirPath, ext = null):
 	var dir = Directory.new()
@@ -17,7 +18,7 @@ static func list_dir(dirPath, ext = null):
 			file_name = dir.get_next()
 			continue;		
 		if dir.current_is_dir():
-			var dret = list_dir(dirPath + file_name, ext)
+			var dret = list_dir(dirPath + file_name + '/', ext)
 			for a in dret:
 				ret.push_back(file_name + '/' + a)
 			print(ret)

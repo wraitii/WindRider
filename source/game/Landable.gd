@@ -2,12 +2,22 @@ extends Area
 
 var data;
 
+### 0-100
+var societyPresence = {};
+
 func _ready():
 	add_to_group('Landables', true)
 	pass
 
 func init(landableName):
 	data = Core.landablesData.get(landableName)
+	for c in data['society_presence']:
+		assert(Core.societyData.get(c['name'] != null))
+		societyPresence[c['name']] = c['presence']
+
+################
+################
+### Docking
 
 func deliver(obj):
 	obj.translation = translation
@@ -15,7 +25,7 @@ func deliver(obj):
 	obj.linear_velocity = Vector3(0,0,0)
 	obj.angular_velocity = Vector3(0,0,0)
 	get_parent().get_parent().add_child(obj)
-	
+
 const Docking = preload('res://source/game/comms/Docking.gd')
 
 func on_received_chat(convo, sender, chatData):
