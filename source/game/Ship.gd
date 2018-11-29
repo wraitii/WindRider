@@ -379,4 +379,4 @@ func on_received_chat(convo, sender, chatData):
 	emit_signal('add_chat_message', chatData.message)
 	if convo is Docking:
 		if chatData.data.type == Docking.DOCKING_NOW:
-			dock(sender.data.ID)
+			dock(sender.ID)

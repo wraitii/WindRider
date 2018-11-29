@@ -3,15 +3,16 @@ extends Node
 export (String) var _system = null;
 
 func _ready():
-	_system = Core.gameState.playerShip.currentSystem;
-
-	self.add_child(Core.systemsMgr.get(_system))
+	_system = Core.systemsMgr.get(Core.gameState.playerShip.currentSystem)
+	print_tree()
+	print(_system)
+	self.add_child(_system)
 	
 	Core.outsideWorldSim.connect('bring_ship_in', self, 'bring_ship_in')
-
 	pass
 
 func _exit_tree():
+	self.remove_child(_system)
 	Core.outsideWorldSim.disconnect('bring_ship_in', self, 'bring_ship_in')
 
 func _loaded_player_ship():
@@ -23,13 +24,13 @@ func bring_ship_in(shipID):
 		assert(ship.docking.status == Enums.DOCKSTATUS.UNDOCKING)
 		var landables = get_tree().get_nodes_in_group('Landables')
 		for l in landables:
-			if l.data.ID == ship.docking.dock:
+			if l.ID == ship.docking.dock:
 				l.deliver(ship)
 				break
 	elif ship.hyperNavigating != null:
 		match ship.hyperNavigating.method:
 			Enums.HYPERNAVMETHOD.JUMPING:
-				var landables = get_tree().get_nodes_in_group('Landables')
+				var landables = get_tree().get_nodes_in_group('JumpZones')
 				for l in landables:
 					print(l)
 					if !('jumpTo' in l):

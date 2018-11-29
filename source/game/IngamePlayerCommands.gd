@@ -9,7 +9,7 @@ func _process(delta):
 		Core.gameState.currentScene.get_node('Camera').switch_mode()
 	if Input.is_action_just_released('ship_dock'):
 		if ship.navSystem.targetNode == null:
-			ship.navSystem.target_closest_landable();
+			ship.navSystem.target_closest_nav_object();
 		ship.try_dock()
 	if Input.is_action_just_released('ship_reset_systems'):
 		ship.dockingProcedure = null;

@@ -79,3 +79,4 @@ func load_scene():
 	else:
 		gameState.currentScene = InGame.instance()
 		get_node('/root').add_child(gameState.currentScene)
+		get_node('/root').print_tree()

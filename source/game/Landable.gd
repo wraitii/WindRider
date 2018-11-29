@@ -4,6 +4,7 @@ const Graphics = preload('res://data/art/landables/Landable.tscn')
 
 var graphics;
 
+var area;
 var ID;
 var position;
 
@@ -19,13 +20,19 @@ func _exit_tree():
 	remove_from_group('Landables')
 	remove_child(graphics)
 	graphics = null;
-
 	
 func init(data):
 	ID = data.ID
 	position = Vector3(data['position'][0],data['position'][1],data['position'][2])
 	translate(position)
 	scale_object_local(Vector3(10,10,10))
+	
+	var collShape = CollisionShape.new()
+	var shape = CylinderShape.new()
+	shape.height= 10.0;
+	shape.radius = 1.0;
+	collShape.shape = shape
+	add_child(collShape)
 
 	for c in data['society_presence']:
 		assert(Core.societyMgr.get(c['ID']) != null)
