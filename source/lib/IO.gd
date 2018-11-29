@@ -21,7 +21,6 @@ static func list_dir(dirPath, ext = null):
 			var dret = list_dir(dirPath + file_name + '/', ext)
 			for a in dret:
 				ret.push_back(file_name + '/' + a)
-			print(ret)
 			file_name = dir.get_next()
 			continue
 		if ext == null || file_name.ends_with(ext):

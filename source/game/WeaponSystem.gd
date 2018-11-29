@@ -45,7 +45,7 @@ func _fire_projectile():
 		return;
 	ownerShip.energy -= weaponData['firing_energy'];
 
-	var data = Core.projectilesData.get(weaponData.kind)
+	var data = Core.dataMgr.get('projectiles/' + weaponData.kind)
 	
 	var proj = Projectile.instance()
 	proj.init(data)

@@ -21,7 +21,7 @@ func get(s):
 	return stats[s]
 
 func _parse_component(compInfo):
-	var cdata = Core.componentsData.get(compInfo['name'])
+	var cdata = Core.dataMgr.get('ship_components/' + compInfo['ID'])
 	if !cdata:
 		return
 	var comp = Component.new(cdata)

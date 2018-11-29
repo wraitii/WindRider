@@ -48,7 +48,7 @@ func init(shipType):
 	targetingSystem = get_node('TargetingSystem');
 	shipStats = get_node('ShipStats')
 	
-	data = Core.shipsData.get(shipType)
+	data = Core.dataMgr.get('ships/' + shipType)
 	shipStats.init(data)
 	targetingSystem.init(null, self);
 	

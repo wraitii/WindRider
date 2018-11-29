@@ -1,19 +1,35 @@
 extends Area
 
-var data;
+const Graphics = preload('res://data/art/landables/Landable.tscn')
+
+var graphics;
+
+var ID;
+var position;
 
 ### 0-100
 var societyPresence = {};
 
-func _ready():
+func _enter_tree():
 	add_to_group('Landables', true)
-	pass
+	graphics = Graphics.instance()
+	add_child(graphics)
+	
+func _exit_tree():
+	remove_from_group('Landables')
+	remove_child(graphics)
+	graphics = null;
 
-func init(landableName):
-	data = Core.landablesData.get(landableName)
+	
+func init(data):
+	ID = data.ID
+	position = Vector3(data['position'][0],data['position'][1],data['position'][2])
+	translate(position)
+	scale_object_local(Vector3(10,10,10))
+
 	for c in data['society_presence']:
-		assert(Core.societyData.get(c['name'] != null))
-		societyPresence[c['name']] = c['presence']
+		assert(Core.societyMgr.get(c['ID']) != null)
+		societyPresence[c['ID']] = c['presence']
 
 ################
 ################

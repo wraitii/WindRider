@@ -1,17 +1,28 @@
 extends Spatial
 
-var ID : String;
-
 const Star = preload('Star.tscn')
-const Landable = preload('Landable.tscn')
 const JumpZone = preload('JumpZone.tscn')
+const Sky = preload('res://data/art/system_skies/SystemSky.tscn')
+
+var ID : String;
+var position : Vector3
+var sky = null;
 
 func init(systemData):
 	ID = systemData.ID;
+	position = A2V._3(systemData.position)
 	_parse_stars(systemData)
 	_parse_landables(systemData)
 	_parse_jump_zones(systemData)
 	pass
+
+func _enter_tree():
+	sky = Sky.instance()
+	add_child(sky)
+
+func _exit_tree():
+	remove_child(sky);
+	sky = null;
 
 func _parse_stars(sysData):
 	if !("stars" in sysData):
@@ -28,39 +39,15 @@ func _parse_landables(sysData):
 	if !("landables" in sysData):
 		return
 
-	for landableDef in sysData['landables']:
-		var landable = Landable.instance()
-		landable.init(landableDef['ID'])
-
-		self.add_child(landable)
-		var pos = landableDef['position']
-		landable.translate(Vector3(pos[0],pos[1],pos[2]))
-		landable.scale_object_local(Vector3(10,10,10))
+	for landable in sysData['landables']:
+		self.add_child(Core.landablesMgr.get(landable))
 
 func _parse_jump_zones(sysData):
 	if !("jump_zones" in sysData):
 		return
 
 	for jsd in sysData['jump_zones']:
-		var pos = jsd['position']
-		var jumpTo = Core.systemsMgr.get(jsd['ID'])
-		if !jumpTo: pass
-
 		var jumpZone = JumpZone.instance()
-		
-		var dir = A2V._3(jumpTo['position']) - A2V._3(sysData['position'])
-		dir = dir.normalized()
-		
-		var up_dir = Vector3(0, 1, 0)
-		if dir == up_dir:
-			up_dir = Vector3(-1,0,0)
-
-		jumpZone.look_at_from_position(Vector3(pos[0],0.0,pos[1]), dir, up_dir)
-		# pretend systems are XY, not XZ aligned
-		jumpZone.rotate_object_local(Vector3(1,0,0),PI/2.0)
-
-		jumpZone.init(jumpTo)
-		jumpZone.direction = dir
-
+		jumpZone.init(self, jsd)
 		self.add_child(jumpZone)
 

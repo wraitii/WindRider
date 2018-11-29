@@ -2,14 +2,10 @@ extends Node
 
 export (String) var _system = null;
 
-const System = preload('System.tscn')
-
 func _ready():
 	_system = Core.gameState.playerShip.currentSystem;
 
-	var system = System.instance()	
-	system.init(Core.systemsMgr.get(_system))
-	self.add_child(system)
+	self.add_child(Core.systemsMgr.get(_system))
 	
 	Core.outsideWorldSim.connect('bring_ship_in', self, 'bring_ship_in')
 

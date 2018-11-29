@@ -23,18 +23,17 @@ var dataMgr = DataMgr.new();
 
 var societyMgr = SocietyMgr.new()
 var systemsMgr = SystemsMgr.new()
-var landablesData = LandableMgr.new()
+var landablesMgr = LandableMgr.new()
 var outsideWorldSim = OutsideWorldSim.new()
 
 var gameState;
 var damageMgr = DamageMgr.new()
 
-func _init():
-	societyMgr.populate()
-	systemsMgr.populate()
-	landablesData.populate()
-
 func create_new_game():
+	societyMgr.populate()
+	landablesMgr.populate()
+	systemsMgr.populate()
+
 	NodeHelpers.queue_delete(get_node('/root/MainMenu'))
 	
 	gameState = GameStatus.new()
@@ -75,7 +74,7 @@ func unload_scene():
 func load_scene():
 	if gameState.playerShip.dockedAt != null:
 		gameState.currentScene = Docked.instance()
-		gameState.currentScene.init(landablesData.get(gameState.playerShip.dockedAt));
+		gameState.currentScene.init(landablesMgr.get(gameState.playerShip.dockedAt));
 		get_node('/root').add_child(gameState.currentScene)
 	else:
 		gameState.currentScene = InGame.instance()
