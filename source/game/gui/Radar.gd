@@ -3,6 +3,18 @@ extends Control
 const JumpZone = preload('../JumpZone.gd')
 var radar = {}
 
+func _create_pixel(size, color):
+	var pixel = Polygon2D.new()
+	pixel.polygon = [
+		Vector2(-0.5,-0.5),
+		Vector2(0.5,-0.5),
+		Vector2(0.5,0.5),
+		Vector2(-0.5,0.5)
+	]
+	pixel.scale = Vector2(size, size)
+	pixel.color = color
+	return pixel
+
 func _process(delta):
 	var playerShip = Core.gameState.playerShip
 	if !playerShip:
@@ -17,30 +29,27 @@ func _process(delta):
 	get_node('center/movementArrow').rotation = angle
 	var scaleR = playerShip.get_linear_velocity().length() / playerShip.stat('max_speed');
 	get_node('center/movementArrow').scale = Vector2(scaleR, scaleR)
-
 	
-	var landables = get_tree().get_nodes_in_group('Landables')
-	for l in landables:
-		var pixel;
-		var id;
-		
-		if l is JumpZone:
-			id = l.jumpTo;
-		else: id = l.ID
-			
-		if id in radar:
-			pixel = radar[id]
-		else:
-			pixel = Polygon2D.new()
-			pixel.polygon = [
-				Vector2(-0.5,-0.5),
-				Vector2(0.5,-0.5),
-				Vector2(0.5,0.5),
-				Vector2(-0.5,0.5)
-			]
-			pixel.scale = Vector2(3,3)
-			pixel.color = Color(1, 1, 0)
-			get_node('center').add_child(pixel)
-			radar[id] = pixel
+	var items = get_tree().get_nodes_in_group('Landables')
+	for l in items:
+		if !(l.name in radar):
+			radar[l.name] = _create_pixel(5, Color(1,1,0))
+			get_node('center').add_child(radar[l.name])
 		var p = (l.translation - playerShip.translation)
-		pixel.position = Vector2(p.x, p.z) * 0.5
+		radar[l.name].position = Vector2(p.x, p.z) * 0.5
+
+	items = get_tree().get_nodes_in_group('JumpZones')
+	for l in items:
+		if !(l.name in radar):
+			radar[l.name] = _create_pixel(5, Color(1,0,1))
+			get_node('center').add_child(radar[l.name])
+		var p = (l.translation - playerShip.translation)
+		radar[l.name].position = Vector2(p.x, p.z) * 0.5
+
+	items = get_tree().get_nodes_in_group('Ships')
+	for l in items:
+		if !(l.name in radar):
+			radar[l.name] = _create_pixel(2, Color(0,1,1))
+			get_node('center').add_child(radar[l.name])
+		var p = (l.translation - playerShip.translation)
+		radar[l.name].position = Vector2(p.x, p.z) * 0.5
