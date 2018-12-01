@@ -1,5 +1,7 @@
 extends Control
 
+const Item = preload('../../graphics/MarketPlaceItem.tscn')
+
 ### Marketplace
 ## Allows you to buy and sell stuff.
 ## Combines the trade, outfit and shipyards functionality all in one.
@@ -24,8 +26,13 @@ func _update_products():
 		var society = Core.societyMgr.get(socName)
 		for k in society.outfits:
 			var outfit = Core.dataMgr.get(k)
-			print(outfit['name'])
-	pass
+			var item = Item.instance()
+			item.init(outfit);
+			item.connect('pressed', self, 'on_item_pressed', [item])
+			get_node('ItemGrid').add_child(item);
+
+func on_item_pressed(item):
+	print(item)
 
 func on_close():
 	emit_signal('close');
