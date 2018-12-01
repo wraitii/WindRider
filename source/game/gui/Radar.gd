@@ -19,9 +19,8 @@ func _process(delta):
 	var playerShip = Core.gameState.playerShip
 	if !playerShip:
 		return;
-
+	
 	## TODO: Handle rotations of the ship in Follow mode
-
 	
 	var velocity = playerShip.get_linear_velocity()
 	velocity = Vector2(velocity.x, -velocity.z);

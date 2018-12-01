@@ -33,7 +33,10 @@ func create_new_game():
 	societyMgr.populate()
 	landablesMgr.populate()
 	systemsMgr.populate()
-
+	
+	## TODO: if I get an outfitMgr or something this should be replaced
+	societyMgr.assign_outfits()
+	
 	NodeHelpers.queue_delete(get_node('/root/MainMenu'))
 	
 	gameState = GameStatus.new()
@@ -79,4 +82,3 @@ func load_scene():
 	else:
 		gameState.currentScene = InGame.instance()
 		get_node('/root').add_child(gameState.currentScene)
-		get_node('/root').print_tree()

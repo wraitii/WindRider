@@ -23,8 +23,17 @@ func _load(path):
 	data[path] = datum
 
 func get(s):
-	var path = 'res://data/' + s + '.json';
+	var path = s
+	if path.find('res://data') == -1:
+		path = 'res://data/' + s + '.json';
 	if !(path in data):
 		print("Data for " + path + " not found")
 		return null
 	return data[path]
+
+func get_all(path):
+	var ret = []
+	for k in data.keys():
+		if k.find(path) != -1:
+			ret.push_back(k)
+	return ret

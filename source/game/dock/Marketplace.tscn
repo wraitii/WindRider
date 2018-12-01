@@ -5,5 +5,18 @@
 [node name="Marketplace" type="Control"]
 anchor_right = 1.0
 anchor_bottom = 1.0
+margin_top = -1.0
+margin_bottom = -1.0
 script = ExtResource( 1 )
+
+[node name="Close" type="Button" parent="."]
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_right = -20.0
+margin_bottom = -20.0
+grow_horizontal = 0
+grow_vertical = 0
+text = "Leave"
 

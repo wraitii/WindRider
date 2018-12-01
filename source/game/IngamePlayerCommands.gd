@@ -7,10 +7,7 @@ func _process(delta):
 	
 	if Input.is_action_just_released('switch_camera'):
 		Core.gameState.currentScene.get_node('Camera').switch_mode()
-	if Input.is_action_just_released('ship_dock'):
-		if ship.navSystem.targetNode == null:
-			ship.navSystem.target_closest_nav_object();
-		ship.try_dock()
+
 	if Input.is_action_just_released('ship_reset_systems'):
 		ship.dockingProcedure = null;
 		ship.navSystem.reset()
@@ -22,6 +19,12 @@ func _process(delta):
 		ship.start_firing();
 	elif Input.is_action_just_released('ship_fire'):
 		ship.stop_firing();
+	# Can take us out of the world
+	if Input.is_action_just_released('ship_dock'):
+		if ship.navSystem.targetNode == null:
+			ship.navSystem.target_closest_nav_object();
+		ship.try_dock()
+
 
 func moveCommandProcess():
 	var commands = []

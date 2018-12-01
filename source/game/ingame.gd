@@ -4,8 +4,6 @@ export (String) var _system = null;
 
 func _ready():
 	_system = Core.systemsMgr.get(Core.gameState.playerShip.currentSystem)
-	print_tree()
-	print(_system)
 	self.add_child(_system)
 	
 	Core.outsideWorldSim.connect('bring_ship_in', self, 'bring_ship_in')

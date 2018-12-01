@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=2]
+[gd_scene load_steps=3 format=2]
 
 [ext_resource path="res://source/game/Docked.gd" type="Script" id=1]
+[ext_resource path="res://source/game/dock/Marketplace.tscn" type="PackedScene" id=2]
 
 [node name="Docked" type="Container"]
 anchor_right = 1.0
@@ -17,19 +18,6 @@ margin_bottom = 40.0
 text = "Nom de la planète"
 align = 1
 
-[node name="Undock" type="Button" parent="."]
-anchor_left = 1.0
-anchor_top = 1.0
-anchor_right = 1.0
-anchor_bottom = 1.0
-margin_left = -200.0
-margin_top = -180.0
-margin_right = -100.0
-margin_bottom = -150.0
-grow_horizontal = 0
-grow_vertical = 0
-text = "Undock"
-
 [node name="Refuel" type="Button" parent="."]
 anchor_left = 1.0
 anchor_top = 1.0
@@ -43,5 +31,35 @@ grow_horizontal = 0
 grow_vertical = 0
 text = "Refuel"
 
-[connection signal="pressed" from="Undock" to="." method="_on_Undock_pressed"]
+[node name="Undock" type="Button" parent="."]
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = -200.0
+margin_top = -180.0
+margin_right = -100.0
+margin_bottom = -150.0
+grow_horizontal = 0
+grow_vertical = 0
+text = "Undock"
+
+[node name="MarketplaceBtn" type="Button" parent="."]
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = -200.0
+margin_top = -280.0
+margin_right = -100.0
+margin_bottom = -250.0
+grow_horizontal = 0
+grow_vertical = 0
+text = "Marketplace"
+
+[node name="Marketplace" parent="." instance=ExtResource( 2 )]
+visible = false
+
 [connection signal="pressed" from="Refuel" to="." method="_on_Refuel_pressed"]
+[connection signal="pressed" from="Undock" to="." method="_on_Undock_pressed"]
+[connection signal="pressed" from="MarketplaceBtn" to="." method="_on_MarketplaceBtn_pressed"]

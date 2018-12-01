@@ -1,13 +1,8 @@
-extends Node
+extends 'Society.gd'
 
 signal player_ship_changed(ship)
 
 var ship setget set_current_ship, get_current_ship
-
-var credits = 0;
-
-# Array of target - Opinion
-var relations = {}
 
 func set_current_ship(s):
 	ship = s;
