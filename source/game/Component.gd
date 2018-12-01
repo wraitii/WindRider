@@ -3,7 +3,7 @@ extends Spatial
 ## Component
 ## Meta-class for ship components
 
-var data;
+var ID;
 
-func _init(d):
-	data = d;
+func _init(id):
+	ID = id

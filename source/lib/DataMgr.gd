@@ -35,5 +35,5 @@ func get_all(path):
 	var ret = []
 	for k in data.keys():
 		if k.find(path) != -1:
-			ret.push_back(k)
+			ret.push_back(k.replace('res://data/','').replace('.json',''))
 	return ret

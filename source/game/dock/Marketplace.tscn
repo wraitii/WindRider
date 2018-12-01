@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=2]
+[gd_scene load_steps=3 format=2]
 
 [ext_resource path="res://source/game/dock/Marketplace.gd" type="Script" id=1]
+[ext_resource path="res://source/graphics/MarketPlaceItem.tscn" type="PackedScene" id=2]
 
 [node name="Marketplace" type="Control"]
 anchor_right = 1.0
@@ -21,10 +22,88 @@ grow_vertical = 0
 text = "Leave"
 
 [node name="ItemGrid" type="GridContainer" parent="."]
+editor/display_folded = true
 anchor_right = 1.0
 anchor_bottom = 1.0
 margin_right = -250.0
 custom_constants/vseparation = 150
 custom_constants/hseparation = 210
 columns = 4
+
+[node name="MarketPlaceItem" parent="ItemGrid" instance=ExtResource( 2 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+
+[node name="MarketPlaceItem2" parent="ItemGrid" instance=ExtResource( 2 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 210.0
+margin_right = 210.0
+
+[node name="MarketPlaceItem3" parent="ItemGrid" instance=ExtResource( 2 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 420.0
+margin_right = 420.0
+
+[node name="MarketPlaceItem4" parent="ItemGrid" instance=ExtResource( 2 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 630.0
+margin_right = 630.0
+
+[node name="Panel" type="Panel" parent="."]
+anchor_left = 0.8
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="Specs" type="TextEdit" parent="Panel"]
+anchor_top = 0.08
+anchor_right = 1.0
+anchor_bottom = 0.8
+margin_left = 10.0
+margin_right = -10.0
+readonly = true
+
+[node name="Label" type="Label" parent="Panel"]
+anchor_right = 1.0
+margin_left = 10.0
+margin_top = 10.0
+margin_right = -10.0
+margin_bottom = 14.0
+text = "Marketplace"
+align = 1
+
+[node name="Player Credits" type="Label" parent="Panel"]
+anchor_top = 0.85
+anchor_right = 1.0
+anchor_bottom = 0.85
+margin_left = 20.0
+margin_right = -20.0
+grow_horizontal = 0
+grow_vertical = 0
+text = "Credits: XXX"
+
+[node name="Buy" type="Button" parent="Panel"]
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = -120.0
+margin_top = -50.0
+margin_right = -20.0
+margin_bottom = -20.0
+grow_horizontal = 0
+grow_vertical = 0
+text = "Buy"
+
+[node name="Sell" type="Button" parent="Panel"]
+anchor_top = 1.0
+anchor_bottom = 1.0
+margin_left = 20.0
+margin_top = -50.0
+margin_right = 120.0
+margin_bottom = -20.0
+grow_vertical = 0
+text = "Sell"
 

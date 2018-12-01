@@ -22,12 +22,10 @@ func get(s):
 	return stats.statsCache[s]
 
 func _parse_component(compInfo):
-	var cdata = Core.dataMgr.get('ship_components/' + compInfo['ID'])
-	if !cdata:
-		return
-	var comp = Component.new(cdata)
+	var comp = Component.new('ship_components/' + compInfo['ID'])
 	self.add_child(comp)
-	
+
+	var cdata = Core.dataMgr.get('ship_components/' + compInfo['ID'])	
 	if 'weapons' in cdata:
 		_create_weapons(comp, cdata);	
 
@@ -35,7 +33,7 @@ func _compute_stats():
 	# Fetch stat item from ship & components
 	var cit = []
 	for c in get_children():
-		for s in c.data.stats:
+		for s in Core.dataMgr.get(c.ID).stats:
 			cit.push_back(s)
 	stats = StatsHelper.new(shipData['stats'] + cit)
 
