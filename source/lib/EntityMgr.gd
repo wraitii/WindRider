@@ -31,7 +31,10 @@ func get(s):
 		return null
 	return data[s]
 
-# virtual
+# virtual from now on
+func serialize():
+	pass
+
 # supposed to return the object being created
 func create(data):
 	pass

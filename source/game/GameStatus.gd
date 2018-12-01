@@ -48,6 +48,8 @@ func save_game():
 	for ship in ships:
 		file.store_var(ship.serialize())
 
+	Core.systemsMgr.serialize();
+
 	return true;
 
 func load_save(root):
