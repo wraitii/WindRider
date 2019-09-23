@@ -41,7 +41,8 @@ Hyperjumps add to the problem, because if you can just do it anywhere, you have 
 The thing is, you don't just need chokepoints. You also need to let the player go to very remote areas of space on his own, if you want the "discovery" aspect of the game to work. That's one thing Escape Velocity Nova did really really well: it had quite a few remote, empty systems. And a lot of them had one random planet there, that you could land on, and get the description of a barren, icy, beautiful planet. And it felt special. It felt like discovering something.
 You can't really do that with X3's system.
 
-So, 3D? Well, not. This game will be 2D, much like Nova, except with 3D graphics and a few goodies thrown in.
+[Initial story:] So, 3D? Well, not. This game will be 2D, much like Nova, except with 3D graphics and a few goodies thrown in.
+[Revised story:] After watching some Rebel Galaxy 2 footage, and running into issues with 2D (mostly >> you would constantly collide with other ships), I feel like 3D is doable. It needs some careful gameplay design, but with clever time boosting, it should be fun enough. NAEV has big empty spaces and remained fun.
 
 
 There is a third big design issue that crops up in a lot of games and where I personally believe most games make the wrong decisions. It is the topic of simulation, or rather, simulating stuff. This can be a bit nebulous (ha), so I'll take an example to illustrate. Sim City 4 vs Cities Skylines. The first can have much much bigger cities than the second. There is a simple reason why: Sim City isn't actually simulating the people that live in the city, it's simulating the effects of having people live in a city. That allows it to handle a lot more data than Cities Skylines, where any car you see is actually one of the guys living in your city.
