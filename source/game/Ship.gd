@@ -3,6 +3,8 @@ extends RigidBody
 # intended for the human player only
 signal add_chat_message(message)
 
+signal ship_death(ship)
+
 const NavSystem = preload('res://source/game/NavSystem.gd')
 const Docking = preload('res://source/game/comms/Docking.gd')
 const JumpZone = preload('res://source/game/JumpZone.gd')
@@ -37,7 +39,8 @@ func stat(stat):
 	return shipStats.get(stat)
 
 func _init():
-	set_angular_damp(1.0);
+	set_linear_damp(0.3);
+	set_angular_damp(0.98);
 	add_to_group('Ships', true)
 	pass
 
@@ -112,52 +115,49 @@ func _physics_process(delta):
 ##############################
 ## Physics
 
-func _integrate_forces(state):
-	var ms = shipStats.get('max_speed')
-	
-	if state.linear_velocity.length_squared() >= ms*ms*0.8*0.8:
-		var dec = state.linear_velocity.length_squared() - ms*ms*0.8*0.8;
-		dec /= ms*ms*0.2*0.2
-		dec *= 0.0005;
-		state.linear_velocity *= (1.0 - dec);
+#func _integrate_forces(state):
+#	var ms = shipStats.get('max_speed')
+#	
+#	if state.linear_velocity.length_squared() >= ms*ms*0.8*0.8:
+#		var dec = state.linear_velocity.length_squared() - ms*ms*0.8*0.8;
+#		dec /= ms*ms*0.2*0.2
+#		dec *= 0.0005;
+#		state.linear_velocity *= (1.0 - dec);
+#
+#	if state.linear_velocity.length_squared() >= ms*ms:
+#		state.linear_velocity = state.linear_velocity.normalized() * ms;
 
-	if state.linear_velocity.length_squared() >= ms*ms:
-		state.linear_velocity = state.linear_velocity.normalized() * ms;
-	
-	## Kestrel regulator AKA 'keeping you at y=0'
-	
-	if abs(translation.y) >= 0.1:
-		#var framesToZero = translation.y / (state.linear_velocity.y / state.get_step())
-		var kestrelVel = state.linear_velocity
-		kestrelVel.y = -translation.y / state.get_step() / 5.0;
-		state.linear_velocity = kestrelVel
-	
-	var up_dir = Vector3(0, 1, 0)
-	var cur_dir = state.transform.basis.xform(Vector3(0, 0, -1))
-	var target_dir = state.transform.origin + -up_dir * cur_dir.dot(up_dir) + cur_dir;
-	var rotation_angle = acos(cur_dir.y) - acos(target_dir.y)
-	var right_dir = cur_dir.cross(up_dir);
-	if abs(cur_dir.y) >= 0.001:
-		state.add_torque(rotation_angle*100.0*right_dir*mass);
-	#state.set_angular_velocity(up_dir * (rotation_angle / state.get_step()))
+func _rel_vec(vec, power):
+	var transform = get_transform()
+	var pushDir = transform.xform(vec) - translation
+	return pushDir * power
 
 func thrust(delta):
-	var transform = get_transform()
-	var pushDir = transform.xform(Vector3(0,0,-1)) - translation
+	add_central_force(_rel_vec(Vector3(0,0,-1), shipStats.get('acceleration')))
 
-	add_central_force(pushDir * shipStats.get('acceleration'))
+func rotate_up(delta):
+	add_torque(_rel_vec(Vector3( 1,0,0), shipStats.get('turn_rate') * 0.3))
+
+func rotate_down(delta):
+	add_torque(_rel_vec(Vector3(-1,0,0), shipStats.get('turn_rate') * 0.3))
 
 func rotate_left(delta):
-	add_torque(Vector3(0,shipStats.get('turn_rate')*10,0))
+	add_torque(_rel_vec(Vector3(0, 1,0), shipStats.get('turn_rate') * 0.3))
 
 func rotate_right(delta):
-	add_torque(Vector3(0,-shipStats.get('turn_rate')*10,0))
+	add_torque(_rel_vec(Vector3(0,-1,0), shipStats.get('turn_rate') * 0.3))
+
+func roll_left(delta):
+	add_torque(_rel_vec(Vector3(0,0, 1), shipStats.get('turn_rate') * 0.3))
+
+func roll_right(delta):
+	add_torque(_rel_vec(Vector3(0,0,-1), shipStats.get('turn_rate') * 0.3))
 
 func rotate_left_small(delta):
-	add_torque(Vector3(0,shipStats.get('turn_rate')*2,0))
+	add_torque(_rel_vec(Vector3(0, 1,0), shipStats.get('turn_rate') * 2))
 
 func rotate_right_small(delta):
-	add_torque(Vector3(0,-shipStats.get('turn_rate')*2,0))
+	add_torque(_rel_vec(Vector3(0,-1,0), shipStats.get('turn_rate') * 2))
 
 func aim_towards_target(delta):
 	var target = targetingSystem.get_active_target();
@@ -227,6 +227,7 @@ func set_armour(a):
 	if armour < 0:
 		armour = 0;
 	if armour == 0:
+		emit_signal('ship_death', self)
 		NodeHelpers.queue_delete(self);
 
 func get_armour(): return armour;
@@ -285,6 +286,7 @@ class DockingData:
 func _jump_out():
 	navSystem.targetNode = null;
 	if ID == Core.gameState.playerShipID:
+		#TODO: Core.outsideWorldSim.scene_about_to_unload()
 		Core.unload_scene();
 	lastSystem = currentSystem
 	currentSystem = null
@@ -305,8 +307,8 @@ func _teleport(to, pos):
 func _do_dock(to):
 	dockingProcedure = null;
 	if ID == Core.gameState.playerShipID:
+		Core.outsideWorldSim.system_about_to_unload()
 		Core.unload_scene();
-
 	docking = null
 	dockedAt = to;
 	emit_signal('docked', ID, dockedAt)
@@ -369,7 +371,7 @@ func try_dock():
 		return
 
 	if dockingProcedure != null:
-		dockingProcedure.try_docking()
+		dockingProcedure.ask_for_docking()
 		return
 
 	dockingProcedure = Docking.new(self, navSystem.targetNode)

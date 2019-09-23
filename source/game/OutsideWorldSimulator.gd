@@ -9,6 +9,8 @@ extends Node
 ## whose job is to make the player think we are actually
 ## playing those outside systems.
 
+const Ship = preload('Ship.gd')
+
 ## This is also essentially the galaxy-wide ship manager
 ## because of that.
 
@@ -17,7 +19,7 @@ var _ships = {
 
 #### Optimizations
 
-# array-per-landable of ships navigating in system
+# array-per-landable of ships navigating in a system (not docked)
 var _shipIDsInSystem = {
 }
 
@@ -30,8 +32,8 @@ signal bring_ship_in(ID)
 func get_ships_to_save():
 	var ret = []
 	for ship in _ships.values():
-		if ship == Core.gameState.playerShip:
-			ret.push_back(ship);
+		#if ship == Core.gameState.playerShip:
+		ret.push_back(ship);
 	return ret;
 
 func deserialize_ship(ship):
@@ -43,12 +45,13 @@ func deserialize_ship(ship):
 	ship.connect('undocked', self, 'ship_undocked')
 	ship.connect('jumped', self, 'ship_jumped')
 	ship.connect('unjumped', self, 'ship_unjumped')
+	ship.connect('ship_death', self, 'ship_death')
 	
 	if (ship.dockedAt):
 		if !(ship.dockedAt in _shipIDsDockedAt):
 			_shipIDsDockedAt[ship.dockedAt] = []
 		_shipIDsDockedAt[ship.dockedAt].push_back(ship.ID)
-	if (ship.currentSystem):
+	elif (ship.currentSystem):
 		if !(ship.currentSystem in _shipIDsInSystem):
 			_shipIDsInSystem[ship.currentSystem] = []
 		_shipIDsInSystem[ship.currentSystem].push_back(ship.ID)
@@ -68,11 +71,23 @@ func assign_id(ship):
 	ship.connect('undocked', self, 'ship_undocked')
 	ship.connect('jumped', self, 'ship_jumped')
 	ship.connect('unjumped', self, 'ship_unjumped')
+	ship.connect('ship_death', self, 'ship_death')
 
 func _ship_appears(shipID):
+	var system = ship(shipID).currentSystem
+	
+	if !(system in _shipIDsInSystem):
+		_shipIDsInSystem[system] = []
+	_shipIDsInSystem[system].push_back(shipID)
+
 	if Core.gameState.playerShipID == shipID:
 		Core.load_scene()
-	emit_signal("bring_ship_in", shipID)
+		# Bring in all ships navigating in this system
+		for shipID in _shipIDsInSystem[system]:
+			emit_signal("bring_ship_in", shipID)
+
+	elif Core.gameState.playerShip.currentSystem == system:
+		emit_signal("bring_ship_in", shipID)
 
 func ship_docked(shipID, at):
 	assert(shipID in _ships)
@@ -80,6 +95,10 @@ func ship_docked(shipID, at):
 	if !(at in _shipIDsDockedAt):
 		_shipIDsDockedAt[at] = []
 	_shipIDsDockedAt[at].push_back(shipID)
+
+	if Core.landablesMgr.get(at).system.ID in _shipIDsInSystem:
+		if shipID in _shipIDsInSystem[Core.landablesMgr.get(at).system.ID]:
+			_shipIDsInSystem[Core.landablesMgr.get(at).system.ID].erase(shipID)
 
 	if Core.gameState.playerShipID == shipID:
 		Core.load_scene()
@@ -113,9 +132,30 @@ func ship_undocked(shipID, at):
 
 func ship_unjumped(shipID, into):
 	assert(shipID in _ships)
-	
-	if !(into in _shipIDsInSystem):
-		_shipIDsInSystem[into] = []
-	_shipIDsInSystem[into].push_back(shipID)
-
 	_ship_appears(shipID)
+
+func ship_death(ship):
+	print(ship)
+	if ship.dockedAt != null:
+		_shipIDsDockedAt[ship.dockedAt].erase(ship.ID)
+	else:
+		_shipIDsInSystem[ship.currentSystem].erase(ship.ID)
+	_ships.erase(ship.ID)
+
+# All ships in the current system would be lost when it unloads,
+# so we need to save those we care about.
+func system_about_to_unload():
+	for ship in Core.gameState.currentScene.get_children():
+		if !(ship is Ship):
+			continue
+		ship.get_parent().remove_child(ship)
+		# TODO: could be worth deleting those we don't care about
+
+func advance(delta):
+	var sys = Core.gameState.playerShip.currentSystem
+	if Core.gameState.playerShip.dockedAt != null:
+		return
+	for ship in _shipIDsInSystem[sys]:
+		if ship == Core.gameState.playerShip.ID:
+			continue
+		# TODO : Ship AI

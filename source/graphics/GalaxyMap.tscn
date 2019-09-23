@@ -3,17 +3,14 @@
 [ext_resource path="res://source/graphics/GalaxyMap.gd" type="Script" id=1]
 
 [sub_resource type="Environment" id=1]
-
 background_mode = 1
 
 [sub_resource type="SpatialMaterial" id=2]
-
 flags_transparent = true
 flags_unshaded = true
 albedo_color = Color( 1, 0, 0, 0.352941 )
 
 [sub_resource type="SpatialMaterial" id=3]
-
 flags_transparent = true
 flags_unshaded = true
 albedo_color = Color( 0, 0.0156863, 1, 0.352941 )
@@ -45,4 +42,3 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 7.5 )
 height = 0.1
 depth = 15.0
 material = SubResource( 3 )
-

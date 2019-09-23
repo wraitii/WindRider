@@ -18,9 +18,9 @@ var focusedItem = null;
 var products = {}
 
 func setup_listeners():
-	get_node('Close').connect('pressed', self, 'on_close');
-	get_node('Buy').connect('pressed', self, 'on_buy');
-	get_node('Sell').connect('pressed', self, 'on_sell');
+	get_node('Panel/Close').connect('pressed', self, 'on_close');
+	get_node('Panel/Buy').connect('pressed', self, 'on_buy');
+	get_node('Panel/Sell').connect('pressed', self, 'on_sell');
 
 func init(d):
 	ownerDock = d;
@@ -49,7 +49,19 @@ func on_item_pressed(item):
 		get_node('Panel/Specs').text = JSON.print(Core.dataMgr.get(item.key), "\t")
 
 func on_buy():
-	pass
+	var player = Core.gameState.player
+	if !('buy_price' in focusedItem):
+		return;
+	if player.credits >= focusedItem['buy_price']:
+		player.credits -= focusedItem['buy_price']
 
 func on_sell():
-	pass
+	var player = Core.gameState.player
+	
+	if !('sell_price' in focusedItem) and !('buy_price' in focusedItem):
+		return;
+
+	if 'sell_price' in focusedItem:
+		player.credits += focusedItem['sell_price']
+	else:
+		player.credits += floor(focusedItem['buy_price'] / 2)

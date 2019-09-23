@@ -32,6 +32,5 @@ margin_top = -50.0
 margin_right = 200.0
 margin_bottom = 50.0
 text = "Resume Game"
-
 [connection signal="pressed" from="Buttons/NewGame" to="." method="_on_NewGame_pressed"]
 [connection signal="pressed" from="Buttons/ResumeGame" to="." method="_on_ResumeGame_pressed"]

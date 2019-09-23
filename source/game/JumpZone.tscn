@@ -1,73 +1,76 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://source/game/JumpZone.gd" type="Script" id=1]
 
 [sub_resource type="CylinderShape" id=1]
+radius = 1.5
+height = 5.0
 
-margin = 0.04
-radius = 1.0
-height = 2.0
+[sub_resource type="ViewportTexture" id=2]
+flags = 4
+viewport_path = NodePath("Viewport")
+
+[sub_resource type="SpatialMaterial" id=3]
+resource_local_to_scene = true
+flags_transparent = true
+params_cull_mode = 2
+params_depth_draw_mode = 1
+albedo_texture = SubResource( 2 )
+emission_enabled = true
+emission = Color( 0, 0, 0, 1 )
+emission_energy = 1.0
+emission_operator = 0
+emission_on_uv2 = false
+emission_texture = SubResource( 2 )
+
+[sub_resource type="PlaneMesh" id=4]
+resource_local_to_scene = true
+material = SubResource( 3 )
 
 [node name="JumpZone" type="Area"]
 input_ray_pickable = false
-input_capture_on_drag = false
-space_override = 0
-gravity_point = false
-gravity_distance_scale = 0.0
-gravity_vec = Vector3( 0, -1, 0 )
-gravity = 9.8
-linear_damp = 0.1
-angular_damp = 1.0
-priority = 0.0
-monitoring = true
-monitorable = true
-collision_layer = 1
-collision_mask = 1
-audio_bus_override = false
-audio_bus_name = "Master"
-reverb_bus_enable = false
-reverb_bus_name = "Master"
-reverb_bus_amount = 0.0
-reverb_bus_uniformity = 0.0
 script = ExtResource( 1 )
 
 [node name="CSGBox" type="CSGBox" parent="."]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -10, 0, -25 )
 layers = 524289
-operation = 0
-use_collision = false
-snap = 0.001
-invert_faces = false
 width = 1.0
 height = 1.0
 depth = 50.0
-material = null
 
 [node name="CSGBox2" type="CSGBox" parent="."]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 10, 0, -25 )
-layers = 1
-operation = 0
-use_collision = false
-snap = 0.001
-invert_faces = false
 width = 1.0
 height = 1.0
 depth = 50.0
-material = null
 
 [node name="CSGBox3" type="CSGBox" parent="."]
-layers = 1
-operation = 0
-use_collision = false
-snap = 0.001
-invert_faces = false
-width = 2.0
-height = 2.0
-depth = 2.0
-material = null
 
 [node name="CollisionShape" type="CollisionShape" parent="."]
-transform = Transform( 8, 0, 0, 0, -3.49691e-07, 8, 0, -8, -3.49691e-07, 0, 0, -1 )
+transform = Transform( 8, 0, 0, 0, -3.49691e-07, 8, 0, -8, -3.49691e-07, 0, 0, -19.0151 )
 shape = SubResource( 1 )
-disabled = false
 
+[node name="Name" type="CSGMesh" parent="."]
+transform = Transform( 20, 0, 0, 0, 1, 0, 0, 0, -10, 0, 0, 4.87348 )
+mesh = SubResource( 4 )
+
+[node name="Viewport" type="Viewport" parent="."]
+size = Vector2( 128, 32 )
+transparent_bg = true
+handle_input_locally = false
+hdr = false
+render_target_update_mode = 3
+gui_disable_input = true
+gui_snap_controls_to_pixels = false
+
+[node name="Jump Name" type="Label" parent="Viewport"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+size_flags_stretch_ratio = 5.0
+text = "TAU CETI"
+align = 1
+valign = 1
+autowrap = true
+uppercase = true

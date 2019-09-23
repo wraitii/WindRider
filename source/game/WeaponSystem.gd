@@ -44,13 +44,16 @@ func _fire_projectile():
 	if ownerShip.energy < weaponData['firing_energy']:
 		return;
 	ownerShip.energy -= weaponData['firing_energy'];
-
+	
+	get_node('WeaponSound').set_stream(preload('res://data/sounds/blaster_crappy_1.wav'));
+	get_node('WeaponSound').play();
+	
 	var data = Core.dataMgr.get('projectiles/' + weaponData.kind)
 	
 	var proj = Projectile.instance()
 	proj.init(data)
 	
 	var angle = ownerShip.transform.basis.xform(Vector3(0,0,-1))
-	proj.apply_central_impulse(ownerShip.linear_velocity + angle * 150);
+	proj.apply_central_impulse(ownerShip.linear_velocity + angle * 200);
 	proj.translation = ownerShip.translation + angle*4
 	Core.gameState.currentScene.add_child(proj)

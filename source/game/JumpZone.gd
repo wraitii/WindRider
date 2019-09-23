@@ -31,6 +31,7 @@ func init_graphics():
 	# pretend systems are XY, not XZ aligned
 	# so that in general jump zones point UP
 	rotate_object_local(Vector3(1,0,0),PI/2.0)
+	get_node('Viewport/Jump Name').set_text(jumpTo);
 
 func deliver(obj):
 	var target = -direction

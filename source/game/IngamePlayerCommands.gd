@@ -26,25 +26,39 @@ func _process(delta):
 		ship.try_dock()
 
 
-func moveCommandProcess():
+func _moveCommandProcess():
 	var commands = []
 
-	if Input.is_action_pressed("ship_thrust"):
-		commands.push_back('thrust')
-
-	# commands related to rotation: not independent.
-	if Input.is_action_pressed("ship_aim_towards_target"):
-		commands.push_back('aim_towards_target')
-	elif Input.is_action_pressed('ship_reverse'):
-		commands.push_back('reverse')
-	elif Input.is_action_pressed('ship_rotate_left_small'):
-		commands.push_back('rotate_left_small')
-	elif Input.is_action_pressed('ship_rotate_right_small'):
-		commands.push_back('rotate_right_small')
+	if Input.is_action_pressed('ship_rotate_roll_left'):
+		commands.push_back('roll_left')
+	elif Input.is_action_pressed('ship_rotate_roll_right'):
+		commands.push_back('roll_right')
 	elif Input.is_action_pressed('ship_rotate_left'):
 		commands.push_back('rotate_left')
 	elif Input.is_action_pressed('ship_rotate_right'):
 		commands.push_back('rotate_right')
+
+	if Input.is_action_pressed('ship_rotate_up'):
+		commands.push_back('rotate_up')
+	elif Input.is_action_pressed('ship_rotate_down'):
+		commands.push_back('rotate_down')
+
+	if len(commands) > 0:
+		return commands
+
+	if Input.is_action_pressed("ship_thrust"):
+		commands.push_back('thrust')
+
+	if Input.is_action_pressed("ship_aim_towards_target"):
+		commands.push_back('aim_towards_target')
+	elif Input.is_action_pressed('ship_reverse'):
+		commands.push_back('reverse')
+
+	return commands
+
+func moveCommandProcess():
+	var commands = _moveCommandProcess()
+
 	var ret = []
 	for c in commands:
 		ret.push_back([Core.gameState.playerShip, c])

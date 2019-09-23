@@ -1,7 +1,6 @@
 [gd_scene load_steps=3 format=2]
 
 [sub_resource type="SpatialMaterial" id=1]
-
 emission_enabled = true
 emission = Color( 1, 1, 1, 1 )
 emission_energy = 1.0
@@ -9,14 +8,12 @@ emission_operator = 0
 emission_on_uv2 = false
 
 [sub_resource type="SphereShape" id=2]
-
 radius = 3.0
 
-[node name="GMSystem" type="StaticBody"]
+[node name="GMSystem" type="Area"]
 
 [node name="System" type="CSGSphere" parent="."]
 material = SubResource( 1 )
 
 [node name="CollisionShape" type="CollisionShape" parent="."]
 shape = SubResource( 2 )
-

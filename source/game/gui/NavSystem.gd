@@ -15,8 +15,16 @@ func _process(delta):
 	if !system.get_ref():
 		get_node('Targeting').text = 'Nav systems offline';
 		return
+	
 	if !system.get_ref().targetNode:
 		get_node('Targeting').text = 'No nav target';
 		return
-	get_node('Targeting').text = 'Targeting: ' + system.get_ref().targetNode.ID;
+	
+	var target = system.get_ref().targetNode;
+	var targetName = "";
+	if target.get('ID'):
+		targetName = target.ID;
+	else:
+		targetName = target.jumpTo;
+	get_node('Targeting').text = 'Targeting: ' + targetName;
 

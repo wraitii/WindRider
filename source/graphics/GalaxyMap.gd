@@ -3,6 +3,8 @@ extends Spatial
 const System = preload('GMSystem.tscn')
 const HyperLink = preload('GMjump.tscn')
 
+const JumpZone = preload('../game/JumpZone.gd')
+
 ### Galaxy Map
 ## This file is responsible for graphics of the galaxy map
 
@@ -25,8 +27,12 @@ func init():
 		for child in get_children():
 			remove_child(child);
 
+	Core.societyMgr.populate()
+	Core.landablesMgr.populate()
+	Core.systemsMgr.populate()
+
 	var systems = Core.systemsMgr.get_systems()
-	
+
 	get_node('../Camera').current = true
 	
 	for name in systems.keys():
@@ -34,9 +40,10 @@ func init():
 		var system = System.instance()
 		system.translation = A2V._3(data.position);
 		add_child(system)
-		if 'jump_zones' in data:
-			for jz in data['jump_zones']:
-				var target = Core.systemsMgr.get(jz['name'])
+		system.connect('input_event', self, '_on_input_event', [data])
+		for jz in data.get_children():
+			if jz is JumpZone:
+				var target = Core.systemsMgr.get(jz.jumpTo)
 				var dir = A2V._3(target.position) - system.translation;
 				var hl = HyperLink.instance()
 				print(dir);
@@ -52,17 +59,10 @@ func init():
 		sys[system] = label
 		add_child(label[0])
 
-func _physics_process(delta):
-	if Input.is_action_just_released('galaxy_map_click'):
-		var mouse_pos = get_viewport().get_mouse_position()
-		var ray_from = get_node('../Camera').project_ray_origin(mouse_pos)
-		var ray_to = ray_from + get_node('../Camera').project_ray_normal(mouse_pos) * 1000
-		var space_state = get_world().direct_space_state
-		var selection = space_state.intersect_ray(ray_from, ray_to)
+func _on_input_event(a, input_event, c, d, e, system):
+	if input_event.is_action_released('click_main'):
+		emit_signal('system_selected', system)
 
-		if 'collider' in selection:
-			emit_signal('system_selected', sys[selection.collider][1])
-	
 #func _process(delta):
 #	for lab in labels:
 #		var pos = get_node('../Camera').unproject_position(lab[1].transform.origin)

@@ -5,3 +5,6 @@
 [node name="WeaponSystem" type="Spatial"]
 script = ExtResource( 1 )
 
+[node name="WeaponSound" type="AudioStreamPlayer3D" parent="."]
+unit_db = 20.0
+unit_size = 3.0

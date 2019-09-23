@@ -9,4 +9,3 @@ scroll_horizontal_enabled = false
 script = ExtResource( 1 )
 
 [node name="chats" type="VBoxContainer" parent="."]
-

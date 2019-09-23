@@ -14,7 +14,7 @@ func on_resize():
 func on_system_selected(system):
 	currentSystem = system;
 	get_node('GUI/SystemName').text = system.ID
-	get_node('GUI/Code').text = IO.read_whole_file(system.raw_path)
+	get_node('GUI/Code').text = IO.read_whole_file(Core.systemsMgr.get_data_path(system.ID))
 	pass;
 
 func _on_Validate_pressed():
@@ -22,13 +22,13 @@ func _on_Validate_pressed():
 	if code.error != OK:
 		get_node('GUI/Save').disabled = true;
 		return;
-	if !Core.systemsMgr._core_validation(code.result, "", currentSystem.ID):
+	if !Core.systemsMgr.validation(Core.systemsMgr.get(currentSystem.ID), Core.systemsMgr.get_data_path(currentSystem.ID)):
 		get_node('GUI/Save').disabled = true;
 		return;
 	get_node('GUI/Save').disabled = false;
 
 func _on_Save_pressed():
-	if !('raw_path' in currentSystem):
+	if !Core.systemsMgr.has(currentSystem.ID):
 		get_node('FileDialog').current_dir = "res://data/systems/"
 		get_node('FileDialog').popup();
 		yield(get_node('FileDialog'), 'confirmed');
@@ -38,9 +38,9 @@ func _on_Save_pressed():
 		get_node('GUI/Save').disabled = true;
 		on_system_selected(Core.systemsMgr.get(JSON.parse(get_node('GUI/Code').text).result.ID));
 		return
-	IO.save_text_to_file(currentSystem.raw_path, str(get_node('GUI/Code').text))
-	Core.systemsMgr._unload(currentSystem.ID)
-	Core.systemsMgr._load(currentSystem.raw_path)
+	var path = Core.systemsMgr.get_data_path(currentSystem.ID)
+	IO.save_text_to_file(path, str(get_node('GUI/Code').text))
+	Core.systemsMgr._load(path)
 	get_node('GalaxyView/GalaxyViewport/GalaxyMap/MapScript').init()
 	get_node('GUI/Save').disabled = true;
 	on_system_selected(Core.systemsMgr.get(JSON.parse(get_node('GUI/Code').text).result.ID));
@@ -56,5 +56,5 @@ func _on_New_pressed():
 	currentSystem = { "ID": null }
 
 func _on_Reload_pressed():
-	Core.systemsMgr._reload();
+#	Core.systemsMgr.populate();
 	get_node('GalaxyView/GalaxyViewport/GalaxyMap/MapScript').init()

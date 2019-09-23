@@ -35,7 +35,7 @@ func _process(delta):
 			radar[l.name] = _create_pixel(5, Color(1,1,0))
 			get_node('center').add_child(radar[l.name])
 		var p = (l.translation - playerShip.translation)
-		radar[l.name].position = Vector2(p.x, p.z) * 0.5
+		radar[l.name].position = Vector2(p.x, p.z) * 0.005
 
 	items = get_tree().get_nodes_in_group('JumpZones')
 	for l in items:
@@ -43,7 +43,7 @@ func _process(delta):
 			radar[l.name] = _create_pixel(5, Color(1,0,1))
 			get_node('center').add_child(radar[l.name])
 		var p = (l.translation - playerShip.translation)
-		radar[l.name].position = Vector2(p.x, p.z) * 0.5
+		radar[l.name].position = Vector2(p.x, p.z) * 0.005
 
 	items = get_tree().get_nodes_in_group('Ships')
 	for l in items:
@@ -51,4 +51,4 @@ func _process(delta):
 			radar[l.name] = _create_pixel(2, Color(0,1,1))
 			get_node('center').add_child(radar[l.name])
 		var p = (l.translation - playerShip.translation)
-		radar[l.name].position = Vector2(p.x, p.z) * 0.5
+		radar[l.name].position = Vector2(p.x, p.z) * 0.005

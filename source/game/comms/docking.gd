@@ -7,9 +7,6 @@ enum {
 	ASK_DOCKING,
 	DOCKING_OK,
 	DOCKING_REFUSED,
-	DOCKING_TRY,
-	DOCKING_TOO_FAR,
-	DOCKING_TOO_FAST,
 	DOCKING_NOW
 }
 
@@ -33,6 +30,7 @@ func ask_for_docking():
 func allow_docking():
 	_send_to_sender(Chat.new("You may land", DockingChat.new(DOCKING_OK)))
 	docking_status = DOCKING_OK
+	receiver.graphics.connect('body_entered', self, '_on_body_entered')
 	return true
 
 func refuse_docking():
@@ -40,14 +38,15 @@ func refuse_docking():
 	docking_status = DOCKING_REFUSED
 	return true;
 
-func try_docking():
-	_send_to_receiver(Chat.new("Now docking", DockingChat.new(DOCKING_TRY)))
-	return true;
-
-func too_far_away():
-	_send_to_sender(Chat.new("You are too far away to dock", DockingChat.new(DOCKING_TOO_FAR)))
+func still_ok():
+	_send_to_sender(Chat.new("Cleared for docking, approach through docking tunnel.", DockingChat.new(DOCKING_OK)))
 	return true;
 
 func dock():
 	_send_to_sender(Chat.new("…Docking…", DockingChat.new(DOCKING_NOW)))
 	return true;
+
+func _on_body_entered(body):
+	if body == sender:
+		receiver.graphics.disconnect('body_entered', self, '_on_body_entered')
+		call_deferred("dock")

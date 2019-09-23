@@ -17,12 +17,14 @@ func init(systemData):
 	pass
 
 func _enter_tree():
-	sky = Sky.instance()
-	add_child(sky)
+	pass
+	#sky = Sky.instance()
+	#add_child(sky)
 
 func _exit_tree():
-	remove_child(sky);
-	sky = null;
+	pass
+	#remove_child(sky);
+	#sky = null;
 
 func _parse_stars(sysData):
 	if !("stars" in sysData):
@@ -39,8 +41,10 @@ func _parse_landables(sysData):
 	if !("landables" in sysData):
 		return
 
-	for landable in sysData['landables']:
-		self.add_child(Core.landablesMgr.get(landable))
+	for landableID in sysData['landables']:
+		var landable = Core.landablesMgr.get(landableID)
+		self.add_child(landable)
+		landable.system = self;
 
 func _parse_jump_zones(sysData):
 	if !("jump_zones" in sysData):

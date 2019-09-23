@@ -8,9 +8,8 @@
 
 [sub_resource type="SphereShape" id=1]
 
-
 [node name="Ship" type="RigidBody"]
-angular_damp = 1.0
+can_sleep = false
 script = ExtResource( 1 )
 
 [node name="ShipGraphics" parent="." instance=ExtResource( 2 )]
@@ -25,8 +24,7 @@ script = ExtResource( 3 )
 [node name="ShipStats" type="Node" parent="."]
 script = ExtResource( 4 )
 
-[node name="WeaponsSystem" type="Node" parent="."]
-
 [node name="TargetingSystem" type="Node" parent="."]
 script = ExtResource( 5 )
 
+[node name="WeaponsSystem" type="Spatial" parent="."]

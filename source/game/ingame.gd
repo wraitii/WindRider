@@ -16,6 +16,7 @@ func _exit_tree():
 func _loaded_player_ship():
 	get_node('Camera').followedShip = Core.gameState.playerShip
 
+# Deals with popping ships in the player system
 func bring_ship_in(shipID):
 	var ship = Core.outsideWorldSim.ship(shipID)
 	if ship.docking != null:
@@ -42,7 +43,12 @@ func bring_ship_in(shipID):
 					ship.hyperNavigating.data.position.x,
 					0,
 					ship.hyperNavigating.data.position.y
-			)
+				)
+	# Assume the ship has correct data.
+	else:
+		print('adding ship ' + str(ship.ID))
+		print(ship.translation)
+		self.add_child(ship)
 	if shipID == Core.gameState.playerShipID:
 		_loaded_player_ship()
 
@@ -51,4 +57,5 @@ func _process(delta):
 
 func _physics_process(delta):
 	Core.gameState.galacticTime.add_time(delta*60*1000);
+	Core.outsideWorldSim.advance(delta*60*1000);
 	pass
