@@ -5,6 +5,7 @@ const DataMgr = preload('lib/DataMgr.gd')
 
 const SocietyMgr = preload('game/mgr/SocietyMgr.gd')
 const SystemsMgr = preload('game/mgr/SystemsMgr.gd')
+const SectorsMgr = preload('game/mgr/SectorsMgr.gd')
 const LandableMgr = preload('game/mgr/LandableMgr.gd')
 const OutsideWorldSim = preload('game/OutsideWorldSimulator.gd')
 
@@ -23,6 +24,7 @@ var dataMgr = DataMgr.new();
 
 var societyMgr = SocietyMgr.new()
 var systemsMgr = SystemsMgr.new()
+var sectorsMgr = SectorsMgr.new()
 var landablesMgr = LandableMgr.new()
 var outsideWorldSim = OutsideWorldSim.new()
 
@@ -32,6 +34,7 @@ var damageMgr = DamageMgr.new()
 func create_new_game():
 	societyMgr.populate()
 	landablesMgr.populate()
+	sectorsMgr.populate()
 	systemsMgr.populate()
 	
 	## TODO: if I get an outfitMgr or something this should be replaced
@@ -53,16 +56,17 @@ func create_new_game():
 	
 	get_node('/root').add_child(gameState.player)
 
-	gameState.playerShip.teleport('Sol', Vector2(20, 0))
+	gameState.playerShip.teleport('Earth', Vector2(20, 0))
 
 	var otherShip = Ship.instance()
 	otherShip.init('Cycles')
-	otherShip.teleport('Sol', Vector2(0, -50))
+	otherShip.teleport('Earth', Vector2(0, -50))
 	gameState.save_game();
 
 func load_saved_game():
 	societyMgr.populate()
 	landablesMgr.populate()
+	sectorsMgr.populate()
 	systemsMgr.populate()
 	
 	## TODO: if I get an outfitMgr or something this should be replaced

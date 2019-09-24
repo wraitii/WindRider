@@ -1,22 +1,22 @@
 extends Node
 
-export (String) var _system = null;
+export (String) var _sector = null;
 
 func _ready():
-	_system = Core.systemsMgr.get(Core.gameState.playerShip.currentSystem)
-	self.add_child(_system)
+	_sector = Core.sectorsMgr.get(Core.gameState.playerShip.currentSector)
+	self.add_child(_sector)
 	
 	Core.outsideWorldSim.connect('bring_ship_in', self, 'bring_ship_in')
 	pass
 
 func _exit_tree():
-	self.remove_child(_system)
+	self.remove_child(_sector)
 	Core.outsideWorldSim.disconnect('bring_ship_in', self, 'bring_ship_in')
 
 func _loaded_player_ship():
 	get_node('Camera').followedShip = Core.gameState.playerShip
 
-# Deals with popping ships in the player system
+# Deals with popping ships in the player sector
 func bring_ship_in(shipID):
 	var ship = Core.outsideWorldSim.ship(shipID)
 	if ship.docking != null:

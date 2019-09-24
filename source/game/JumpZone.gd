@@ -1,12 +1,12 @@
 extends Spatial
 
-var ownerSystem;
+var ownerSector;
 var jumpTo : String;
 var position : Vector3;
 var direction : Vector3;
 
 func init(o, d):
-	ownerSystem = o
+	ownerSector = o
 	jumpTo = d['jump_to'];
 	position = Vector3(d['position'][0], 0.0, d['position'][1]);
 	# defer direction to graphics to avoid a data race
@@ -19,7 +19,7 @@ func _exit_tree():
 	remove_from_group('JumpZones')
 
 func init_graphics():
-	var jumpSys = Core.systemsMgr.get(jumpTo)
+	var jumpSys = Core.sectorsMgr.get(jumpTo)
 
 	direction = (jumpSys.position - position).normalized()
 	
@@ -28,7 +28,7 @@ func init_graphics():
 		up_dir = Vector3(-1,0,0)
 	
 	look_at_from_position(position, direction, up_dir)
-	# pretend systems are XY, not XZ aligned
+	# pretend sectors are XY, not XZ aligned
 	# so that in general jump zones point UP
 	rotate_object_local(Vector3(1,0,0),PI/2.0)
 	get_node('Viewport/Jump Name').set_text(jumpTo);

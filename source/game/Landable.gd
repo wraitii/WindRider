@@ -8,7 +8,7 @@ var graphics;
 var area;
 var ID;
 var position;
-var system;
+var sector;
 
 ### 0-100
 var societyPresence = {};

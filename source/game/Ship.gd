@@ -23,8 +23,8 @@ var targetingSystem;
 var shipStats;
 
 # Navigation
-var lastSystem = null;
-var currentSystem = null;
+var lastSector = null;
+var currentSector = null;
 var dockedAt = null;
 var hyperNavigating = null;
 var docking = null;
@@ -71,8 +71,8 @@ func serialize():
 	ret.armour = armour
 	ret.energy = energy
 	ret.hyperfuel = hyperfuel
-	ret.lastSystem = lastSystem
-	ret.currentSystem = currentSystem
+	ret.lastSector = lastSector
+	ret.currentSector = currentSector
 	ret.dockedAt = dockedAt
 	ret.hyperNavigating = hyperNavigating
 	ret.docking = docking
@@ -83,8 +83,8 @@ func deserialize(ret):
 	ID = ret.ID
 	data = ret.data
 	
-	lastSystem = ret.lastSystem
-	currentSystem = ret.currentSystem
+	lastSector = ret.lastSector
+	currentSector = ret.currentSector
 	dockedAt = ret.dockedAt
 	hyperNavigating = ret.hyperNavigating
 	docking = ret.docking
@@ -288,17 +288,17 @@ func _jump_out():
 	if ID == Core.gameState.playerShipID:
 		#TODO: Core.outsideWorldSim.scene_about_to_unload()
 		Core.unload_scene();
-	lastSystem = currentSystem
-	currentSystem = null
-	emit_signal('jumped', ID, lastSystem)
+	lastSector = currentSector
+	currentSector = null
+	emit_signal('jumped', ID, lastSector)
 
 func _do_jump(to):
-	assert(to != currentSystem)
-	hyperNavigating = HypernavigationData.hyperjump(to, currentSystem)
+	assert(to != currentSector)
+	hyperNavigating = HypernavigationData.hyperjump(to, currentSector)
 	_jump_out()
 
 func _teleport(to, pos):
-	if to != currentSystem:
+	if to != currentSector:
 		hyperNavigating = HypernavigationData.teleport(to, pos)
 		_jump_out()
 	else:
@@ -307,7 +307,7 @@ func _teleport(to, pos):
 func _do_dock(to):
 	dockingProcedure = null;
 	if ID == Core.gameState.playerShipID:
-		Core.outsideWorldSim.system_about_to_unload()
+		Core.outsideWorldSim.sector_about_to_unload()
 		Core.unload_scene();
 	docking = null
 	dockedAt = to;
@@ -327,7 +327,7 @@ func _do_undock():
 
 func _do_unjump():
 	assert(hyperNavigating != null)
-	currentSystem = hyperNavigating.to
+	currentSector = hyperNavigating.to
 	emit_signal('unjumped', ID, hyperNavigating.to)
 	_unjumping_done()
 

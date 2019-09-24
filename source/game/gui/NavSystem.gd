@@ -10,7 +10,7 @@ func _on_player_ship_change(ship):
 	system = weakref(ship.navSystem);
 
 func _process(delta):
-	get_node('CurrentSystem').text = 'In ' + Core.gameState.playerShip.currentSystem;
+	get_node('CurrentSector').text = 'In ' + Core.gameState.playerShip.currentSector;
 	
 	if !system.get_ref():
 		get_node('Targeting').text = 'Nav systems offline';
