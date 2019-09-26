@@ -55,9 +55,6 @@ func clear_targets():
 func _add_target(shipID):
 	targets[shipID] = TargetingData.new(shipID)
 	var ship = Core.outsideWorldSim.ship(shipID)
-	print(shipID)
-	print(ship)
-	print(self)
 	ship.connect('tree_exiting', self, '_target_gone', [ship])
 	emit_signal('target', shipID)
 

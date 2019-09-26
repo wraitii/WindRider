@@ -6,7 +6,7 @@ func on_pressed():
 	
 var focused : bool setget set_focused, get_focused;
 
-var owned : int = 0;
+var owned : int = 0 setget set_owned, get_owned;
 
 # Key of the item
 var key;
@@ -18,6 +18,13 @@ func set_focused(v):
 func get_focused():
 	return focused
 
+func set_owned(o):
+	owned = o
+	get_node('Panel/Owned').text = str(owned)
+
+func get_owned():
+	return owned;
+
 func init(k):
 	key = k
 	var item = Core.dataMgr.get(k)
@@ -25,15 +32,3 @@ func init(k):
 	
 	if 'name' in item:
 		get_node('Panel/Name').text = item.name
-	
-	_compute_owned()
-
-func _compute_owned():
-	owned = 0;
-	var player = Core.gameState.player;
-	var ship = player.get_current_ship()
-	## This isn't efficient.
-	for comp in ship.shipStats.get_children():
-		if comp.ID == key:
-			owned += 1;
-	get_node('Panel/Owned').text = str(owned);

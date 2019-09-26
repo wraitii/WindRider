@@ -11,7 +11,7 @@ func _physics_process(delta):
 	for command in commands:
 		var ship = command[0]
 		var fun = command[1]
-		ship.call(fun, delta)
+		ship.call(fun)
 	
 	commands = []
 

@@ -54,6 +54,6 @@ func _fire_projectile():
 	proj.init(data)
 	
 	var angle = ownerShip.transform.basis.xform(Vector3(0,0,-1))
-	proj.apply_central_impulse(ownerShip.linear_velocity + angle * 200);
-	proj.translation = ownerShip.translation + angle*4
+	proj.linear_velocity = ownerShip.linear_velocity + angle * weaponData['firing_speed'];
+	proj.translation = ownerShip.translation + angle * 4 + angle * ownerShip.linear_velocity.length() / 10.0
 	Core.gameState.currentScene.add_child(proj)

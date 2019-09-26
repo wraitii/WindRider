@@ -30,7 +30,7 @@ func ask_for_docking():
 func allow_docking():
 	_send_to_sender(Chat.new("You may land", DockingChat.new(DOCKING_OK)))
 	docking_status = DOCKING_OK
-	receiver.graphics.connect('body_entered', self, '_on_body_entered')
+	receiver.connect('trigger_dock', self, '_on_body_entered')
 	return true
 
 func refuse_docking():
@@ -48,5 +48,5 @@ func dock():
 
 func _on_body_entered(body):
 	if body == sender:
-		receiver.graphics.disconnect('body_entered', self, '_on_body_entered')
+		receiver.disconnect('trigger_dock', self, '_on_body_entered')
 		call_deferred("dock")

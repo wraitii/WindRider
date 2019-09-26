@@ -58,9 +58,10 @@ func create_new_game():
 
 	gameState.playerShip.teleport('Earth', Vector2(20, 0))
 
-	var otherShip = Ship.instance()
-	otherShip.init('Cycles')
-	otherShip.teleport('Earth', Vector2(0, -50))
+	for i in range(10):
+		var otherShip = Ship.instance()
+		otherShip.init('Cycles_slow')
+		otherShip.teleport('Earth', Vector2((randf()-0.5)*50, (randf()-0.5)*50))
 	gameState.save_game();
 
 func load_saved_game():

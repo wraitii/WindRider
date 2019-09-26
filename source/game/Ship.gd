@@ -7,7 +7,6 @@ signal ship_death(ship)
 
 const NavSystem = preload('res://source/game/NavSystem.gd')
 const Docking = preload('res://source/game/comms/Docking.gd')
-const JumpZone = preload('res://source/game/JumpZone.gd')
 const Graphics = preload('res://source/graphics/Ship.tscn')
 
 var ID;
@@ -17,6 +16,7 @@ var dockingProcedure = null
 var data;
 
 # subsystems shorthand
+var AI;
 var navSystem;
 var weaponsSystem;
 var targetingSystem;
@@ -39,7 +39,7 @@ func stat(stat):
 	return shipStats.get(stat)
 
 func _init():
-	set_linear_damp(0.3);
+	set_linear_damp(0);
 	set_angular_damp(0.98);
 	add_to_group('Ships', true)
 	pass
@@ -49,7 +49,8 @@ func init(shipType):
 	navSystem = get_node('NavSystem');
 	weaponsSystem = get_node('WeaponsSystem');
 	targetingSystem = get_node('TargetingSystem');
-	shipStats = get_node('ShipStats')
+	shipStats = get_node('ShipStats');
+	AI = get_node('AI');
 	
 	data = Core.dataMgr.get('ships/' + shipType)
 	shipStats.init(data)
@@ -111,6 +112,14 @@ func _physics_process(delta):
 	if energy > stat('max_energy'):
 		energy = stat('max_energy')
 
+func _integrate_forces(state):
+	var speed = state.linear_velocity.length_squared();
+	var dir = state.linear_velocity.normalized();
+	if speed > 0:
+		state.linear_velocity = state.linear_velocity - dir * 0.05;
+	if speed > stat('max_speed') * stat('max_speed'):
+		state.linear_velocity = dir * stat('max_speed')
+
 ##############################
 ##############################
 ## Physics
@@ -132,61 +141,67 @@ func _rel_vec(vec, power):
 	var pushDir = transform.xform(vec) - translation
 	return pushDir * power
 
-func thrust(delta):
-	add_central_force(_rel_vec(Vector3(0,0,-1), shipStats.get('acceleration')))
+func safe_stat(stat, percent):
+	return shipStats.get(stat) * max(0, min(1, percent))
 
-func rotate_up(delta):
-	add_torque(_rel_vec(Vector3( 1,0,0), shipStats.get('turn_rate') * 0.3))
+func thrust(percent = 1.0):
+	add_central_force(_rel_vec(Vector3(0,0,-1), safe_stat('acceleration', percent)))
 
-func rotate_down(delta):
-	add_torque(_rel_vec(Vector3(-1,0,0), shipStats.get('turn_rate') * 0.3))
+func rotate_up(percent = 1.0):
+	add_torque(_rel_vec(Vector3( 1,0,0), safe_stat('turn_rate', percent) * 0.3))
 
-func rotate_left(delta):
-	add_torque(_rel_vec(Vector3(0, 1,0), shipStats.get('turn_rate') * 0.3))
+func rotate_down(percent = 1.0):
+	add_torque(_rel_vec(Vector3(-1,0,0), safe_stat('turn_rate', percent) * 0.3))
 
-func rotate_right(delta):
-	add_torque(_rel_vec(Vector3(0,-1,0), shipStats.get('turn_rate') * 0.3))
+func rotate_left(percent = 1.0):
+	add_torque(_rel_vec(Vector3(0, 1,0), safe_stat('turn_rate', percent) * 0.3))
 
-func roll_left(delta):
-	add_torque(_rel_vec(Vector3(0,0, 1), shipStats.get('turn_rate') * 0.3))
+func rotate_right(percent = 1.0):
+	add_torque(_rel_vec(Vector3(0,-1,0), safe_stat('turn_rate', percent) * 0.3))
 
-func roll_right(delta):
-	add_torque(_rel_vec(Vector3(0,0,-1), shipStats.get('turn_rate') * 0.3))
+func roll_left(percent = 1.0):
+	add_torque(_rel_vec(Vector3(0,0, 1), safe_stat('turn_rate', percent) * 0.3))
 
-func rotate_left_small(delta):
-	add_torque(_rel_vec(Vector3(0, 1,0), shipStats.get('turn_rate') * 2))
+func roll_right(percent = 1.0):
+	add_torque(_rel_vec(Vector3(0,0,-1), safe_stat('turn_rate', percent) * 0.3))
 
-func rotate_right_small(delta):
-	add_torque(_rel_vec(Vector3(0,-1,0), shipStats.get('turn_rate') * 2))
+func rotation_needs(targetVec):
+	var t = get_transform().basis;
+	var velo = targetVec.normalized();
+	var forward = t.xform(Vector3(0,0,-1));
+	var up = t.xform(Vector3(0,1,0))
+	return Vector3(up.cross(forward).dot(velo), forward.dot(velo), up.dot(velo));
 
-func aim_towards_target(delta):
+func align_with(vec):
+	var euler = rotation_needs(vec);
+
+	var moved = false;
+	if euler.x >= 0.01:
+		roll_left(max(0.01, abs(euler.x) * 10.0));
+		moved = true
+	elif euler.x < -0.01:
+		roll_right(max(0.01, abs(euler.x) * 10.0));
+		moved = true
+
+	if euler.y < 1.0 and euler.z >= 0:
+		rotate_up(max(0.01, abs(euler.y - 1) * 10.0));
+		moved = true
+	elif euler.y < 1 and euler.z < 0:
+		rotate_down(max(0.01, abs(euler.y - 1) * 10.0));
+		moved = true
+	
+	## TODO: rotate towards sector-up when idle-ish.
+
+func reverse():
+	align_with(-get_linear_velocity())
+
+func aim_towards_target():
 	var target = targetingSystem.get_active_target();
 	if target == null:
 		target = navSystem.targetNode
 	if target == null:
 		return;
-
-	var cross = (target.transform.origin - transform.origin).normalized().cross(transform.basis.xform(Vector3(0,0,-1)))
-	if cross.y > 0.1:
-		rotate_right(0);
-	elif cross.y > 0:
-		rotate_right_small(0);
-	elif cross.y < -0.1:
-		rotate_left(0);
-	elif cross.y < 0:
-		rotate_left_small(0);
-
-func reverse(delta):
-	var reva = get_transform().basis.xform(Vector3(0,0,-1))
-	var cross = reva.cross(get_linear_velocity().normalized())
-	if cross.y > 0.1:
-		rotate_right(0);
-	elif cross.y > 0:
-		rotate_right_small(0);
-	elif cross.y < -0.1:
-		rotate_left(0);
-	elif cross.y < 0:
-		rotate_left_small(0);
+	align_with(target.transform.origin - get_transform().origin)
 
 ##############################
 ##############################
@@ -286,7 +301,7 @@ class DockingData:
 func _jump_out():
 	navSystem.targetNode = null;
 	if ID == Core.gameState.playerShipID:
-		#TODO: Core.outsideWorldSim.scene_about_to_unload()
+		Core.outsideWorldSim.sector_about_to_unload()
 		Core.unload_scene();
 	lastSector = currentSector
 	currentSector = null
@@ -364,11 +379,6 @@ func dock(to):
 func try_dock():
 	if navSystem.targetNode == null:
 		return;
-	
-	if navSystem.targetNode is JumpZone:
-		if navSystem.targetNode.overlaps_body(self):
-			jump(navSystem.targetNode.jumpTo)
-		return
 
 	if dockingProcedure != null:
 		dockingProcedure.ask_for_docking()

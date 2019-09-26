@@ -14,6 +14,7 @@ func init(o, d):
 func _enter_tree():
 	add_to_group('JumpZones', true)
 	init_graphics();
+	self.connect('body_entered', self, 'on_body_entered')
 
 func _exit_tree():
 	remove_from_group('JumpZones')
@@ -38,5 +39,19 @@ func deliver(obj):
 	var up = Vector3(0,1,0)
 	if target == up:
 		up = Vector3(1,0,0)
-	obj.look_at_from_position(translation, target, up)
+	obj.look_at_from_position(translation + target * 50, target, up)
+	obj.linear_velocity = Vector3()
 	get_parent().get_parent().add_child(obj)
+
+const Ship = preload('res://source/game/Ship.gd')
+
+func on_body_entered(body):
+	if body is Ship:
+		body.call_deferred('jump', jumpTo)
+
+const Docking = preload('res://source/game/comms/Docking.gd')
+	
+func on_received_chat(convo, sender, chatData):
+	if convo is Docking:
+		convo.allow_docking()
+		return

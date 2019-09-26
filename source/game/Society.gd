@@ -12,7 +12,7 @@ var opinions = {};
 
 var outfits = [];
 
-var credits = 0;
+var credits = 10000;
 
 func init(d):
 	ID = d.ID

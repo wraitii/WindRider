@@ -44,6 +44,12 @@ func deliver(obj):
 	obj.angular_velocity = Vector3(0,0,0)
 	get_parent().get_parent().add_child(obj)
 
+signal trigger_dock
+
+func on_body_entered(body):
+	if body is Ship:
+		emit_signal('trigger_dock', body)
+
 const Docking = preload('res://source/game/comms/Docking.gd')
 
 func on_received_chat(convo, sender, chatData):

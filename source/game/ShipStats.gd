@@ -12,7 +12,7 @@ func init(data):
 	shipData = data
 
 	for component in data['components']:
-		_parse_component(component)
+		_add_component('ship_components/' + component['ID'])
 	_compute_stats()
 	get_parent().set_mass(get('empty_mass'))
 
@@ -21,13 +21,32 @@ func get(s):
 		return null # not necessarily a problem
 	return stats.statsCache[s]
 
-func _parse_component(compInfo):
-	var comp = Component.new('ship_components/' + compInfo['ID'])
+func get_components(comp_id):
+	var components = get_children()
+	var out = []
+	for component in components:
+		if component.ID == comp_id:
+			out.append(component)
+	return out
+
+func remove_component(comp_id):
+	var components = get_children()
+	for component in components:
+		if component.ID == comp_id:
+			self.remove_child(component)
+			return
+
+func add_component(comp_id):
+	_add_component(comp_id)
+	_compute_stats()
+	
+func _add_component(comp_id):
+	var comp = Component.new(comp_id)
 	self.add_child(comp)
 
-	var cdata = Core.dataMgr.get('ship_components/' + compInfo['ID'])	
+	var cdata = Core.dataMgr.get(comp_id)	
 	if 'weapons' in cdata:
-		_create_weapons(comp, cdata);	
+		_create_weapons(comp, cdata);
 
 func _compute_stats():
 	# Fetch stat item from ship & components
