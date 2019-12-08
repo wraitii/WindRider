@@ -202,22 +202,22 @@ func align_with(vec, percent_xz = Vector2(1.0,1.0)):
 
 	var moved = false;
 	
-	if euler.x >= 0.01:
-		rotate_left(max(0.01, abs(euler.x) * 100.0 * percent_xz.x));
+	if euler.x >= 0.0:
+		rotate_left(max(0.05, abs(euler.x) * 100.0 * percent_xz.x));
 		if euler.x >= 0.25:
-			roll_left(max(0.01, abs(euler.x) * 10.0 * percent_xz.x));
+			roll_left(max(0.05, abs(euler.x) * 10.0 * percent_xz.x));
 		moved = true
-	elif euler.x < -0.01:
-		rotate_right(max(0.01, abs(euler.x) * 100.0 * percent_xz.x));
+	elif euler.x < -0.0:
+		rotate_right(max(0.05, abs(euler.x) * 100.0 * percent_xz.x));
 		if euler.x <= -0.25:
-			roll_right(max(0.01, abs(euler.x) * 10.0 * percent_xz.x));	
+			roll_right(max(0.05, abs(euler.x) * 10.0 * percent_xz.x));	
 		moved = true
 
 	if euler.y < 1.0 and euler.z >= 0:
-		rotate_up(max(0.01, abs(euler.y - 1) * 10.0 * percent_xz.y));
+		rotate_up(max(0.05, abs(euler.y - 1) * 10.0 * percent_xz.y));
 		moved = true
 	elif euler.y < 1 and euler.z < 0:
-		rotate_down(max(0.01, abs(euler.y - 1) * 10.0 * percent_xz.y));
+		rotate_down(max(0.05, abs(euler.y - 1) * 10.0 * percent_xz.y));
 		moved = true
 	
 	## TODO: rotate towards sector-up when idle-ish.
@@ -233,8 +233,12 @@ func aim_towards_target():
 	if target == null:
 		target = navSystem.targetNode
 	if target == null:
-		return;
-	align_with(target.transform.origin - get_transform().origin)
+		return
+
+	if target is RigidBody:
+		align_with(Intercept.simple_intercept(self, target, 1000)[0])
+	else:
+		align_with(target.transform.origin - get_transform().origin)
 
 func follow_vector(var world_vector, var percent_xz = Vector2(1.0,1.0)):
 	align_with(world_vector, percent_xz)

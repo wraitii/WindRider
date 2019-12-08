@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://source/tests/InterceptTest.gd" type="Script" id=1]
+
+[node name="InterceptTest" type="Node"]
+script = ExtResource( 1 )

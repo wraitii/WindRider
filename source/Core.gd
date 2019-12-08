@@ -56,7 +56,7 @@ func create_new_game():
 	
 	get_node('/root').add_child(gameState.player)
 
-	gameState.playerShip.teleport('Earth', Vector2(20, 0))
+	gameState.playerShip.teleport('Earth', Vector2(-2000, 0))
 
 	for i in range(10):
 		var otherShip = Ship.instance()

@@ -1,0 +1,47 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://source/game/gui/TargetingReticule.gd" type="Script" id=1]
+
+[node name="TargetingReticule" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Firing Reticule" type="Node2D" parent="."]
+
+[node name="Line2D" type="Line2D" parent="Firing Reticule"]
+points = PoolVector2Array( -10, 0, 10, 0 )
+width = 2.0
+
+[node name="Line2D2" type="Line2D" parent="Firing Reticule"]
+points = PoolVector2Array( 0, -10, 0, 10 )
+width = 2.0
+
+[node name="Aim Reticule" type="Node2D" parent="."]
+
+[node name="Line2D" type="Line2D" parent="Aim Reticule"]
+points = PoolVector2Array( -10, 0, 10, 0 )
+width = 2.0
+
+[node name="Line2D2" type="Line2D" parent="Aim Reticule"]
+points = PoolVector2Array( 0, -10, 0, 10 )
+width = 2.0
+
+[node name="Control" type="Control" parent="."]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_right = 40.0
+margin_bottom = 40.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Line2D" type="Line2D" parent="Control"]
+scale = Vector2( 30, 30 )
+points = PoolVector2Array( -1, 0, 0, 1, 1, 0, 0, -1, -1, 0 )
+width = 0.05

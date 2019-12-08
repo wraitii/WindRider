@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=2]
+[gd_scene load_steps=14 format=2]
 
 [ext_resource path="res://source/game/ingame.gd" type="Script" id=1]
 [ext_resource path="res://source/game/Camera.gd" type="Script" id=2]
@@ -10,6 +10,7 @@
 [ext_resource path="res://source/game/gui/TargetingSystemGUI.gd" type="Script" id=8]
 [ext_resource path="res://source/game/gui/Chat.tscn" type="PackedScene" id=9]
 [ext_resource path="res://source/game/IngamePlayerCommands.gd" type="Script" id=10]
+[ext_resource path="res://source/game/gui/TargetingReticule.tscn" type="PackedScene" id=11]
 
 [sub_resource type="ProceduralSky" id=1]
 radiance_size = 0
@@ -96,6 +97,8 @@ margin_right = -240.0
 margin_bottom = 140.0
 alignment = 2
 script = ExtResource( 8 )
+
+[node name="TargetingReticule" parent="." instance=ExtResource( 11 )]
 
 [node name="Chat" parent="." instance=ExtResource( 9 )]
 anchor_left = 0.5
