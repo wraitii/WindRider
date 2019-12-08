@@ -1,9 +1,10 @@
 extends Camera
 
-enum CAMERA_STATES { FOLLOW, FOLLOW_FROM_ABOVE }
+enum CAMERA_STATES { FOLLOW, FOLLOW_FROM_ABOVE, FOLLOW_FROM_SHIP }
 export (CAMERA_STATES) var mode = CAMERA_STATES.FOLLOW;
 
 var followedShip = null;
+var followerShip = null;
 
 func _ready():
 	if !Core.gameState.cameraMode:
@@ -12,7 +13,7 @@ func _ready():
 	_init_mode()
 	pass
 
-func _process(delta):
+func _physics_process(delta):
 	if !followedShip:
 		return
 	
@@ -20,10 +21,10 @@ func _process(delta):
 
 	match mode:
 		CAMERA_STATES.FOLLOW:
-			var pos = Vector3(0,1.5,3.0);
+			var pos = Vector3(0,1.5,5.0);
 			var vec = trans.xform(pos)
-			transform.origin = vec
-			transform.basis = trans.basis
+			transform.origin = transform.origin.linear_interpolate(vec, 0.2)
+			transform.basis = transform.basis.slerp(trans.basis, 0.2)
 			#rotate_object_local(Vector3(0,1,0),-PI/2.0)
 		CAMERA_STATES.FOLLOW_FROM_ABOVE:
 			var pos = trans.origin
@@ -32,10 +33,19 @@ func _process(delta):
 			transform.basis = Basis()
 			#rotate_object_local(Vector3(0,1,0),-PI/2.0)
 			rotate_object_local(Vector3(1,0,0),-PI/2.0)
+		CAMERA_STATES.FOLLOW_FROM_SHIP:
+			if followerShip == null:
+				switch_mode();
+			var pos = trans.origin
+			var dir = trans.origin - followerShip.transform.origin
+			pos = pos - dir.normalized() * 10
+			look_at_from_position(pos, trans.origin, followerShip.transform.basis.xform(Vector3(0,1,0)))
 	return
 
 func switch_mode():
 	mode = mode + 1;
+	if mode == CAMERA_STATES.FOLLOW_FROM_SHIP and followerShip == null:
+		mode = mode + 1
 	if mode >= len(CAMERA_STATES):
 		mode = CAMERA_STATES.FOLLOW;
 	_init_mode()

@@ -1,0 +1,45 @@
+[gd_scene load_steps=5 format=2]
+
+[ext_resource path="res://source/graphics/SystemMap.gd" type="Script" id=1]
+
+[sub_resource type="Environment" id=1]
+background_mode = 1
+
+[sub_resource type="SpatialMaterial" id=2]
+flags_transparent = true
+flags_unshaded = true
+albedo_color = Color( 1, 0, 0, 0.352941 )
+
+[sub_resource type="SpatialMaterial" id=3]
+flags_transparent = true
+flags_unshaded = true
+albedo_color = Color( 0, 0.0156863, 1, 0.352941 )
+
+[node name="SystemMap" type="Spatial"]
+
+[node name="Camera" type="Camera" parent="."]
+transform = Transform( 0.810071, 0.300799, -0.503293, 0, 0.858377, 0.513019, 0.586331, -0.415582, 0.695347, -50, 50, 50 )
+environment = SubResource( 1 )
+projection = 1
+current = true
+fov = 90.3
+size = 200.0
+near = 10.0
+far = 10000.0
+
+[node name="MapScript" type="Spatial" parent="."]
+script = ExtResource( 1 )
+
+[node name="Lines" type="CSGCombiner" parent="."]
+
+[node name="LineX" type="CSGBox" parent="Lines"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 7.5, 0, 0 )
+width = 15.0
+height = 0.1
+material = SubResource( 2 )
+
+[node name="LineZ" type="CSGBox" parent="Lines"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 7.5 )
+height = 0.1
+depth = 15.0
+material = SubResource( 3 )

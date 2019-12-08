@@ -3,12 +3,9 @@
 [ext_resource path="res://source/game/Star.gd" type="Script" id=1]
 
 [sub_resource type="SpatialMaterial" id=1]
+flags_unshaded = true
+flags_do_not_receive_shadows = true
 albedo_color = Color( 0.968627, 0.917647, 0.65098, 1 )
-emission_enabled = true
-emission = Color( 0.886275, 0.807843, 0.447059, 1 )
-emission_energy = 1.0
-emission_operator = 0
-emission_on_uv2 = false
 
 [node name="Star" type="Spatial"]
 script = ExtResource( 1 )
@@ -18,6 +15,10 @@ light_energy = 10.0
 light_indirect_energy = 0.2
 light_bake_mode = 0
 light_cull_mask = 4294967293
+directional_shadow_split_1 = 0.3
+directional_shadow_split_2 = 0.5
+directional_shadow_split_3 = 0.8
+directional_shadow_max_distance = 3000.0
 
 [node name="CSGSphere" type="CSGSphere" parent="."]
 layers = 2

@@ -1,0 +1,11 @@
+[gd_scene load_steps=2 format=2]
+
+[sub_resource type="BoxShape" id=1]
+extents = Vector3( 10, 10, 10 )
+
+[node name="SectorArea" type="Area"]
+monitoring = false
+monitorable = false
+
+[node name="CollisionShape" type="CollisionShape" parent="."]
+shape = SubResource( 1 )

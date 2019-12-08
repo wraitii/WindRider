@@ -1,6 +1,11 @@
 extends Node
 
+enum TARGETING_MODE { KEYBOARD, FOLLOW_MOUSE }
 
+var TargetingMode = TARGETING_MODE.KEYBOARD;
+
+# used to 'doubletap' warp.
+var last_warp_input_time = 0;
 
 func _process(delta):
 	var ship = Core.gameState.playerShip;
@@ -12,6 +17,14 @@ func _process(delta):
 		ship.dockingProcedure = null;
 		ship.navSystem.reset()
 
+	if Input.is_action_just_released('ship_switch_rr_mode'):
+		ship.switch_rr_mode()
+
+	if Input.is_action_just_released('ship_switch_controlling_mode'):
+		TargetingMode = TargetingMode + 1
+		if TargetingMode >= 2:
+			TargetingMode = 0
+
 	if Input.is_action_just_released('ship_next_target'):
 		ship.targetingSystem.pick_new_target()
 
@@ -19,40 +32,63 @@ func _process(delta):
 		ship.start_firing();
 	elif Input.is_action_just_released('ship_fire'):
 		ship.stop_firing();
+
 	# Can take us out of the world
 	if Input.is_action_just_released('ship_dock'):
 		if ship.navSystem.targetNode == null:
 			ship.navSystem.target_closest_nav_object();
 		ship.try_dock()
 
+	if Input.is_action_just_released('warp_factor'):
+		# if switching fast, switch, otherwise assume we want to reset.
+		if OS.get_ticks_msec() - last_warp_input_time > 1000 and Core.gameState.warp_factor != 1:
+			Core.gameState.warp_factor = 1
+		else:
+			Core.gameState.warp_factor += 1
+			if Core.gameState.warp_factor >= len(Core.gameState.warp_factors):
+				Core.gameState.warp_factor = 0
+		last_warp_input_time = OS.get_ticks_msec()
+		Engine.set_time_scale(Core.gameState.warp_factors[Core.gameState.warp_factor])
 
 func _moveCommandProcess():
 	var commands = []
-
-	if Input.is_action_pressed('ship_rotate_roll_left'):
-		commands.push_back('roll_left')
-	elif Input.is_action_pressed('ship_rotate_roll_right'):
-		commands.push_back('roll_right')
-	elif Input.is_action_pressed('ship_rotate_left'):
-		commands.push_back('rotate_left')
+	
+	# Input commands slower when warping so things remain controllable.
+	# (not purely linear because otherwise inputs are too limited.)
+	var warp_multiplier = sqrt(1/Engine.get_time_scale());
+	
+	if Input.is_action_pressed('ship_rotate_left'):
+		commands.push_back(['rotate_left', [warp_multiplier]])
 	elif Input.is_action_pressed('ship_rotate_right'):
-		commands.push_back('rotate_right')
+		commands.push_back(['rotate_right', [warp_multiplier]])
+	elif Input.is_action_pressed('ship_rotate_roll_left'):
+		commands.push_back(['roll_left', [warp_multiplier]])
+	elif Input.is_action_pressed('ship_rotate_roll_right'):
+		commands.push_back(['roll_right', [warp_multiplier]])
 
 	if Input.is_action_pressed('ship_rotate_up'):
-		commands.push_back('rotate_up')
+		commands.push_back(['rotate_up', [warp_multiplier]])
 	elif Input.is_action_pressed('ship_rotate_down'):
-		commands.push_back('rotate_down')
-
-	if len(commands) > 0:
-		return commands
+		commands.push_back(['rotate_down', [warp_multiplier]])
 
 	if Input.is_action_pressed("ship_thrust"):
-		commands.push_back('thrust')
+		commands.push_back(['thrust', [warp_multiplier]])
 
 	if Input.is_action_pressed("ship_aim_towards_target"):
 		commands.push_back('aim_towards_target')
 	elif Input.is_action_pressed('ship_reverse'):
 		commands.push_back('reverse')
+
+	if TargetingMode == TARGETING_MODE.FOLLOW_MOUSE:
+		var dir = get_viewport().get_camera().project_ray_normal(get_viewport().get_mouse_position())
+		var deadzone = get_viewport().get_mouse_position();
+		var zone = get_viewport().get_visible_rect().end
+		deadzone = deadzone/zone - Vector2(0.5, 0.5);
+		deadzone.x = max(0, abs(deadzone.x)-0.02)
+		deadzone.x = min(1, deadzone.x*deadzone.x*20)
+		deadzone.y = max(0, abs(deadzone.y)-0.02)
+		deadzone.y = min(1, deadzone.y*deadzone.y*20)
+		commands.push_back(['follow_vector', [dir, deadzone]])
 
 	return commands
 

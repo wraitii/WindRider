@@ -5,6 +5,10 @@ var target;
 
 func init(t):
 	target = weakref(t);
+	get_node('aligner/ViewportContainer/Viewport/Camera').followedShip = target.get_ref()
+	get_node('aligner/ViewportContainer/Viewport/Camera').followerShip = Core.gameState.playerShip
+	get_node('aligner/ViewportContainer/Viewport/Camera').switch_mode()
+	get_node('aligner/ViewportContainer/Viewport/Camera').switch_mode()
 
 func _process(delta):
 	assert(target.get_ref())

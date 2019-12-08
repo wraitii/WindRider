@@ -5,6 +5,7 @@ extends Node
 ## This holds no data
 
 var data = {} setget __nos, __nog
+var raw_data = {} setget __nos, __nog
 var paths = {} setget __nos, __nog
 var kind;
 var path;
@@ -22,7 +23,7 @@ func _load(path):
 	if !validation(source, path):
 		return
 	var obj = create(source)
-	register(obj, path);
+	register(obj, source, path);
 
 func populate():
 	for s in data:
@@ -41,14 +42,21 @@ func get(s):
 		return null
 	return data[s]
 
+func get_source(s):
+	if !(s in raw_data):
+		print('Warning: ' + s + ' not found in ' + kind);
+		return null
+	return raw_data[s]
+
 func get_data_path(s):
 	if !(s in paths):
 		print('Warning: ' + s + ' not found in ' + kind);
 		return null
 	return paths[s]
 
-func register(item, path):
+func register(item, source, path):
 	data[item.ID] = item;
+	raw_data[item.ID] = source;
 	paths[item.ID] = path;
 
 func unregister(item):

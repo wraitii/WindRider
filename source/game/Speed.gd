@@ -13,5 +13,8 @@ func _process(delta):
 	txt += "Position: " + str(ship.translation) + "\n"
 	txt += "Rotation: " + str(ship.get_angular_velocity().length()) + "\n"
 	txt += "Velocity: " + str(ship.get_linear_velocity()) + "\n"
-	txt += "Pos: " + str(ship.translation)
+	txt += "Pos: " + str(ship.translation) + "\n"
+	txt += "RR: " + str(ship.railroading) + '\n'
+	txt += "x: " + str(Engine.get_time_scale()) + '\n'
+	txt += "Target: " + str(ship.target_speed)
 	text = txt

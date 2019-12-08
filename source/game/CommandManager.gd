@@ -10,8 +10,11 @@ func _physics_process(delta):
 	
 	for command in commands:
 		var ship = command[0]
-		var fun = command[1]
-		ship.call(fun)
+		if command[1] is String:
+			var fun = command[1]
+			ship.call(fun)
+		else:
+			ship.callv(command[1][0],command[1][1])
 	
 	commands = []
 

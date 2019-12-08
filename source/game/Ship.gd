@@ -29,6 +29,16 @@ var dockedAt = null;
 var hyperNavigating = null;
 var docking = null;
 
+## Manual mode means thrust = boosters.
+## Autothrust and railroading is probably what you want,
+## but a quick bout of no-railroad manual burst mode can be fun.
+enum DRIVING_MODE { AUTOTHRUST, MANUAL }
+var driving_mode = DRIVING_MODE.AUTOTHRUST;
+var target_speed = 0;
+# How 'railroaded' the ship's inertia is currently being.
+# Runs between 0 (realistic behaviour) and 1 (star wars)
+var railroading = 0.0;
+
 ## Ship caracteristics
 var hyperfuel = null
 var energy = null setget set_energy, get_energy;
@@ -111,30 +121,42 @@ func _physics_process(delta):
 	energy += stat('energy_gen') * delta
 	if energy > stat('max_energy'):
 		energy = stat('max_energy')
+	
+	if driving_mode == DRIVING_MODE.AUTOTHRUST:
+		railroading = max(0, min(1, linear_velocity.length() / (0.4 * stat('max_speed')) - 0.1));
+	else:
+		railroading *= 0.96
 
-func _integrate_forces(state):
-	var speed = state.linear_velocity.length_squared();
-	var dir = state.linear_velocity.normalized();
-	if speed > 0:
-		state.linear_velocity = state.linear_velocity - dir * 0.05;
-	if speed > stat('max_speed') * stat('max_speed'):
-		state.linear_velocity = dir * stat('max_speed')
+func switch_rr_mode():
+	driving_mode += 1
+	if driving_mode >= len(DRIVING_MODE):
+		driving_mode = DRIVING_MODE.AUTOTHRUST;
+
 
 ##############################
 ##############################
 ## Physics
 
-#func _integrate_forces(state):
-#	var ms = shipStats.get('max_speed')
-#	
-#	if state.linear_velocity.length_squared() >= ms*ms*0.8*0.8:
-#		var dec = state.linear_velocity.length_squared() - ms*ms*0.8*0.8;
-#		dec /= ms*ms*0.2*0.2
-#		dec *= 0.0005;
-#		state.linear_velocity *= (1.0 - dec);
-#
-#	if state.linear_velocity.length_squared() >= ms*ms:
-#		state.linear_velocity = state.linear_velocity.normalized() * ms;
+func _integrate_forces(state):
+	var speed = state.linear_velocity.length_squared();
+	var dir = state.linear_velocity.normalized();
+	#if speed > 0:
+	#	state.linear_velocity = state.linear_velocity - dir * 0.05;
+	if speed > stat('max_speed') * stat('max_speed'):
+		state.linear_velocity = dir * stat('max_speed')
+	
+	if driving_mode == DRIVING_MODE.AUTOTHRUST:
+		if speed < target_speed * target_speed:
+			state.add_central_force(_rel_vec(Vector3(0,0,-1), safe_stat('acceleration', 1.0)))
+		elif speed > target_speed * target_speed:
+			state.add_central_force(_rel_vec(Vector3(0,0,1), safe_stat('acceleration', 0.2)))
+
+	# Railroading (orient velocity wherever the ship is pointing)
+	var velo_local = get_transform().basis.inverse() * state.linear_velocity
+	var rot = Quat(Transform().looking_at(state.linear_velocity, Vector3(0,1,0)).basis)
+	rot = rot.slerp(get_transform().basis, 0.1 * railroading)
+	state.linear_velocity = rot.xform(Vector3(0,0,-1)) * state.linear_velocity.length()
+
 
 func _rel_vec(vec, power):
 	var transform = get_transform()
@@ -145,25 +167,28 @@ func safe_stat(stat, percent):
 	return shipStats.get(stat) * max(0, min(1, percent))
 
 func thrust(percent = 1.0):
-	add_central_force(_rel_vec(Vector3(0,0,-1), safe_stat('acceleration', percent)))
+	if driving_mode == DRIVING_MODE.AUTOTHRUST:
+		target_speed = min(stat('max_speed'), target_speed + 1)
+	else:
+		add_central_force(_rel_vec(Vector3(0,0,-1), safe_stat('acceleration', percent)))
 
 func rotate_up(percent = 1.0):
-	add_torque(_rel_vec(Vector3( 1,0,0), safe_stat('turn_rate', percent) * 0.3))
+	add_torque(_rel_vec(Vector3( 1,0,0), safe_stat('turn_rate', percent) * 0.1))
 
 func rotate_down(percent = 1.0):
-	add_torque(_rel_vec(Vector3(-1,0,0), safe_stat('turn_rate', percent) * 0.3))
+	add_torque(_rel_vec(Vector3(-1,0,0), safe_stat('turn_rate', percent) * 0.1))
 
 func rotate_left(percent = 1.0):
-	add_torque(_rel_vec(Vector3(0, 1,0), safe_stat('turn_rate', percent) * 0.3))
+	add_torque(_rel_vec(Vector3(0, 1,0), safe_stat('turn_rate', percent)*0.25 * 0.1))
 
 func rotate_right(percent = 1.0):
-	add_torque(_rel_vec(Vector3(0,-1,0), safe_stat('turn_rate', percent) * 0.3))
+	add_torque(_rel_vec(Vector3(0,-1,0), safe_stat('turn_rate', percent)*0.25 * 0.1))
 
 func roll_left(percent = 1.0):
-	add_torque(_rel_vec(Vector3(0,0, 1), safe_stat('turn_rate', percent) * 0.3))
+	add_torque(_rel_vec(Vector3(0,0, 1), safe_stat('turn_rate', percent) * 0.1))
 
 func roll_right(percent = 1.0):
-	add_torque(_rel_vec(Vector3(0,0,-1), safe_stat('turn_rate', percent) * 0.3))
+	add_torque(_rel_vec(Vector3(0,0,-1), safe_stat('turn_rate', percent) * 0.1))
 
 func rotation_needs(targetVec):
 	var t = get_transform().basis;
@@ -172,28 +197,36 @@ func rotation_needs(targetVec):
 	var up = t.xform(Vector3(0,1,0))
 	return Vector3(up.cross(forward).dot(velo), forward.dot(velo), up.dot(velo));
 
-func align_with(vec):
+func align_with(vec, percent_xz = Vector2(1.0,1.0)):
 	var euler = rotation_needs(vec);
 
 	var moved = false;
+	
 	if euler.x >= 0.01:
-		roll_left(max(0.01, abs(euler.x) * 10.0));
+		rotate_left(max(0.01, abs(euler.x) * 100.0 * percent_xz.x));
+		if euler.x >= 0.25:
+			roll_left(max(0.01, abs(euler.x) * 10.0 * percent_xz.x));
 		moved = true
 	elif euler.x < -0.01:
-		roll_right(max(0.01, abs(euler.x) * 10.0));
+		rotate_right(max(0.01, abs(euler.x) * 100.0 * percent_xz.x));
+		if euler.x <= -0.25:
+			roll_right(max(0.01, abs(euler.x) * 10.0 * percent_xz.x));	
 		moved = true
 
 	if euler.y < 1.0 and euler.z >= 0:
-		rotate_up(max(0.01, abs(euler.y - 1) * 10.0));
+		rotate_up(max(0.01, abs(euler.y - 1) * 10.0 * percent_xz.y));
 		moved = true
 	elif euler.y < 1 and euler.z < 0:
-		rotate_down(max(0.01, abs(euler.y - 1) * 10.0));
+		rotate_down(max(0.01, abs(euler.y - 1) * 10.0 * percent_xz.y));
 		moved = true
 	
 	## TODO: rotate towards sector-up when idle-ish.
 
 func reverse():
-	align_with(-get_linear_velocity())
+	if driving_mode == DRIVING_MODE.AUTOTHRUST:
+		target_speed = max(0, target_speed - 1)
+	else:
+		align_with(-get_linear_velocity())
 
 func aim_towards_target():
 	var target = targetingSystem.get_active_target();
@@ -202,6 +235,9 @@ func aim_towards_target():
 	if target == null:
 		return;
 	align_with(target.transform.origin - get_transform().origin)
+
+func follow_vector(var world_vector, var percent_xz = Vector2(1.0,1.0)):
+	align_with(world_vector, percent_xz)
 
 ##############################
 ##############################

@@ -28,6 +28,8 @@ func get_player_ship_id(): return playerShipID;
 ### Other settings (might be taken out of this at some point?)
 var cameraMode = null;
 
+const warp_factors = [0.5, 1, 1.5, 2, 4, 8]
+var warp_factor = 1;
 
 ### Serialization
 
