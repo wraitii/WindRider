@@ -1,9 +1,12 @@
 extends Node
 
-export (String) var _sector = null;
+const Sector = preload('Sector.gd')
 
-func _ready():
-	_sector = Core.sectorsMgr.get(Core.gameState.playerShip.currentSector)
+var _sector;
+
+func _enter_tree():
+	print(Core.gameState.playerShip.currentSector)
+	_sector = Sector.new().init(Core.gameState.playerShip.currentSector)
 	self.add_child(_sector)
 	
 	Core.outsideWorldSim.connect('bring_ship_in', self, 'bring_ship_in')

@@ -2,7 +2,6 @@ extends Node
 
 ## EntityMgr
 ## Generic abstraction around and ID->Script
-## This holds no data
 
 var data = {} setget __nos, __nog
 var raw_data = {} setget __nos, __nog
@@ -61,6 +60,7 @@ func register(item, source, path):
 
 func unregister(item):
 	data.erase(item.ID);
+	raw_data.erase(item.ID);
 	paths.erase(item.ID);
 
 # Functions below are virtual

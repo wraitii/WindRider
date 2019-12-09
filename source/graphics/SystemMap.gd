@@ -15,9 +15,9 @@ func init(system):
 	currentSystem = system
 	Core.societyMgr.populate()
 	Core.landablesMgr.populate()
-	Core.sectorsMgr.populate()
 	Core.systemsMgr.populate()
-	setup(Core.systemsMgr.get_source(system))
+	Core.sectorsMgr.populate()
+	setup(Core.systemsMgr.get(system))
 	
 func setup(sysData):
 	var distance = 0
@@ -29,7 +29,8 @@ func setup(sysData):
 			distance = star.translation.length()
 			add_child(star)
 	if 'sectors' in sysData:
-		for sectorData in sysData['sectors']:
+		for sectorID in sysData['sectors']:
+			var sectorData = Core.sectorsMgr.get(sectorID)
 			var sector = Sector.instance()
 			sector.translation = A2V._2y0(sectorData['position']) / scale;
 			distance = sector.translation.length()

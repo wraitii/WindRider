@@ -39,6 +39,13 @@ func refuse_docking():
 	return true;
 
 func still_ok():
+	if receiver.graphics.has_node('SlowDockArea'):
+		if receiver.graphics.get_node('SlowDockArea').overlaps_body(sender):
+			_do_dock()
+			return true;
+		_send_to_sender(Chat.new("Please come closer to docking area.", DockingChat.new(DOCKING_OK)))
+		return true;
+
 	_send_to_sender(Chat.new("Cleared for docking, approach through docking tunnel.", DockingChat.new(DOCKING_OK)))
 	return true;
 
@@ -48,5 +55,8 @@ func dock():
 
 func _on_body_entered(body):
 	if body == sender:
-		receiver.disconnect('trigger_dock', self, '_on_body_entered')
-		call_deferred("dock")
+		_do_dock()
+
+func _do_dock():
+	receiver.disconnect('trigger_dock', self, '_on_body_entered')
+	call_deferred("dock")

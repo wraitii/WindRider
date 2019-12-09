@@ -4,33 +4,22 @@ const Star = preload('Star.tscn')
 const JumpZone = preload('JumpZone.tscn')
 const Sky = preload('res://data/art/system_skies/SystemSky.tscn')
 
-var ID : String;
-var position : Vector3
-var sky = null;
+var ID;
 
-func init(sectorData):
-	ID = sectorData.ID;
-	position = A2V._3(sectorData.position)
+func init(sectorID):
+	ID = sectorID;
+	var sectorData = Core.sectorsMgr.get(ID)
 	_parse_stars(sectorData)
 	_parse_landables(sectorData)
 	_parse_jump_zones(sectorData)
-	pass
+	return self
 
-func _enter_tree():
-	pass
-	#sky = Sky.instance()
-	#add_child(sky)
-
-func _exit_tree():
-	pass
-	#remove_child(sky);
-	#sky = null;
-
-func _parse_stars(sysData):
-	if !("stars" in sysData):
+func _parse_stars(sectorData):
+	var systemData = Core.systemsMgr.get(sectorData['system'])
+	if !("stars" in systemData):
 		return
 
-	for starDef in sysData['stars']:
+	for starDef in systemData['stars']:
 		var star = Star.instance()
 		self.add_child(star)
 		var pos = starDef['position']

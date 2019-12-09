@@ -1,12 +1,12 @@
 extends "res://source/lib/EntityMgr.gd"
 
-const System = preload('../System.gd')
+const SystemData = preload('../SystemData.gd')
 
 func _init().('Systems', 'res://data/systems/'):
 	pass
 
 func create(data):
-	var item = System.new();
+	var item = SystemData.new();
 	item.init(data);
 	return item;
 

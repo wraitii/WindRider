@@ -17,7 +17,9 @@ func _enter_tree():
 	add_to_group('Landables', true)
 	graphics = LandableGraphics.instance()
 	add_child(graphics)
-	
+	if graphics.has_node("AutoDockArea"):
+		get_node("AutoDockArea").connect("body_entered", self, 'on_autodock_entered')
+
 func _exit_tree():
 	remove_from_group('Landables')
 	remove_child(graphics)
@@ -40,15 +42,17 @@ func init(data):
 ### Docking
 
 func deliver(obj):
-	obj.translation = translation + Vector3(20,0,0)
-	obj.translation.y = 0;
+	obj.global_transform.origin = graphics.get_node('Exit').global_transform.origin
+	obj.global_transform.basis = Basis(graphics.get_node('Exit').global_transform.basis.get_rotation_quat())
+	
 	obj.linear_velocity = Vector3(0,0,0)
 	obj.angular_velocity = Vector3(0,0,0)
+	print(get_tree())
 	get_parent().get_parent().add_child(obj)
 
 signal trigger_dock
 
-func on_body_entered(body):
+func on_autodock_entered(body):
 	if body is Ship:
 		emit_signal('trigger_dock', body)
 

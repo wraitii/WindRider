@@ -34,8 +34,8 @@ var damageMgr = DamageMgr.new()
 func create_new_game():
 	societyMgr.populate()
 	landablesMgr.populate()
-	sectorsMgr.populate()
 	systemsMgr.populate()
+	sectorsMgr.populate()
 	
 	## TODO: if I get an outfitMgr or something this should be replaced
 	societyMgr.assign_outfits()
@@ -67,8 +67,8 @@ func create_new_game():
 func load_saved_game():
 	societyMgr.populate()
 	landablesMgr.populate()
-	sectorsMgr.populate()
 	systemsMgr.populate()
+	sectorsMgr.populate()
 	
 	## TODO: if I get an outfitMgr or something this should be replaced
 	societyMgr.assign_outfits()
