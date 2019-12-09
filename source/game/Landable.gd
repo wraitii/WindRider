@@ -1,8 +1,8 @@
 extends Area
 
 const Ship = preload('Ship.gd')
-const Graphics = preload('res://data/art/landables/Landable.tscn')
 
+var LandableGraphics = null;
 var graphics;
 
 var area;
@@ -15,7 +15,7 @@ var societyPresence = {};
 
 func _enter_tree():
 	add_to_group('Landables', true)
-	graphics = Graphics.instance()
+	graphics = LandableGraphics.instance()
 	add_child(graphics)
 	
 func _exit_tree():
@@ -28,6 +28,8 @@ func init(data):
 	position = Vector3(data['position'][0],data['position'][1],data['position'][2])
 	translate(position)
 	scale_object_local(Vector3(10,10,10))
+	
+	LandableGraphics = load('res://data/art/landables/' + data['graphics'] + '/' + data['graphics'] + '.tscn')
 	
 	for c in data['society_presence']:
 		assert(Core.societyMgr.get(c['ID']) != null)

@@ -22,6 +22,7 @@ margin_right = 300.0
 margin_bottom = 200.0
 rect_min_size = Vector2( 400, 140 )
 popup_exclusive = true
+show_hidden_files = true
 
 [node name="GalaxyView" type="ViewportContainer" parent="."]
 anchor_right = 0.8
