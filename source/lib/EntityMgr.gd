@@ -7,15 +7,15 @@ var data = {} setget __nos, __nog
 var raw_data = {} setget __nos, __nog
 var paths = {} setget __nos, __nog
 var kind;
-var path;
+var resource_path;
 
 # Fake getters
-func __nos(a): pass
+func __nos(_a): pass
 func __nog(): pass
 
 func _init(k, p):
 	kind = k
-	path = p
+	resource_path = p
 
 func _load(path):
 	var source = IO.read_json(path);
@@ -28,9 +28,9 @@ func populate():
 	for s in data:
 		unregister(data[s])
 
-	var files = IO.list_dir(path, '.json')
+	var files = IO.list_dir(resource_path, '.json')
 	for f in files:
-		_load(path + f);
+		_load(resource_path + f);
 
 func has(s):
 	return s in data
@@ -69,8 +69,8 @@ func serialize():
 	pass
 
 # supposed to return the object being created
-func create(data):
+func create(_data):
 	pass
 
-func validation(data, path):
+func validation(_data, _path):
 	pass

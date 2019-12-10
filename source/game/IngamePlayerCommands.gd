@@ -7,6 +7,12 @@ var TargetingMode = TARGETING_MODE.KEYBOARD;
 # used to 'doubletap' warp.
 var last_warp_input_time = 0;
 
+func _init():
+	InputMap.add_action('player_open_galaxy_map')
+	var event = InputEventKey.new()
+	event.scancode = KEY_M
+	InputMap.action_add_event('player_open_galaxy_map', event)
+
 func _process(delta):
 	var ship = Core.gameState.playerShip;
 	

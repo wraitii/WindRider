@@ -7,7 +7,7 @@ extends Node
 var data = {} setget __nos, __nog
 
 # Fake getters
-func __nos(a): pass
+func __nos(_a): pass
 func __nog(): pass
 
 func _init():

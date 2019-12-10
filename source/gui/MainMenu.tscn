@@ -10,6 +10,9 @@ script = ExtResource( 1 )
 [node name="Buttons" type="Container" parent="."]
 anchor_right = 1.0
 anchor_bottom = 1.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="NewGame" type="Button" parent="Buttons"]
 anchor_left = 0.5

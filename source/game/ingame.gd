@@ -5,7 +5,6 @@ const Sector = preload('Sector.gd')
 var _sector;
 
 func _enter_tree():
-	print(Core.gameState.playerShip.currentSector)
 	_sector = Sector.new().init(Core.gameState.playerShip.currentSector)
 	self.add_child(_sector)
 
@@ -50,8 +49,6 @@ func bring_ship_in(shipID):
 				)
 	# Assume the ship has correct data.
 	else:
-		print('adding ship ' + str(ship.ID))
-		print(ship.translation)
 		self.add_child(ship)
 	if shipID == Core.gameState.playerShipID:
 		_loaded_player_ship()

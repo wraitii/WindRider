@@ -1,7 +1,7 @@
 [gd_scene load_steps=5 format=2]
 
 [ext_resource path="res://source/editors/GalaxyEditor.gd" type="Script" id=1]
-[ext_resource path="res://source/editors/GalaxyViewport.gd" type="Script" id=2]
+[ext_resource path="res://source/gui/viewportPickingFix.gd" type="Script" id=2]
 [ext_resource path="res://source/graphics/GalaxyMap.tscn" type="PackedScene" id=3]
 
 [sub_resource type="World" id=1]
@@ -28,6 +28,9 @@ show_hidden_files = true
 anchor_right = 0.8
 anchor_bottom = 1.0
 stretch = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="GalaxyViewport" type="Viewport" parent="GalaxyView"]
 size = Vector2( 1040, 800 )
@@ -45,6 +48,9 @@ script = ExtResource( 2 )
 anchor_left = 0.8
 anchor_right = 1.0
 anchor_bottom = 1.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="Title" type="Label" parent="GUI"]
 anchor_left = 0.5
@@ -55,6 +61,9 @@ margin_right = 100.0
 text = "Galaxy Map
 "
 align = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="SystemName" type="Label" parent="GUI"]
 anchor_top = 0.07

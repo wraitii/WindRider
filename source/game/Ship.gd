@@ -114,7 +114,7 @@ func deserialize(ret):
 	energy = ret.energy
 	hyperfuel = ret.hyperfuel
 	
-func _process(delta):
+func _process(_delta):
 	pass
 
 func _physics_process(delta):
@@ -152,10 +152,13 @@ func _integrate_forces(state):
 			state.add_central_force(_rel_vec(Vector3(0,0,1), safe_stat('acceleration', 0.2)))
 
 	# Railroading (orient velocity wherever the ship is pointing)
-	var velo_local = get_transform().basis.inverse() * state.linear_velocity
-	var rot = Quat(Transform().looking_at(state.linear_velocity, Vector3(0,1,0)).basis)
-	rot = rot.slerp(get_transform().basis, 0.1 * railroading)
-	state.linear_velocity = rot.xform(Vector3(0,0,-1)) * state.linear_velocity.length()
+	if not state.linear_velocity.is_equal_approx(Vector3()):
+		var up = Vector3(0,1,0)
+		if state.linear_velocity.is_equal_approx(up):
+			up = Vector3(0,0,1)
+		var rot = Quat(Transform().looking_at(state.linear_velocity, up).basis)
+		rot = rot.slerp(get_transform().basis, 0.1 * railroading)
+		state.linear_velocity = rot.xform(Vector3(0,0,-1)) * state.linear_velocity.length()
 
 
 func _rel_vec(vec, power):
@@ -199,26 +202,20 @@ func rotation_needs(targetVec):
 
 func align_with(vec, percent_xz = Vector2(1.0,1.0)):
 	var euler = rotation_needs(vec);
-
-	var moved = false;
 	
 	if euler.x >= 0.0:
 		rotate_left(max(0.05, abs(euler.x) * 100.0 * percent_xz.x));
 		if euler.x >= 0.25:
 			roll_left(max(0.05, abs(euler.x) * 10.0 * percent_xz.x));
-		moved = true
 	elif euler.x < -0.0:
 		rotate_right(max(0.05, abs(euler.x) * 100.0 * percent_xz.x));
 		if euler.x <= -0.25:
 			roll_right(max(0.05, abs(euler.x) * 10.0 * percent_xz.x));	
-		moved = true
 
 	if euler.y < 1.0 and euler.z >= 0:
 		rotate_up(max(0.05, abs(euler.y - 1) * 10.0 * percent_xz.y));
-		moved = true
 	elif euler.y < 1 and euler.z < 0:
 		rotate_down(max(0.05, abs(euler.y - 1) * 10.0 * percent_xz.y));
-		moved = true
 	
 	## TODO: rotate towards sector-up when idle-ish.
 

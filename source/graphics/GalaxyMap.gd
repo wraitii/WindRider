@@ -1,4 +1,4 @@
-extends Spatial
+extends Control
 
 const System = preload('GMSystem.tscn')
 const HyperLink = preload('GMjump.tscn')
@@ -8,7 +8,7 @@ const JumpZone = preload('../game/JumpZone.gd')
 ### Galaxy Map
 ## This file is responsible for graphics of the galaxy map
 
-signal system_selected(system)
+signal system_selected(systemData)
 
 var sys = {}
 
@@ -18,7 +18,7 @@ func _init():
 	event.button_index = BUTTON_LEFT
 	InputMap.action_add_event('galaxy_map_click', event)
 	
-func _enter_tree():
+func _ready():
 	init()
 	
 func init():
@@ -33,7 +33,7 @@ func init():
 
 	var systems = Core.systemsMgr.get_systems()
 
-	get_node('../Camera').current = true
+	get_node('Camera').set_current(true)
 	
 	for name in systems.keys():
 		var data = systems[name]
@@ -46,14 +46,13 @@ func init():
 				var target = Core.systemsMgr.get(jz.jumpTo)
 				var dir = A2V._3(target.position) - system.translation;
 				var hl = HyperLink.instance()
-				print(dir);
 				hl.look_at_from_position(system.translation, A2V._3(target.position), Vector3(0,1,0))
 				hl.scale = Vector3(1,1,dir.length())
 				add_child(hl)
 		
 		var label = [Label.new(), data]
 		label[0].text = name
-		var pos = get_node('../Camera').unproject_position(system.transform.origin)
+		var pos = get_node('Camera').unproject_position(system.transform.origin)
 		label[0].rect_position = pos
 		
 		sys[system] = label

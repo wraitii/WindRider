@@ -1,4 +1,4 @@
-[gd_scene load_steps=2 format=2]
+[gd_scene load_steps=3 format=2]
 
 [sub_resource type="SpatialMaterial" id=1]
 emission_enabled = true
@@ -7,7 +7,11 @@ emission_energy = 1.0
 emission_operator = 0
 emission_on_uv2 = false
 
-[node name="GMHyperLink" type="Spatial"]
+[sub_resource type="BoxShape" id=2]
+
+[node name="SysMapHyperLink" type="Area"]
+monitoring = false
+monitorable = false
 
 [node name="CSGBox" type="CSGBox" parent="."]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.5 )
@@ -15,3 +19,7 @@ width = 0.4
 height = 0.4
 depth = 1.0
 material = SubResource( 1 )
+
+[node name="CollisionShape" type="CollisionShape" parent="."]
+transform = Transform( 0.2, 0, 0, 0, -2.18557e-08, 0.2, 0, -0.5, -8.74228e-09, 0, 0, -0.50174 )
+shape = SubResource( 2 )
