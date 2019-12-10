@@ -8,12 +8,13 @@ func _enter_tree():
 	print(Core.gameState.playerShip.currentSector)
 	_sector = Sector.new().init(Core.gameState.playerShip.currentSector)
 	self.add_child(_sector)
-	
+
 	Core.outsideWorldSim.connect('bring_ship_in', self, 'bring_ship_in')
 	pass
 
 func _exit_tree():
 	self.remove_child(_sector)
+	_sector = null
 	Core.outsideWorldSim.disconnect('bring_ship_in', self, 'bring_ship_in')
 
 func _loaded_player_ship():

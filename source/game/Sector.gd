@@ -14,6 +14,10 @@ func init(sectorID):
 	_parse_jump_zones(sectorData)
 	return self
 
+func _exit_tree():
+	# Since for now I'm fetching landables, I have to unparent them.
+	NodeHelpers.remove_all_children(self)
+
 func _parse_stars(sectorData):
 	var systemData = Core.systemsMgr.get(sectorData['system'])
 	if !("stars" in systemData):
