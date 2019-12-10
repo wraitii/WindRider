@@ -82,6 +82,7 @@ func unload_scene():
 	## May happen at the Start
 	if gameState.currentScene == null:
 		return
+
 	if gameState.playerShip != null && gameState.playerShip.is_inside_tree():
 		gameState.playerShip.get_parent().remove_child(gameState.playerShip)
 	NodeHelpers.queue_delete(gameState.currentScene)

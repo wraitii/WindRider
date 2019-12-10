@@ -169,6 +169,11 @@ func _rel_vec(vec, power):
 func safe_stat(stat, percent):
 	return shipStats.get(stat) * max(0, min(1, percent))
 
+# Called before delivering from a landable
+func reset_speed_params():
+	target_speed = 0
+	railroading = 0
+
 func thrust(percent = 1.0):
 	if driving_mode == DRIVING_MODE.AUTOTHRUST:
 		target_speed = min(stat('max_speed'), target_speed + 1)

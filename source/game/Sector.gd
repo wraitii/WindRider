@@ -36,7 +36,7 @@ func _parse_landables(sysData):
 
 	for landableID in sysData['landables']:
 		var landable = Core.landablesMgr.get(landableID)
-		landable.sector = self;
+		landable.sectorID = ID;
 		self.add_child(landable)
 
 func _parse_jump_zones(sysData):

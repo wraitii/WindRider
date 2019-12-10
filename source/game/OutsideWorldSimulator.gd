@@ -96,9 +96,9 @@ func ship_docked(shipID, at):
 		_shipIDsDockedAt[at] = []
 	_shipIDsDockedAt[at].push_back(shipID)
 
-	if Core.landablesMgr.get(at).sector.ID in _shipIDsInSector:
-		if shipID in _shipIDsInSector[Core.landablesMgr.get(at).sector.ID]:
-			_shipIDsInSector[Core.landablesMgr.get(at).sector.ID].erase(shipID)
+	if Core.landablesMgr.get(at).sectorID in _shipIDsInSector:
+		if shipID in _shipIDsInSector[Core.landablesMgr.get(at).sectorID]:
+			_shipIDsInSector[Core.landablesMgr.get(at).sectorID].erase(shipID)
 
 	if Core.gameState.playerShipID == shipID:
 		Core.load_scene()

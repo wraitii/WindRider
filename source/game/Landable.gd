@@ -8,7 +8,7 @@ var graphics;
 var area;
 var ID;
 var position;
-var sector;
+var sectorID;
 
 ### 0-100
 var societyPresence = {};
@@ -44,10 +44,9 @@ func init(data):
 func deliver(obj):
 	obj.global_transform.origin = graphics.get_node('Exit').global_transform.origin
 	obj.global_transform.basis = Basis(graphics.get_node('Exit').global_transform.basis.get_rotation_quat())
-	
+	obj.reset_speed_params()
 	obj.linear_velocity = Vector3(0,0,0)
 	obj.angular_velocity = Vector3(0,0,0)
-	print(get_tree())
 	get_parent().get_parent().add_child(obj)
 
 signal trigger_dock
