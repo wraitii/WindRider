@@ -2,6 +2,11 @@ extends Control
 
 var currentSystem = null;
 
+func _init():
+	Core.societyMgr.populate()
+	Core.landablesMgr.populate()
+	Core.systemsMgr.populate()
+
 func _ready():
 	self.connect('resized', self, 'on_resize')
 	get_node('GalaxyView/GalaxyViewport/GalaxyMap/MapScript').connect('system_selected', self, 'on_system_selected');

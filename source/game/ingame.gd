@@ -33,13 +33,18 @@ func bring_ship_in(shipID):
 		match ship.hyperNavigating.method:
 			Enums.HYPERNAVMETHOD.JUMPING:
 				var landables = get_tree().get_nodes_in_group('JumpZones')
+				var delivered = false
 				for l in landables:
 					print(l)
 					if !('jumpTo' in l):
 						continue
 					if l.jumpTo == ship.hyperNavigating.data.from:
 						l.deliver(ship)
+						delivered = true
 						break
+				# If this triggers, probably the target system has no 'reverse' jump point.
+				# That's unsupported ATM.
+				assert(delivered)
 			Enums.HYPERNAVMETHOD.TELEPORTING:
 				self.add_child(ship)
 				ship.translation = Vector3(

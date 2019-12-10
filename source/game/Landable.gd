@@ -18,7 +18,7 @@ func _enter_tree():
 	graphics = LandableGraphics.instance()
 	add_child(graphics)
 	if graphics.has_node("AutoDockArea"):
-		get_node("AutoDockArea").connect("body_entered", self, 'on_autodock_entered')
+		graphics.get_node("AutoDockArea").connect("body_entered", self, 'on_autodock_entered')
 
 func _exit_tree():
 	remove_from_group('Landables')
@@ -42,6 +42,7 @@ func init(data):
 ### Docking
 
 func deliver(obj):
+	assert(graphics.has_node('Exit'))
 	obj.global_transform.origin = graphics.get_node('Exit').global_transform.origin
 	obj.global_transform.basis = Basis(graphics.get_node('Exit').global_transform.basis.get_rotation_quat())
 	obj.reset_speed_params()

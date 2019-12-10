@@ -27,10 +27,6 @@ func init():
 		for child in get_children():
 			remove_child(child);
 
-	Core.societyMgr.populate()
-	Core.landablesMgr.populate()
-	Core.systemsMgr.populate()
-
 	var systems = Core.systemsMgr.get_systems()
 
 	get_node('Camera').set_current(true)
@@ -39,16 +35,25 @@ func init():
 		var data = systems[name]
 		var system = System.instance()
 		system.translation = A2V._3(data.position);
+		if Core.gameState.playerShip:
+			if Core.sectorsMgr.get(Core.gameState.playerShip.currentSector).system == data.ID:
+				system.get_node("ActiveSystem").show()
 		add_child(system)
 		system.connect('input_event', self, '_on_input_event', [data])
-		for jz in data.get_children():
-			if jz is JumpZone:
-				var target = Core.systemsMgr.get(jz.jumpTo)
-				var dir = A2V._3(target.position) - system.translation;
-				var hl = HyperLink.instance()
-				hl.look_at_from_position(system.translation, A2V._3(target.position), Vector3(0,1,0))
-				hl.scale = Vector3(1,1,dir.length())
-				add_child(hl)
+		
+		var jump_to_systems = {}
+		for sectorID in data.sectors:
+			var sectorData = Core.sectorsMgr.get(sectorID)
+			if 'jump_zones' in sectorData:
+				for jz in sectorData['jump_zones']:
+					jump_to_systems[Core.sectorsMgr.get(jz['jump_to']).system] = true
+		for neighbor in jump_to_systems:
+			var target = Core.systemsMgr.get(neighbor)
+			var dir = A2V._3(target.position) - system.translation;
+			var hl = HyperLink.instance()
+			hl.look_at_from_position(system.translation, A2V._3(target.position), Vector3(0,1,0))
+			hl.scale = Vector3(1,1,dir.length())
+			add_child(hl)
 		
 		var label = [Label.new(), data]
 		label[0].text = name
