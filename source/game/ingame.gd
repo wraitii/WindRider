@@ -5,8 +5,9 @@ const Sector = preload('Sector.gd')
 var _sector;
 
 func _enter_tree():
-	_sector = Sector.new().init(Core.gameState.playerShip.currentSector)
+	_sector = Sector.new()
 	self.add_child(_sector)
+	_sector.init(Core.gameState.playerShip.currentSector)
 
 	Core.outsideWorldSim.connect('bring_ship_in', self, 'bring_ship_in')
 	pass

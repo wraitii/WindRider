@@ -15,7 +15,7 @@ func init(sectorID):
 	return self
 
 func _exit_tree():
-	# Since for now I'm fetching landables, I have to unparent them.
+	# Since for now I'm fetching landables directly from the mgr, I have to unparent them.
 	NodeHelpers.remove_all_children(self)
 
 func _parse_stars(sectorData):
@@ -25,10 +25,11 @@ func _parse_stars(sectorData):
 
 	for starDef in systemData['stars']:
 		var star = Star.instance()
-		self.add_child(star)
-		var pos = starDef['position']
-		star.translate(Vector3(pos[0],pos[1],pos[2]))
+		add_child(star)
+		var pos = (A2V._3(starDef['position']) - sectorData.position) * 100
+		star.translate(pos)
 		star.scale_object_local(Vector3(100,100,100))
+		star.lightDir = -pos
 
 func _parse_landables(sysData):
 	if !("landables" in sysData):
