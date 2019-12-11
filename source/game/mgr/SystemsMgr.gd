@@ -5,7 +5,7 @@ const SystemData = preload('../SystemData.gd')
 func _init().('Systems', 'res://data/systems/'):
 	pass
 
-func create(data):
+func _instance(data):
 	var item = SystemData.new();
 	item.init(data);
 	return item;

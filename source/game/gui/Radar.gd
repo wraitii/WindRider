@@ -34,7 +34,7 @@ func _process(delta):
 		if !(l.name in radar):
 			radar[l.name] = _create_pixel(5, Color(1,1,0))
 			get_node('center').add_child(radar[l.name])
-		var p = (l.translation - playerShip.translation)
+		var p = (l.position - playerShip.translation)
 		radar[l.name].position = Vector2(p.x, p.z) * 0.005
 
 	items = get_tree().get_nodes_in_group('JumpZones')

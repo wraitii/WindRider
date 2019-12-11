@@ -28,6 +28,7 @@ size = Vector2( 650, 400 )
 transparent_bg = true
 handle_input_locally = false
 hdr = false
+render_target_update_mode = 3
 script = ExtResource( 1 )
 
 [node name="MapCamera" type="Camera" parent="ViewportContainer/Viewport"]

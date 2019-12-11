@@ -17,23 +17,32 @@ func _init(k, p):
 	kind = k
 	resource_path = p
 
-func _load(path):
-	var source = IO.read_json(path);
-	if !validation(source, path):
-		return
-	var obj = create(source)
-	register(obj, source, path);
-
 func populate():
 	for s in data:
-		unregister(data[s])
+		_unregister(data[s])
 
 	var files = IO.list_dir(resource_path, '.json')
 	for f in files:
-		_load(resource_path + f);
+		create_resource(IO.read_json(resource_path + f), resource_path + f);
 
 func has(s):
 	return s in data
+
+# Create a new resource at the given path, and instance it.
+# if path is null, this will auto-assign a path.
+func create_resource(data, path = null):
+	if path == null:
+		path = 'custom_' + data.ID + '_' + str(OS.get_unix_time());
+	# Hack in case the above is _still_ not sufficient.
+	while path in paths:
+		path += '_'
+
+	if !validation(data, path):
+		return null
+	
+	var obj = _instance(data)
+	_register(obj, data, path);
+	return obj
 
 func get(s):
 	if !(s in data):
@@ -53,12 +62,12 @@ func get_data_path(s):
 		return null
 	return paths[s]
 
-func register(item, source, path):
+func _register(item, source, path):
 	data[item.ID] = item;
 	raw_data[item.ID] = source;
 	paths[item.ID] = path;
 
-func unregister(item):
+func _unregister(item):
 	data.erase(item.ID);
 	raw_data.erase(item.ID);
 	paths.erase(item.ID);
@@ -68,8 +77,8 @@ func unregister(item):
 func serialize():
 	pass
 
-# supposed to return the object being created
-func create(_data):
+# Internal function to create an instance from data.
+func _instance(_data):
 	pass
 
 func validation(_data, _path):

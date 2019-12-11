@@ -46,7 +46,11 @@ func create_new_game():
 	
 	gameState.galacticTime = GalacticTime.new(3065, 04, 12, 13, 48)
 	
-	gameState.player = Character.instance()
+	gameState.player = societyMgr.create_resource({
+		"ID": "player_character",
+		"short_name": "Player",
+		"type": "character"
+	})
 	gameState.player.credits = 10000;
 	
 	var playerShip = Ship.instance()

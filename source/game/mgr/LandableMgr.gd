@@ -5,7 +5,7 @@ const Landable = preload('../Landable.gd')
 func _init().('Landable', 'res://data/landables/'):
 	pass
 
-func create(data):
+func _instance(data):
 	var item = Landable.new();
 	item.init(data);
 	return item;

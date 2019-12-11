@@ -233,14 +233,15 @@ func reverse():
 func aim_towards_target():
 	var target = targetingSystem.get_active_target();
 	if target == null:
-		target = navSystem.targetNode
+		target = navSystem.get_next_waypoint_position()
+
 	if target == null:
 		return
 
 	if target is RigidBody:
 		align_with(Intercept.simple_intercept(self, target, 1000)[0])
 	else:
-		align_with(target.transform.origin - get_transform().origin)
+		align_with(target - get_transform().origin)
 
 func follow_vector(var world_vector, var percent_xz = Vector2(1.0,1.0)):
 	align_with(world_vector, percent_xz)
@@ -341,7 +342,7 @@ class DockingData:
 		)
 
 func _jump_out():
-	navSystem.targetNode = null;
+	navSystem.reset()
 	if ID == Core.gameState.playerShipID:
 		Core.outsideWorldSim.sector_about_to_unload()
 		Core.unload_scene();
@@ -419,14 +420,18 @@ func dock(to):
 ## Comms-related
 
 func try_dock():
-	if navSystem.targetNode == null:
+	if !navSystem.has_target():
+		return;
+
+	var target = navSystem.get_target()
+	if target.type != target.TARGET_TYPE.LANDABLE:
 		return;
 
 	if dockingProcedure != null:
 		dockingProcedure.ask_for_docking()
 		return
 
-	dockingProcedure = Docking.new(self, navSystem.targetNode)
+	dockingProcedure = Docking.new(self, Core.landablesMgr.get(target.ID))
 	dockingProcedure.ask_for_docking()
 
 func on_received_chat(convo, sender, chatData):

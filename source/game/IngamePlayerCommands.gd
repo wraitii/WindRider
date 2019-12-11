@@ -52,7 +52,7 @@ func _process(delta):
 
 	# Can take us out of the world
 	if Input.is_action_just_released('ship_dock'):
-		if ship.navSystem.targetNode == null:
+		if !ship.navSystem.has_target():
 			ship.navSystem.target_closest_nav_object();
 		ship.try_dock()
 

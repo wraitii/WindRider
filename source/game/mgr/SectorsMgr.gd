@@ -5,7 +5,7 @@ const SectorData = preload('../SectorData.gd')
 func _init().('Sectors', 'res://data/sectors/'):
 	pass
 
-func create(data):
+func _instance(data):
 	var item = SectorData.new();
 	item.init(data);
 	return item;
