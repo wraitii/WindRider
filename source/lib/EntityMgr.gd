@@ -39,7 +39,7 @@ func create_resource(data, path = null):
 
 	if !validation(data, path):
 		return null
-	
+
 	var obj = _instance(data)
 	_register(obj, data, path);
 	return obj
@@ -75,6 +75,10 @@ func _unregister(item):
 # Functions below are virtual
 
 func serialize():
+	pass
+
+func deserialize(_data):
+	populate()
 	pass
 
 # Internal function to create an instance from data.

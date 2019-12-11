@@ -7,18 +7,39 @@ extends Node
 const Opinion = preload('Opinion.gd')
 
 var ID;
+var type;
+var _raw;
 
 var opinions = {};
-
 var outfits = [];
-
 var credits = 10000;
 
 func init(d):
 	ID = d.ID
+	type = d.type
+	_raw = d
 	if 'relations' in d:
 		for rel in d['relations']:
 			var tgt = Core.societyData.get(rel['target']);
 			var r = Opinion.new(self, tgt);
 			r.core_opinion = rel['core_opinion'];
 			opinions[rel['target']] = r
+
+func serialize():
+	var ret = {}
+	ret._raw = _raw
+	ret.type = type
+	ret.credits = credits	
+	ret.opinions_ = {}
+	for op in opinions:
+		ret.opinions_[op] = opinions[op].serialize()
+	# no need to serialize outfits atm
+	return ret
+
+func deserialize(data):
+	for prop in data:
+		if prop in self:
+			set(prop, data[prop])
+
+	for op in data.opinions_:
+		opinions[op] = Opinion.deserialize(data.opinions[op])

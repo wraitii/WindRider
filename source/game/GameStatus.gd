@@ -42,6 +42,11 @@ func save_game():
 	if file.open('user://save_game.wrdr', File.WRITE) != OK:
 		return null;
 	
+	file.store_var(Core.societyMgr.serialize())
+	file.store_var(Core.landablesMgr.serialize())
+	file.store_var(Core.systemsMgr.serialize())
+	file.store_var(Core.sectorsMgr.serialize())
+
 	file.store_var(galacticTime.serialize());
 	
 	file.store_var(playerShipID)
@@ -50,15 +55,17 @@ func save_game():
 	for ship in ships:
 		file.store_var(ship.serialize())
 
-	Core.sectorsMgr.serialize();
-	Core.systemsMgr.serialize();
-
 	return true;
 
 func load_save(root):
 	var file = File.new()
 	if file.open('user://save_game.wrdr', File.READ) != OK:
 		return null;
+
+	Core.societyMgr.deserialize(file.get_var())
+	Core.landablesMgr.deserialize(file.get_var())
+	Core.systemsMgr.deserialize(file.get_var())
+	Core.sectorsMgr.deserialize(file.get_var())
 
 	galacticTime = GalacticTime.new(0,0,0,0,0)
 	galacticTime.deserialize(file.get_var());

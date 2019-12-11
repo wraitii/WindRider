@@ -36,10 +36,7 @@ func create_new_game():
 	landablesMgr.populate()
 	systemsMgr.populate()
 	sectorsMgr.populate()
-	
-	## TODO: if I get an outfitMgr or something this should be replaced
-	societyMgr.assign_outfits()
-	
+
 	NodeHelpers.queue_delete(get_node('/root/MainMenu'))
 	
 	gameState = GameStatus.new()
@@ -69,14 +66,6 @@ func create_new_game():
 	gameState.save_game();
 
 func load_saved_game():
-	societyMgr.populate()
-	landablesMgr.populate()
-	systemsMgr.populate()
-	sectorsMgr.populate()
-	
-	## TODO: if I get an outfitMgr or something this should be replaced
-	societyMgr.assign_outfits()
-
 	NodeHelpers.queue_delete(get_node('/root/MainMenu'))
 	gameState = GameStatus.new();
 	gameState.load_save(get_node('/root'));
