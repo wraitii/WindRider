@@ -45,6 +45,6 @@ func _parse_jump_zones(sysData):
 
 	for jsd in sysData['jump_zones']:
 		var jumpZone = JumpZone.instance()
-		jumpZone.init(self, jsd)
+		jumpZone.init(ID, jsd)
 		self.add_child(jumpZone)
 
