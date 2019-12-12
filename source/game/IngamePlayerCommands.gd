@@ -42,6 +42,9 @@ func _process(delta):
 		if TargetingMode >= 2:
 			TargetingMode = 0
 
+	if Input.is_action_just_released("ship_activate_autopilot"):
+		ship.navSystem.set_mode(ship.navSystem.MODE.MOVE)
+
 	if Input.is_action_just_released('ship_next_target'):
 		ship.targetingSystem.pick_new_target()
 

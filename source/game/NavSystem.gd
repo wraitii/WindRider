@@ -2,8 +2,10 @@ extends Node
 
 signal navsystem_target_change()
 
-# Achtung: this is a reference to the actual node
-var targetNode = null;
+# Autopilot modes. State Machine.
+enum MODE { OFF, MOVE }
+
+var autopilotMode = MODE.OFF;
 
 # More stable targets
 var navTargetsIDs = [];
@@ -43,10 +45,10 @@ func _enter_tree():
 	ship = get_parent();
 
 func _exit_tree():
-	targetNode = null;
+	remove_from_group('autopilot_running')
+	
 
 func reset(send_signal = true):
-	targetNode = null;
 	navTargetsIDs.clear()
 	if send_signal:
 		emit_signal('navsystem_target_change')
@@ -68,14 +70,17 @@ func get_next_waypoint_position():
 	if !has_target():
 		return null
 	
+	var target = get_target().nodeRef.get_ref()
+	
 	# TODO: Compute a path to the next target.
-	if get_target().nodeRef.get_ref() == null:
+	if target == null:
 		return null
 
-	if !'translation' in get_target().nodeRef.get_ref():
-		return null
+	if !'translation' in target:
+		if 'position' in target:
+			return target.position
 		
-	return get_target().nodeRef.get_ref().translation
+	return target.translation
 
 func target_closest_nav_object():
 	var landables = get_tree().get_nodes_in_group('Landables') + get_tree().get_nodes_in_group('JumpZones')
@@ -86,6 +91,25 @@ func target_closest_nav_object():
 		if bestLandable[1] == null || dist <= bestLandable[1]:
 			bestLandable[0] = landable;
 			bestLandable[1] = dist;
-	targetNode = bestLandable[0]
-	set_target_node(targetNode)
+	set_target_node(bestLandable[0])
+
+func set_mode(mode):
+	if autopilotMode == MODE.OFF and mode != MODE.OFF:
+		add_to_group('autopilot_running')
+	elif autopilotMode != MODE.OFF and mode == MODE.OFF:
+		remove_from_group('autopilot_running')
+	autopilotMode = mode
+
+func get_commands(delta):
+	if autopilotMode == MODE.OFF:
+		assert(!is_in_group('autopilot_running'))
+		return []
+
+	var ship = get_parent()
+	assert(ship)
 	
+	var tg = get_next_waypoint_position()
+	if tg == null:
+		return []
+	
+	return [[ship, 'thrust'], [ship, 'aim_towards_target']]

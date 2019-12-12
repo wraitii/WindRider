@@ -8,6 +8,9 @@ margin_right = 70.0
 margin_bottom = 80.0
 rect_clip_content = true
 script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="CurrentSector" type="Label" parent="."]
 anchor_right = 1.0
@@ -22,3 +25,17 @@ margin_left = 10.0
 margin_top = 25.0
 margin_right = -10.0
 text = "default text"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Autopilot" type="Label" parent="."]
+anchor_left = 1.0
+anchor_right = 1.0
+margin_top = 5.0
+grow_horizontal = 0
+text = "ON"
+align = 2
+__meta__ = {
+"_edit_use_anchors_": false
+}

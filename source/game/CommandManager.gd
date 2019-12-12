@@ -7,7 +7,10 @@ func _process(delta):
 
 func _physics_process(delta):
 	commands += get_node('../PlayerCommands').moveCommandProcess()
-	
+
+	for node in get_tree().get_nodes_in_group('autopilot_running'):
+		commands += node.get_commands(delta)
+
 	for command in commands:
 		var ship = command[0]
 		if command[1] is String:

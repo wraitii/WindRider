@@ -1,4 +1,4 @@
-extends Node
+extends Spatial
 
 const Ship = preload('Ship.gd')
 const Society = preload('Society.gd')
@@ -20,8 +20,6 @@ func _enter_tree():
 
 	var LandableGraphics = load('res://data/art/landables/' + _raw['graphics'] + '/' + _raw['graphics'] + '.tscn')
 	graphics = LandableGraphics.instance()
-	graphics.translate(position)
-	graphics.scale_object_local(Vector3(10,10,10))
 	add_child(graphics)
 	if graphics.has_node("AutoDockArea"):
 		graphics.get_node("AutoDockArea").connect("body_entered", self, 'on_autodock_entered')
@@ -36,6 +34,10 @@ func init(data):
 	ID = data.ID
 	position = Vector3(data['position'][0],data['position'][1],data['position'][2])
 	
+	# For convenience elsewhere, move the Landable itself instead of only its graphics.
+	translate(position)
+	scale_object_local(Vector3(10,10,10))
+
 	for c in data['society_presence']:
 		assert(Core.societyMgr.get(c['ID']) != null)
 		societyPresence[c['ID']] = c['presence']
