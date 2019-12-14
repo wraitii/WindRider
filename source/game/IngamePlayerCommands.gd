@@ -122,5 +122,6 @@ func moveCommandProcess():
 		ret.push_back([Core.gameState.playerShip, c])
 
 	ret += ship.navSystem.autothrust()
+	ship.navSystem.autorailroad()
 
 	return ret

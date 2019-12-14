@@ -86,8 +86,21 @@ func get_next_waypoint_position():
 	if !'translation' in target:
 		if 'position' in target:
 			return target.position
-		
+		return null
+	
 	return target.translation
+
+func get_next_waypoint_speed():
+	if !has_target():
+		return null
+	var target = get_target().nodeRef.get_ref()
+	if target == null:
+		return null
+	
+	if get_target().type == get_target().TARGET_TYPE.LANDABLE:
+		return min(1, (target.translation - get_parent().translation).length_squared() / (400*400))
+
+	return null
 
 func target_closest_nav_object():
 	var landables = get_tree().get_nodes_in_group('Landables') + get_tree().get_nodes_in_group('JumpZones')
@@ -112,12 +125,20 @@ func switch_driving_mode():
 	if drivingMode >= len(DRIVING_MODE):
 		drivingMode = DRIVING_MODE.AUTOTHRUST;
 
+func autorailroad():
+	var ship = get_parent()
+	assert(ship)
+	if ship.navSystem.drivingMode == ship.navSystem.DRIVING_MODE.AUTOTHRUST or autopilotMode != MODE.OFF:
+		ship.railroading = max(0, min(1, ship.linear_velocity.length() / (0.4 * ship.stat('max_speed')) - 0.1));
+	else:
+		ship.railroading *= 0.96
+
 func autothrust():
 	var ship = get_parent()
 	assert(ship)
 	var commands = []
 	
-	if drivingMode == DRIVING_MODE.AUTOTHRUST:
+	if drivingMode == DRIVING_MODE.AUTOTHRUST or autopilotMode != MODE.OFF:
 		var speed = ship.linear_velocity.length_squared();
 		var delta = abs(speed - targetSpeed * ship.stat('max_speed') * ship.stat('max_speed'))
 		if delta > 0.1:
@@ -141,6 +162,12 @@ func get_commands(delta):
 	var tg = get_next_waypoint_position()
 	if tg == null:
 		return commands
+	
+	var ts = get_next_waypoint_speed()
+	if ts == null:
+		targetSpeed = 1.0
+	else:
+		targetSpeed = ts
 	
 	commands.append([ship, 'aim_towards_target'])
 	return commands

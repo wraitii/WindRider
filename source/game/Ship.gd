@@ -118,11 +118,6 @@ func _physics_process(delta):
 	energy += stat('energy_gen') * delta
 	if energy > stat('max_energy'):
 		energy = stat('max_energy')
-	
-	if navSystem.drivingMode == navSystem.DRIVING_MODE.AUTOTHRUST:
-		railroading = max(0, min(1, linear_velocity.length() / (0.4 * stat('max_speed')) - 0.1));
-	else:
-		railroading *= 0.96
 
 ##############################
 ##############################
