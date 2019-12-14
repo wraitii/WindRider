@@ -88,6 +88,8 @@ func serialize():
 	ret.hyperNavigating = hyperNavigating
 	ret.docking = docking
 	
+	ret.hold = hold.serialize()
+	
 	return ret;
 
 func deserialize(ret):
@@ -105,9 +107,9 @@ func deserialize(ret):
 	targetingSystem = get_node('TargetingSystem');
 	shipStats = get_node('ShipStats')
 	hold = get_node('Hold')
+	hold.deserialize(ret.hold)
 	
 	shipStats.init(data)
-	hold.init(data)
 	targetingSystem.init(null, self);
 	get_node('ShipGraphics').init(data)
 	

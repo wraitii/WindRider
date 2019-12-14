@@ -9,6 +9,8 @@ func _enter_tree():
 	self.add_child(_sector)
 	_sector.init(Core.gameState.playerShip.currentSector)
 
+	$"Layer-Widgets/ShipHoldView".init(Core.gameState.playerShip.hold)
+
 	Core.outsideWorldSim.connect('bring_ship_in', self, 'bring_ship_in')
 	pass
 

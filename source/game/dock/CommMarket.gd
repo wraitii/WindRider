@@ -11,7 +11,7 @@ func _ready():
 
 func _process(delta):
 	if Input.is_action_just_released("default_escape_action"):
-		get_parent().get_node('Submenus/CommMarket').visible = false
+		visible = false
 
 # Amount is relative to the player, i.e. positive means the player is buying.
 func _transaction(commodity, amount):

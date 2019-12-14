@@ -35,6 +35,9 @@ func inspect():
 		$Inspector/Title.text = 'Empty'
 		$Inspector/Desc.text = 'Nothing in there.'
 	else:
+		print(hold.holdContent)
+		print(hold.holdContent[cell])
+		var t = hold.holdContent[cell]
 		$Inspector/Title.text = hold.holdContent[cell].ID
 		$Inspector/Desc.text = str(hold.holdContent[cell].amount)
 
