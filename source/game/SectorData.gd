@@ -29,7 +29,7 @@ const Ship = preload('Ship.tscn')
 func generate_activity():
 	for i in range(ceil(rand_range(5,25))):
 		var ship = Ship.instance()
-		var type = 'Cycles_slow'
+		var type = 'Cycles'
 		if randi() % 2 == 1:
 			type = 'Manta'
 		ship.init(type)

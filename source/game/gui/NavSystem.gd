@@ -21,11 +21,8 @@ func _must_update():
 		get_node('Targeting').text = 'Nav systems offline';
 		return
 	
-	if system.get_ref().autopilotMode == system.get_ref().MODE.OFF:
-		get_node("Autopilot").text = "OFF"
-	else:
-		get_node("Autopilot").text = "ON"
-	
+	get_node("Autopilot").text = system.get_ref().modeDescs[system.get_ref().autopilotMode]
+
 	if !len(system.get_ref().navTargetsIDs):
 		get_node('Targeting').text = 'No nav target';
 		return

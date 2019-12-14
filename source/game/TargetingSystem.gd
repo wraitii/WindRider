@@ -41,10 +41,10 @@ func get_active_target():
 
 func target(shipID):
 	if targets.size() > 0:
-		clear_targets()
+		reset()
 	_add_target(shipID)
 
-func clear_targets():
+func reset():
 	for targetID in targets.keys():
 		emit_signal('untarget', targetID)
 	targets = {}

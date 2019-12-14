@@ -126,6 +126,7 @@ func set_mode(mode):
 	elif autopilotMode != MODE.OFF and mode == MODE.OFF:
 		remove_from_group('autopilot_running')
 	autopilotMode = mode
+	emit_signal('navsystem_target_change')
 
 func switch_driving_mode():
 	drivingMode += 1
@@ -164,6 +165,11 @@ func get_commands(delta):
 
 	var ship = get_parent()
 	assert(ship)
+
+	# AI ships need this.
+	if ship != Core.gameState.playerShip:
+		commands += ship.navSystem.autothrust()
+		ship.navSystem.autorailroad()
 
 	if autopilotMode == MODE.INTERCEPT:
 		var target = ship.targetingSystem.get_active_target();

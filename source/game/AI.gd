@@ -1,7 +1,11 @@
 extends Node
 
+enum MODE { MOVE, KILL }
+
 var ship = null;
 var objective = null;
+
+var mode = MODE.MOVE;
 
 ## TODO: figure this out.
 
@@ -19,10 +23,31 @@ func do_ai():
 		return
 
 	if objective == null:
-		objective = random_point()
+		var behaviour = randf();
+		if ship.data.ID == "Cycles" and behaviour > 0.6:
+			print("kill")
+			objective = weakref(Core.gameState.playerShip)
+			mode = MODE.KILL
+			ship.navSystem.reset()
+			ship.targetingSystem.reset()
+			ship.targetingSystem.target(objective.get_ref().ID)
+			ship.navSystem.activate()
+		else:
+			objective = random_point()
+			mode = MODE.MOVE
+
+	if mode == MODE.MOVE:
+		ship.align_with(objective - ship.transform.origin)
+		ship.thrust()
 	
-	ship.align_with(objective - ship.transform.origin)
-	ship.thrust()
-	
-	if (objective - ship.transform.origin).length_squared() < 100:
-		objective = random_point()
+		if (objective - ship.transform.origin).length_squared() < 100:
+			objective = random_point()
+	else:
+		var target = objective.get_ref()
+		if !target:
+			objective = null
+			return
+		if (target.translation - ship.translation).length_squared() < 400*400:
+			ship.start_firing()
+		else:
+			ship.stop_firing()
