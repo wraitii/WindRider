@@ -114,11 +114,13 @@ func moveCommandProcess():
 		var dir = get_viewport().get_camera().project_ray_normal(get_viewport().get_mouse_position())
 		var deadzone = get_viewport().get_mouse_position();
 		var zone = get_viewport().get_visible_rect().end
-		deadzone = deadzone/zone - Vector2(0.5, 0.5);
-		deadzone.x = max(0, abs(deadzone.x)-0.02)
-		deadzone.x = min(1, deadzone.x*deadzone.x*20)
-		deadzone.y = max(0, abs(deadzone.y)-0.02)
-		deadzone.y = min(1, deadzone.y*deadzone.y*20)
+		var maxzone = min(zone.x, zone.y) / 3
+		deadzone = deadzone-zone/2;
+		deadzone.x = min(1, max(0, abs(deadzone.x)-30) / maxzone)
+		#deadzone.x = min(1, deadzone.x*deadzone.x*20)
+		deadzone.y = min(1, max(0, abs(deadzone.y)-30) / maxzone)
+		#deadzone.y = min(1, deadzone.y*deadzone.y*20)
+		print(deadzone)
 		commands.push_back(['follow_vector', [dir, deadzone]])
 
 	var ret = []

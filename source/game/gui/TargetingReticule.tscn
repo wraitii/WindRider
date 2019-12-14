@@ -3,7 +3,8 @@
 [ext_resource path="res://source/game/gui/TargetingReticule.gd" type="Script" id=1]
 
 [node name="TargetingReticule" type="Control"]
-anchor_right = 1.0
+anchor_left = -0.00029757
+anchor_right = 0.999702
 anchor_bottom = 1.0
 script = ExtResource( 1 )
 __meta__ = {
@@ -42,6 +43,7 @@ __meta__ = {
 }
 
 [node name="Line2D" type="Line2D" parent="Control"]
-scale = Vector2( 30, 30 )
+scale = Vector2( 60, 60 )
 points = PoolVector2Array( -1, 0, 0, 1, 1, 0, 0, -1, -1, 0 )
 width = 0.05
+default_color = Color( 0.4, 0.501961, 1, 0.215686 )
