@@ -7,6 +7,13 @@ enum MODE { OFF, MOVE }
 
 var autopilotMode = MODE.OFF;
 
+## Manual mode lets you thrust wherever you're pointing in 'realistic' Euclidian fashion.
+## Autothrust just tries to get you to the target speed, and slows you down
+## automagically without needing to turn around, though slower than by doing that.
+enum DRIVING_MODE { AUTOTHRUST, MANUAL }
+var drivingMode = DRIVING_MODE.AUTOTHRUST;
+var targetSpeed = 0;
+
 # More stable targets
 var navTargetsIDs = [];
 
@@ -100,16 +107,40 @@ func set_mode(mode):
 		remove_from_group('autopilot_running')
 	autopilotMode = mode
 
-func get_commands(delta):
+func switch_driving_mode():
+	drivingMode += 1
+	if drivingMode >= len(DRIVING_MODE):
+		drivingMode = DRIVING_MODE.AUTOTHRUST;
+
+func autothrust():
+	var ship = get_parent()
+	assert(ship)
+	var commands = []
+	
+	if drivingMode == DRIVING_MODE.AUTOTHRUST:
+		var speed = ship.linear_velocity.length_squared();
+		var delta = abs(speed - targetSpeed * ship.stat('max_speed') * ship.stat('max_speed'))
+		if delta > 0.1:
+			if speed < targetSpeed * ship.stat('max_speed') * ship.stat('max_speed'):
+				commands.append([ship, 'thrust', max(1, delta)])
+			elif speed > targetSpeed * ship.stat('max_speed') * ship.stat('max_speed'):
+				commands.append([ship, 'reverse_thrust', max(1, delta)])
+	return commands
+
+func get_commands(delta):		
+	var commands = []
+
 	if autopilotMode == MODE.OFF:
 		assert(!is_in_group('autopilot_running'))
-		return []
+		return commands
 
 	var ship = get_parent()
 	assert(ship)
+
 	
 	var tg = get_next_waypoint_position()
 	if tg == null:
-		return []
+		return commands
 	
-	return [[ship, 'thrust'], [ship, 'aim_towards_target']]
+	commands.append([ship, 'aim_towards_target'])
+	return commands

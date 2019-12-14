@@ -13,6 +13,8 @@ func _physics_process(delta):
 
 	for command in commands:
 		var ship = command[0]
+		if ship == Core.gameState.playerShip:
+			print("test")
 		if command[1] is String:
 			var fun = command[1]
 			ship.call(fun)

@@ -29,14 +29,11 @@ var dockedAt = null;
 var hyperNavigating = null;
 var docking = null;
 
-## Manual mode means thrust = boosters.
-## Autothrust and railroading is probably what you want,
-## but a quick bout of no-railroad manual burst mode can be fun.
-enum DRIVING_MODE { AUTOTHRUST, MANUAL }
-var driving_mode = DRIVING_MODE.AUTOTHRUST;
-var target_speed = 0;
-# How 'railroaded' the ship's inertia is currently being.
-# Runs between 0 (realistic behaviour) and 1 (star wars)
+## Railroading (aka RR) orients velocity wherever the ship
+## is pointing. With 0 RR, the behaviour is Euclidian, with 1 RR, the ship behaves
+## a lot more like Star Wars spaceships (and planes on Earth).
+## In general, Autothrust and High Railroading are probably the easiest option.
+## Autothrust also auto-railroads based on velocity.
 var railroading = 0.0;
 
 ## Ship caracteristics
@@ -122,16 +119,10 @@ func _physics_process(delta):
 	if energy > stat('max_energy'):
 		energy = stat('max_energy')
 	
-	if driving_mode == DRIVING_MODE.AUTOTHRUST:
+	if navSystem.drivingMode == navSystem.DRIVING_MODE.AUTOTHRUST:
 		railroading = max(0, min(1, linear_velocity.length() / (0.4 * stat('max_speed')) - 0.1));
 	else:
 		railroading *= 0.96
-
-func switch_rr_mode():
-	driving_mode += 1
-	if driving_mode >= len(DRIVING_MODE):
-		driving_mode = DRIVING_MODE.AUTOTHRUST;
-
 
 ##############################
 ##############################
@@ -140,16 +131,10 @@ func switch_rr_mode():
 func _integrate_forces(state):
 	var speed = state.linear_velocity.length_squared();
 	var dir = state.linear_velocity.normalized();
-	#if speed > 0:
-	#	state.linear_velocity = state.linear_velocity - dir * 0.05;
+
+	## M	Ships have a max speed.
 	if speed > stat('max_speed') * stat('max_speed'):
 		state.linear_velocity = dir * stat('max_speed')
-	
-	if driving_mode == DRIVING_MODE.AUTOTHRUST:
-		if speed < target_speed * target_speed:
-			state.add_central_force(_rel_vec(Vector3(0,0,-1), safe_stat('acceleration', 1.0)))
-		elif speed > target_speed * target_speed:
-			state.add_central_force(_rel_vec(Vector3(0,0,1), safe_stat('acceleration', 0.2)))
 
 	# Railroading (orient velocity wherever the ship is pointing)
 	if not state.linear_velocity.is_equal_approx(Vector3()):
@@ -171,14 +156,14 @@ func safe_stat(stat, percent):
 
 # Called before delivering from a landable
 func reset_speed_params():
-	target_speed = 0
+	navSystem.targetSpeed = 0
 	railroading = 0
 
 func thrust(percent = 1.0):
-	if driving_mode == DRIVING_MODE.AUTOTHRUST:
-		target_speed = min(stat('max_speed'), target_speed + 1)
-	else:
-		add_central_force(_rel_vec(Vector3(0,0,-1), safe_stat('acceleration', percent)))
+	add_central_force(_rel_vec(Vector3(0,0,-1), safe_stat('acceleration', percent)))
+
+func reverse_thrust(percent = 1.0):
+	add_central_force(_rel_vec(Vector3(0,0,1), safe_stat('acceleration', percent) * 0.2))
 
 func rotate_up(percent = 1.0):
 	add_torque(_rel_vec(Vector3( 1,0,0), safe_stat('turn_rate', percent) * 0.1))
@@ -225,10 +210,7 @@ func align_with(vec, percent_xz = Vector2(1.0,1.0)):
 	## TODO: rotate towards sector-up when idle-ish.
 
 func reverse():
-	if driving_mode == DRIVING_MODE.AUTOTHRUST:
-		target_speed = max(0, target_speed - 1)
-	else:
-		align_with(-get_linear_velocity())
+	align_with(-get_linear_velocity())
 
 func aim_towards_target():
 	var target = targetingSystem.get_active_target();

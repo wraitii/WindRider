@@ -23,8 +23,12 @@ func _physics_process(delta):
 		CAMERA_STATES.FOLLOW:
 			var pos = Vector3(0,1.5,5.0);
 			var vec = trans.xform(pos)
-			transform.origin = transform.origin.linear_interpolate(vec, 0.2)
-			transform.basis = transform.basis.slerp(trans.basis, 0.2)
+			var lookat = trans.xform(pos + Vector3(0,0,-1)*1000)
+			var up = trans.xform(Vector3(0,1,0)) - trans.origin
+			var target = Transform(Basis(), vec).looking_at(lookat, up)
+			transform = transform.interpolate_with(target, 0.2)
+			#transform.origin = transform.origin.linear_interpolate(vec, 0.2)
+			#transform.basis = transform.basis.slerp(trans.basis, 1)
 			#rotate_object_local(Vector3(0,1,0),-PI/2.0)
 		CAMERA_STATES.FOLLOW_FROM_ABOVE:
 			var pos = trans.origin
