@@ -33,4 +33,4 @@ func generate_activity():
 		if randi() % 2 == 1:
 			type = 'Manta'
 		ship.init(type)
-		ship.teleport(ID, Vector2((randf()-0.5)*5000, (randf()-0.5)*500))
+		ship.teleport(ID, Vector2((randf()-0.5)*500, (randf()-0.5)*500))
