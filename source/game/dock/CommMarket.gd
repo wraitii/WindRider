@@ -17,18 +17,17 @@ func _process(delta):
 
 # Amount is relative to the player, i.e. positive means the player is buying.
 func _transaction(commodity, amount):
-	## TODO	: select
-	if !len($ShipHoldView.selected_cells):
-		return
-
 	if amount > 0:
 		## TODO: warn
 		if Core.gameState.player.credits < amount * 50:
 			return
 
-	var cell = $ShipHoldView.selected_cells[0]
-	var ress = Hold.HoldItem.new(commodity, Hold.HoldItem.TYPE.COMMODITY, abs(amount))
+	var ress = Hold.HoldItem.new(commodity, Hold.HoldItem.TYPE.COMMODITY, abs(amount), 0.01)
 	var hold = $ShipHoldView.hold
+
+	var cell;
+	if len($ShipHoldView.selected_cells):
+		cell = $ShipHoldView.selected_cells[0]
 
 	var cs;
 	if amount > 0:

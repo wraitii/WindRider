@@ -20,11 +20,13 @@ class HoldItem:
 	var ID;
 	var type;
 	var amount = 0;
+	var volume = 1;
 	
-	func _init(id, t, a = 0):
+	func _init(id, t, a = 0, v = 1):
 		ID = id
 		type = t
 		amount = a
+		volume = v
 
 func init(shipData):
 	holdSpace = shipData['hold'];
