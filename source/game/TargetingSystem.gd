@@ -6,11 +6,9 @@ extends Node
 var ownerShip = null;
 var ownerComponent = null;
 
-#### GUI signals
 signal target(ID)
 signal untarget(ID)
 
-## Player / AI signal
 signal lost_target(ID)
 
 # ship ID >> data

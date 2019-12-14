@@ -37,6 +37,7 @@ func _process(delta):
 	if Input.is_action_just_released('ship_reset_systems'):
 		ship.dockingProcedure = null;
 		ship.navSystem.reset()
+		ship.targetingSystem.reset()
 
 	if Input.is_action_just_released('ship_switch_driving_mode'):
 		ship.navSystem.switch_driving_mode()
@@ -117,10 +118,7 @@ func moveCommandProcess():
 		var maxzone = min(zone.x, zone.y) / 3
 		deadzone = deadzone-zone/2;
 		deadzone.x = min(1, max(0, abs(deadzone.x)-30) / maxzone)
-		#deadzone.x = min(1, deadzone.x*deadzone.x*20)
 		deadzone.y = min(1, max(0, abs(deadzone.y)-30) / maxzone)
-		#deadzone.y = min(1, deadzone.y*deadzone.y*20)
-		print(deadzone)
 		commands.push_back(['follow_vector', [dir, deadzone]])
 
 	var ret = []
