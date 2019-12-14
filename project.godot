@@ -209,6 +209,7 @@ ship_activate_autopilot={
 
 [physics]
 
+common/physics_fps=120
 3d/physics_engine="Bullet"
 3d/default_gravity=0.0
 3d/default_linear_damp=0.0
