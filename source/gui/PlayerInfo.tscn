@@ -40,16 +40,27 @@ __meta__ = {
 }
 
 [node name="ShipHoldView" parent="Tabs" instance=ExtResource( 1 )]
+visible = false
 margin_left = 4.0
 margin_top = 32.0
 margin_right = -4.0
 margin_bottom = -4.0
 
-[node name="Placeholder for player info" type="Control" parent="Tabs"]
-visible = false
+[node name="Player" type="Control" parent="Tabs"]
 anchor_right = 1.0
 anchor_bottom = 1.0
 margin_left = 4.0
 margin_top = 32.0
 margin_right = -4.0
 margin_bottom = -4.0
+
+[node name="Desc" type="Label" parent="Tabs/Player"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 10.0
+margin_top = 10.0
+margin_right = -10.0
+margin_bottom = -10.0
+__meta__ = {
+"_edit_use_anchors_": false
+}

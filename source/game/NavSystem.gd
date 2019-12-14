@@ -53,7 +53,6 @@ func _enter_tree():
 
 func _exit_tree():
 	remove_from_group('autopilot_running')
-	
 
 func reset(send_signal = true):
 	navTargetsIDs.clear()
