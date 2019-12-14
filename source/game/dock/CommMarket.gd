@@ -7,6 +7,7 @@ const Hold = preload('res://source/game/ShipHold.gd')
 func _ready():
 	for c in commodities:
 		$CommodityView.add_item(c)
+	$ShipHoldView.init(Core.gameState.playerShip.hold)
 
 func _process(delta):
 	if Input.is_action_just_released("default_escape_action"):

@@ -5,10 +5,12 @@ signal hold_cell_selected(x,y,z)
 var selected_cells = []
 var hold
 
-func _enter_tree():
-	hold = load('res://source/game/ShipHold.gd').new()
-	hold.init(IO.read_json('res://data/ships/Cycles.json'))
+#hold = load('res://source/game/ShipHold.gd').new()
+#hold.init(IO.read_json('res://data/ships/Cycles.json'))
 
+
+func init(h):
+	hold = h
 	hold.connect('hold_content_changed', self, '_on_hold_changed')
 	_update()
 

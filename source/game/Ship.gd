@@ -21,6 +21,7 @@ var navSystem;
 var weaponsSystem;
 var targetingSystem;
 var shipStats;
+var hold;
 
 # Navigation
 var lastSector = null;
@@ -58,9 +59,11 @@ func init(shipType):
 	targetingSystem = get_node('TargetingSystem');
 	shipStats = get_node('ShipStats');
 	AI = get_node('AI');
+	hold = get_node('Hold')
 	
 	data = Core.dataMgr.get('ships/' + shipType)
 	shipStats.init(data)
+	hold.init(data)
 	targetingSystem.init(null, self);
 	
 	shields = stat('max_shields')
@@ -101,8 +104,10 @@ func deserialize(ret):
 	weaponsSystem = get_node('WeaponsSystem');
 	targetingSystem = get_node('TargetingSystem');
 	shipStats = get_node('ShipStats')
+	hold = get_node('Hold')
 	
 	shipStats.init(data)
+	hold.init(data)
 	targetingSystem.init(null, self);
 	get_node('ShipGraphics').init(data)
 	
