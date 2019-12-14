@@ -29,5 +29,8 @@ const Ship = preload('Ship.tscn')
 func generate_activity():
 	for i in range(ceil(rand_range(5,25))):
 		var ship = Ship.instance()
-		ship.init('Cycles_slow')
+		var type = 'Cycles_slow'
+		if randi() % 2 == 1:
+			type = 'Manta'
+		ship.init(type)
 		ship.teleport(ID, Vector2((randf()-0.5)*5000, (randf()-0.5)*500))

@@ -7,7 +7,6 @@ signal ship_death(ship)
 
 const NavSystem = preload('res://source/game/NavSystem.gd')
 const Docking = preload('res://source/game/comms/Docking.gd')
-const Graphics = preload('res://source/graphics/Ship.tscn')
 
 var ID;
 
@@ -70,8 +69,12 @@ func init(shipType):
 	energy = stat('max_energy')
 	hyperfuel = stat('max_hyperfuel')
 
-	get_node('ShipGraphics').init(data)
-	pass
+	var graph = load('res://data/art/ships/' + data['scene'] + '.tscn')
+	var graphics = graph.instance()
+	self.add_child(graphics)
+	for c in graphics.get_node('Shapes').get_children():
+		graphics.get_node('Shapes').remove_child(c)
+		add_child(c)
 
 func serialize():
 	var ret = {}
@@ -110,8 +113,14 @@ func deserialize(ret):
 	
 	shipStats.init(data)
 	targetingSystem.init(null, self);
-	get_node('ShipGraphics').init(data)
 	
+	var graph = load('res://data/art/ships/' + data['scene'] + '.tscn')
+	var graphics = graph.instance()
+	self.add_child(graphics)
+	for c in graphics.get_node('Shapes').get_children():
+		graphics.get_node('Shapes').remove_child(c)
+		add_child(c)
+
 	shields = ret.shields
 	armour = ret.armour
 	energy = ret.energy

@@ -1,5 +1,5 @@
 extends Spatial
-const Projectile = preload('Projectile.tscn')
+const Projectile = preload('res://data/art/projectiles/BlasterBolt.tscn')
 
 var ownerShip = null;
 var ownerComponent = null;
@@ -56,4 +56,5 @@ func _fire_projectile():
 	var angle = ownerShip.transform.basis.xform(Vector3(0,0,-1))
 	proj.linear_velocity = ownerShip.linear_velocity + angle * weaponData['firing_speed'];
 	proj.translation = ownerShip.translation + angle * 4 + angle * ownerShip.linear_velocity.length() / 10.0
+	proj.rotation = ownerShip.rotation
 	Core.gameState.currentScene.add_child(proj)

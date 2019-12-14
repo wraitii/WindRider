@@ -26,10 +26,11 @@ func _process(delta):
 	
 	# Compute the cross for instant firing.
 	if target == null:
+		get_node("Aim Reticule").hide()
 		return
 	
 	# Assume weapon speed for now
-	var dir_pos = Intercept.simple_intercept(Core.gameState.playerShip, Core.outsideWorldSim.ship(target), 1000)
+	var dir_pos = Intercept.simple_intercept(Core.gameState.playerShip, Core.outsideWorldSim.ship(target), 500)
 
 	if dir_pos[1] == null:
 		get_node("Aim Reticule").hide()
