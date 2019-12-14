@@ -23,6 +23,10 @@ func _init():
 	event.scancode = KEY_K
 	InputMap.action_add_event('player_open_sector_map', event)
 
+	InputMap.add_action('player_open_player_info')
+	event = InputEventKey.new()
+	event.scancode = KEY_I
+	InputMap.action_add_event('player_open_player_info', event)
 
 func _process(delta):
 	var ship = Core.gameState.playerShip;

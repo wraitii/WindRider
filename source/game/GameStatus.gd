@@ -39,7 +39,7 @@ const GalacticTime = preload('GalacticTime.gd')
 
 func save_game():
 	var file = File.new()
-	if file.open('user://save_game.wrdr', File.WRITE) != OK:
+	if file.open('user://save_game.wdrr', File.WRITE) != OK:
 		return null;
 	
 	file.store_var(Core.societyMgr.serialize())
@@ -59,7 +59,7 @@ func save_game():
 
 func load_save(root):
 	var file = File.new()
-	if file.open('user://save_game.wrdr', File.READ) != OK:
+	if file.open('user://save_game.wdrr', File.READ) != OK:
 		return null;
 
 	Core.societyMgr.deserialize(file.get_var())
