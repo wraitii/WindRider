@@ -51,7 +51,6 @@ func create_new_game():
 	gameState.player.credits = 10000;
 	
 	var playerShip = Ship.instance()
-	playerShip = Ship.instance()
 	playerShip.init('Cycles')
 	gameState.player.ship = playerShip
 	
@@ -76,8 +75,6 @@ func unload_scene():
 	if gameState.currentScene == null:
 		return
 
-	if gameState.playerShip != null && gameState.playerShip.is_inside_tree():
-		gameState.playerShip.get_parent().remove_child(gameState.playerShip)
 	NodeHelpers.queue_delete(gameState.currentScene)
 
 func load_scene():

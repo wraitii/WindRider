@@ -4,6 +4,8 @@ const Sector = preload('Sector.gd')
 
 var _sector;
 
+const Ship = preload('Ship.gd')
+
 func _enter_tree():
 	_sector = Sector.new()
 	self.add_child(_sector)
@@ -16,6 +18,12 @@ func _exit_tree():
 	self.remove_child(_sector)
 	_sector = null
 	Core.outsideWorldSim.disconnect('bring_ship_in', self, 'bring_ship_in')
+
+	for child in get_children():
+		if child is Ship:
+			# Detach the ships because this is getting destroyed along with chikdren,
+			# but the outside world manager might want some ships to stay alive.
+			remove_child(child)
 
 func _loaded_player_ship():
 	get_node('Camera').followedShip = Core.gameState.playerShip
@@ -36,7 +44,6 @@ func bring_ship_in(shipID):
 				var landables = get_tree().get_nodes_in_group('JumpZones')
 				var delivered = false
 				for l in landables:
-					print(l)
 					if !('jumpTo' in l):
 						continue
 					if l.jumpTo == ship.hyperNavigating.data.from:
@@ -56,6 +63,7 @@ func bring_ship_in(shipID):
 	# Assume the ship has correct data.
 	else:
 		self.add_child(ship)
+	ship.add_to_group('sector_ships')
 	if shipID == Core.gameState.playerShipID:
 		_loaded_player_ship()
 

@@ -141,18 +141,6 @@ func ship_death(ship):
 		_shipIDsInSector[ship.currentSector].erase(ship.ID)
 	_ships.erase(ship.ID)
 
-# All ships in the current sector would be lost when it unloads,
-# so we need to save those we care about.
-func sector_about_to_unload():
-	if Core.gameState.currentScene == null:
-		return
-
-	for ship in Core.gameState.currentScene.get_children():
-		if !(ship is Ship):
-			continue
-		ship.get_parent().remove_child(ship)
-		# TODO: could be worth deleting those we don't care about
-
 func advance(delta):
 	if Core.gameState.playerShip == null:
 		return

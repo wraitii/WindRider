@@ -49,7 +49,6 @@ func stat(stat):
 func _init():
 	set_linear_damp(0);
 	set_angular_damp(0.98);
-	add_to_group('Ships', true)
 	pass
 
 func init(shipType):
@@ -117,7 +116,7 @@ func deserialize(ret):
 	armour = ret.armour
 	energy = ret.energy
 	hyperfuel = ret.hyperfuel
-	
+
 func _process(_delta):
 	pass
 
@@ -328,7 +327,6 @@ class DockingData:
 func _jump_out():
 	navSystem.reset()
 	if ID == Core.gameState.playerShipID:
-		Core.outsideWorldSim.sector_about_to_unload()
 		Core.unload_scene();
 	lastSector = currentSector
 	currentSector = null
@@ -349,7 +347,6 @@ func _teleport(to, pos):
 func _do_dock(to):
 	dockingProcedure = null;
 	if ID == Core.gameState.playerShipID:
-		Core.outsideWorldSim.sector_about_to_unload()
 		Core.unload_scene();
 	docking = null
 	dockedAt = to;
