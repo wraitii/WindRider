@@ -204,18 +204,18 @@ func align_with(vec, percent_xz = Vector2(1.0,1.0)):
 	var euler = rotation_needs(vec);
 	
 	if euler.x >= 0.0:
-		rotate_left(max(0.05, abs(euler.x) * 10.0) * percent_xz.x);
+		rotate_left(max(0.05, abs(euler.x) * 100.0) * percent_xz.x);
 		if euler.x >= 0.25:
-			roll_left(max(0.05, abs(euler.x) * 10.0) * percent_xz.x);
+			roll_left(max(0.05, abs(euler.x) * 100.0) * percent_xz.x);
 	elif euler.x < -0.0:
 		rotate_right(max(0.05, abs(euler.x) * 10.0) * percent_xz.x);
 		if euler.x <= -0.25:
 			roll_right(max(0.05, abs(euler.x) * 10.0) * percent_xz.x);	
 
 	if euler.y < 1.0 and euler.z >= 0:
-		rotate_up(max(0.05, abs(euler.y - 1) * 10.0) * percent_xz.y);
+		rotate_up(max(0.05, abs(euler.y - 1) * 100.0) * percent_xz.y);
 	elif euler.y < 1 and euler.z < 0:
-		rotate_down(max(0.05, abs(euler.y - 1) * 10.0) * percent_xz.y);
+		rotate_down(max(0.05, abs(euler.y - 1) * 100.0) * percent_xz.y);
 	
 	## TODO: rotate towards sector-up when idle-ish.
 

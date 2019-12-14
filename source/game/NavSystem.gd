@@ -3,7 +3,9 @@ extends Node
 signal navsystem_target_change()
 
 # Autopilot modes. State Machine.
-enum MODE { OFF, MOVE }
+enum MODE { OFF, NAVTARGET, INTERCEPT }
+
+const modeDescs = ['Off', 'Nav', 'Intercept']
 
 var autopilotMode = MODE.OFF;
 
@@ -53,6 +55,7 @@ func _enter_tree():
 
 func reset(send_signal = true):
 	navTargetsIDs.clear()
+	set_mode(MODE.OFF)
 	if send_signal:
 		emit_signal('navsystem_target_change')
 
@@ -109,6 +112,14 @@ func target_closest_nav_object():
 			bestLandable[1] = dist;
 	set_target_node(bestLandable[0])
 
+# Activate autopilot
+func activate():
+	if ship.targetingSystem.get_active_target() != null:
+		if get_target() == null:
+			ship.navSystem.set_mode(ship.navSystem.MODE.INTERCEPT)
+			return
+	ship.navSystem.set_mode(ship.navSystem.MODE.NAVTARGET)
+
 func set_mode(mode):
 	if autopilotMode == MODE.OFF and mode != MODE.OFF:
 		add_to_group('autopilot_running')
@@ -153,6 +164,25 @@ func get_commands(delta):
 
 	var ship = get_parent()
 	assert(ship)
+
+	if autopilotMode == MODE.INTERCEPT:
+		var target = ship.targetingSystem.get_active_target();
+		if !target:
+			set_mode(MODE.OFF)
+			return commands
+		if ship.translation.distance_squared_to(ship.translation) > 400*400:
+			targetSpeed = 1.0
+			var vector = Intercept.simple_intercept(ship, target, ship.stat('max_speed'))[0]
+			if !vector:
+				vector = (target.translation - ship.translation).normalized()
+			commands.append([ship, ['follow_vector', [vector]]])
+		else:
+			targetSpeed = 1.0
+			var vector = Intercept.simple_intercept(ship, target, 500)[0]
+			if !vector:
+				vector = (target.translation - ship.translation).normalized()
+			commands.append([ship, ['follow_vector', [vector]]])
+		return commands
 
 	var tg = get_next_waypoint_position()
 	if tg == null:
