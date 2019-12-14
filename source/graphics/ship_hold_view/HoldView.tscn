@@ -1,0 +1,27 @@
+[gd_scene load_steps=5 format=2]
+
+[ext_resource path="res://source/graphics/ship_hold_view/HoldMat.tres" type="Material" id=1]
+[ext_resource path="res://source/graphics/ship_hold_view/HexMesh.tres" type="ArrayMesh" id=2]
+
+[sub_resource type="Skin" id=1]
+
+[sub_resource type="SphereShape" id=2]
+
+[node name="Spatial" type="Spatial"]
+
+[node name="Camera" type="Camera" parent="."]
+transform = Transform( 1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 10, 0 )
+projection = 1
+current = true
+size = 10.0
+
+[node name="HoldSpace" type="Area" parent="."]
+
+[node name="MeshInstance" type="MeshInstance" parent="HoldSpace"]
+cast_shadow = 0
+mesh = ExtResource( 2 )
+skin = SubResource( 1 )
+material/0 = ExtResource( 1 )
+
+[node name="Coll" type="CollisionShape" parent="HoldSpace"]
+shape = SubResource( 2 )

@@ -1,15 +1,18 @@
 extends Container
 
-var landableData
+var landable
 
 func init(l):
 	Core.gameState.save_game();
-	landableData = l;
-	get_node('PlanetName').text = landableData.ID
+	landable = l;
+	get_node('PlanetName').text = landable.ID
 	_check_hyperfuel();
 	
-	get_node('Marketplace').init(Core.landablesMgr.get(landableData.ID))
-	get_node('Marketplace').connect('close', self, 'on_marketplace_closed')
+	$Submenus/Marketplace.init(landable)
+	$Submenus/Marketplace.connect('close', self, 'on_marketplace_closed')
+	
+	var admin = landable.administrator
+	get_node('GeneralInfo').text = str(admin.get_opinion(Core.gameState.player))
 
 func _on_Undock_pressed():
 	Core.gameState.playerShip._do_undock()
@@ -23,7 +26,10 @@ func _on_Refuel_pressed():
 	_check_hyperfuel();
 
 func _on_MarketplaceBtn_pressed():
-	get_node('Marketplace').visible = true
+	$Submenus/Marketplace.visible = true
 
 func on_marketplace_closed():
-	get_node('Marketplace').visible = false
+	$Submenus/Marketplace.visible = false
+
+func _on_CommoditiesBtn_pressed():
+	$Submenus/CommMarket.visible = true

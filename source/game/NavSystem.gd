@@ -158,7 +158,6 @@ func get_commands(delta):
 	var ship = get_parent()
 	assert(ship)
 
-	
 	var tg = get_next_waypoint_position()
 	if tg == null:
 		return commands

@@ -25,6 +25,9 @@ func init(d):
 			r.core_opinion = rel['core_opinion'];
 			opinions[rel['target']] = r
 
+func get_opinion(target):
+	return 0
+
 func serialize():
 	var ret = {}
 	ret._raw = _raw
