@@ -45,7 +45,7 @@ func _process(delta):
 		var p = (l.translation - playerShip.translation)
 		radar[l.name].position = Vector2(p.x, p.z) * 0.005
 
-	items = get_tree().get_nodes_in_group('Ships')
+	items = get_tree().get_nodes_in_group('sector_ships')
 	for l in items:
 		if !(l.name in radar):
 			radar[l.name] = _create_pixel(2, Color(0,1,1))

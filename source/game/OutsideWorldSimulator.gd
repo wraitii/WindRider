@@ -82,6 +82,9 @@ func _ship_appears(shipID):
 
 	if Core.gameState.playerShipID == shipID:
 		Core.load_scene()
+		# Create new ships in this sector.
+		Core.sectorsMgr.get(sector).generate_activity()
+
 		# Bring in all ships navigating in this sector
 		for shipID in _shipIDsInSector[sector]:
 			emit_signal("bring_ship_in", shipID)

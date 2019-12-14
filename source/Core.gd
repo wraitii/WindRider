@@ -58,10 +58,6 @@ func create_new_game():
 
 	gameState.playerShip.teleport('Kerguelen', Vector2(-2000, 0))
 
-	for i in range(10):
-		var otherShip = Ship.instance()
-		otherShip.init('Cycles_slow')
-		otherShip.teleport('Kerguelen', Vector2((randf()-0.5)*50, (randf()-0.5)*50))
 	gameState.save_game();
 
 func load_saved_game():

@@ -27,8 +27,7 @@ func init(c, s):
 	ownerComponent = c;
 
 func pick_new_target():
-	## Should this be done using outsideworldMgr?
-	var ships = get_tree().get_nodes_in_group('Ships')
+	var ships = get_tree().get_nodes_in_group('sector_ships')
 	
 	for ship in ships:
 		if ship == ownerShip:
