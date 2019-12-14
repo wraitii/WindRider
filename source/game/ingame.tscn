@@ -16,7 +16,7 @@
 [ext_resource path="res://source/gui/SectorMap.tscn" type="PackedScene" id=14]
 [ext_resource path="res://source/gui/PlayerInfo.tscn" type="PackedScene" id=15]
 
-[sub_resource type="ProceduralSky" id=1]
+[sub_resource type="ProceduralSky" id=4]
 radiance_size = 0
 sky_top_color = Color( 0.0156863, 0.0431373, 0.258824, 1 )
 sky_horizon_color = Color( 0.231373, 0.0823529, 0.396078, 1 )
@@ -33,10 +33,10 @@ sun_curve = 0.0353554
 sun_energy = 0.0
 texture_size = 1
 
-[sub_resource type="Environment" id=2]
+[sub_resource type="Environment" id=5]
 resource_local_to_scene = true
 background_mode = 2
-background_sky = SubResource( 1 )
+background_sky = SubResource( 4 )
 ambient_light_color = Color( 1, 1, 1, 1 )
 ambient_light_energy = 0.2
 
@@ -66,12 +66,10 @@ margin_bottom = 140.0
 [node name="RadarCenter" parent="Layer-HUD" instance=ExtResource( 6 )]
 anchor_left = 1.0
 anchor_top = 1.0
-anchor_right = 1.0
-anchor_bottom = 1.0
-margin_left = -120.0
-margin_top = -120.0
-margin_right = -120.0
-margin_bottom = -120.0
+margin_left = -220.0
+margin_top = -220.0
+margin_right = -20.0
+margin_bottom = -20.0
 
 [node name="ShipStatusGUI" parent="Layer-HUD" instance=ExtResource( 7 )]
 anchor_left = 1.0
@@ -117,7 +115,7 @@ script = ExtResource( 2 )
 script = ExtResource( 3 )
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
-environment = SubResource( 2 )
+environment = SubResource( 5 )
 
 [node name="PlayerCommands" type="Node" parent="."]
 script = ExtResource( 10 )
