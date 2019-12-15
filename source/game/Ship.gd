@@ -286,7 +286,7 @@ func install_component(componentID):
 		var cs = hold.can_store(item)
 		assert(cs[0])
 		hold.store(item, cs[1])
-		print('comp ' + comp.ID + ' at ' + str(cs[1]))
+
 	# Component has safely been stored. We install it.
 	shipStats.install(comp)
 
