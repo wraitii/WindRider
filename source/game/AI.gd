@@ -8,9 +8,20 @@ var objective = null;
 var mode = MODE.MOVE;
 
 ## TODO: figure this out.
-
 func _enter_tree():
-	ship = get_parent();
+	ship = get_parent()
+	if ship == Core.gameState.playerShip:
+		return
+
+	var collisionWarning = BoxShape.new();
+	collisionWarning.extents = Vector3(5,5,50)
+	var cs = CollisionShape.new()
+	cs.shape = collisionWarning
+	var area = Area.new()
+	area.add_child(cs)
+	area.translation = Vector3(0,0,-50)
+	area.connect('body_entered', self, 'on_collision_warning')
+	ship.call_deferred("add_child", area)
 
 func _exit_tree():
 	ship = null;
@@ -41,7 +52,7 @@ func do_ai():
 		comms.append([ship, ['align_with', [objective - ship.transform.origin]]])
 
 		if (objective - ship.transform.origin).length_squared() < 100:
-			objective = random_point()
+			objective = null
 	else:
 		var target = objective.get_ref()
 		if !target:
@@ -51,3 +62,7 @@ func do_ai():
 			ship.start_firing()
 		else:
 			ship.stop_firing()
+
+func on_collision_warning(body):
+	# super dumb
+	objective = null

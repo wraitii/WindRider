@@ -17,11 +17,11 @@ static func simple_intercept(chaser, target, chase_speed):
 	
 	# Chaser speed is insignificant, assume failure.
 	if chase_speed < 0.1:
-		return [null, null]
+		return [null, null, null]
 	
 	# Target is not moving relative to the distance, assume it's not moving.
 	if target_vel.length_squared() < target_to_chaser.length_squared()/1000.0:
-		return [-target_to_chaser.normalized(), target.translation]
+		return [-target_to_chaser.normalized(), target.translation, target_to_chaser.length() / chase_speed]
 
 	var a = chase_speed * chase_speed - target_vel.length_squared();
 	var b = 2 * target_to_chaser.dot(target_vel);
@@ -30,14 +30,14 @@ static func simple_intercept(chaser, target, chase_speed):
 	var time_to_intercept = null
 
 	if abs(a) < 0.001 and b <= 0.001:
-		return [null, null]
+		return [null, null, null]
 	elif abs(a) < 0.001:
 		time_to_intercept = -c / b
 	else:
 		# preliminary check that there are real solutions:
 		var bb_4ac = b * b - 4 * a * c
 		if bb_4ac < 0:
-			return [null, null]
+			return [null, null, null]
 
 		# Compute roots, pick the smallest positive value.
 		var roots = [(-b - sqrt(bb_4ac)) / (2*a), (-b + sqrt(bb_4ac)) / (2*a)]
@@ -47,9 +47,9 @@ static func simple_intercept(chaser, target, chase_speed):
 		elif roots[1] >= 0:
 			time_to_intercept = roots[1]
 		else:
-			return [null, null]
+			return [null, null, null]
 	
 	var intercept_pos = target.translation + target_vel * time_to_intercept
-	return [(intercept_pos - chaser.translation).normalized(), intercept_pos]
+	return [(intercept_pos - chaser.translation).normalized(), intercept_pos, time_to_intercept]
 
 # TODO: fancier intercepts, possibly assuming a constant-velocity bezier?
