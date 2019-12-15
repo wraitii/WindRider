@@ -29,6 +29,10 @@ var dockedAt = null;
 var hyperNavigating = null;
 var docking = null;
 
+var commands = [];
+# Temporary global to process commands in integrate_forces
+var physState;
+
 ## Railroading (aka RR) orients velocity wherever the ship
 ## is pointing. With 0 RR, the behaviour is Euclidian, with 1 RR, the ship behaves
 ## a lot more like Star Wars spaceships (and planes on Earth).
@@ -155,11 +159,17 @@ func _integrate_forces(state):
 		rot = rot.slerp(get_transform().basis, 0.1 * railroading)
 		state.linear_velocity = rot.xform(Vector3(0,0,-1)) * state.linear_velocity.length()
 
-
-func _rel_vec(vec, power):
-	var transform = get_transform()
-	var pushDir = transform.xform(vec) - translation
-	return pushDir * power
+	# Commands processing
+	# TODO: maybe avoid contradictory or supplementary commands?
+	physState = state;
+	for command in commands:
+		if command is String:
+			var fun = command
+			call(fun)
+		else:
+			callv(command[0],command[1])
+	commands = []
+	physState = null;
 
 func safe_stat(stat, percent):
 	return shipStats.get(stat) * max(0, min(1, percent))
@@ -169,29 +179,34 @@ func reset_speed_params():
 	navSystem.targetSpeed = 0
 	railroading = 0
 
+func _phys_vec(vec, stat, power):
+	var transform = get_transform()
+	var pushDir = transform.xform(vec) - translation
+	return pushDir * safe_stat(stat, power) / mass
+
 func thrust(percent = 1.0):
-	add_central_force(_rel_vec(Vector3(0,0,-1), safe_stat('acceleration', percent)))
+	physState.linear_velocity += _phys_vec(Vector3(0,0,-1), 'acceleration', percent) / 200.0
 
 func reverse_thrust(percent = 1.0):
-	add_central_force(_rel_vec(Vector3(0,0,1), safe_stat('acceleration', percent) * 0.2))
+	physState.linear_velocity -= _phys_vec(Vector3(0,0,-1), 'acceleration', percent) / 200.0
 
 func rotate_up(percent = 1.0):
-	add_torque(_rel_vec(Vector3( 1,0,0), safe_stat('turn_rate', percent) * 0.1))
+	physState.angular_velocity += _phys_vec(Vector3(1,0,0), 'turn_rate', percent) / 100.0
 
 func rotate_down(percent = 1.0):
-	add_torque(_rel_vec(Vector3(-1,0,0), safe_stat('turn_rate', percent) * 0.1))
+	physState.angular_velocity -= _phys_vec(Vector3(1,0,0), 'turn_rate', percent) / 100.0
 
 func rotate_left(percent = 1.0):
-	add_torque(_rel_vec(Vector3(0, 1,0), safe_stat('turn_rate', percent)*0.25 * 0.1))
+	physState.angular_velocity += _phys_vec(Vector3(0,1,0), 'turn_rate', percent) / 500.0
 
 func rotate_right(percent = 1.0):
-	add_torque(_rel_vec(Vector3(0,-1,0), safe_stat('turn_rate', percent)*0.25 * 0.1))
+	physState.angular_velocity -= _phys_vec(Vector3(0,1,0), 'turn_rate', percent) / 500.0
 
 func roll_left(percent = 1.0):
-	add_torque(_rel_vec(Vector3(0,0, 1), safe_stat('turn_rate', percent) * 0.1))
+	physState.angular_velocity += _phys_vec(Vector3(0,0,1), 'turn_rate', percent) / 100.0
 
 func roll_right(percent = 1.0):
-	add_torque(_rel_vec(Vector3(0,0,-1), safe_stat('turn_rate', percent) * 0.1))
+	physState.angular_velocity -= _phys_vec(Vector3(0,0,1), 'turn_rate', percent) / 100.0
 
 func rotation_needs(targetVec):
 	var t = get_transform().basis;

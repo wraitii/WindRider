@@ -14,7 +14,7 @@ func init(data):
 	for component in data['components']:
 		_add_component('ship_components/' + component['ID'])
 	_compute_stats()
-	get_parent().set_mass(get('empty_mass'))
+	get_parent().set_mass(get('mass'))
 
 func get(s):
 	if !(s in stats.statsCache):

@@ -21,7 +21,7 @@ func _physics_process(delta):
 
 	match mode:
 		CAMERA_STATES.FOLLOW:
-			var pos = Vector3(0,1.5,5.0);
+			var pos = Vector3(0,1.5,5.0) * 9;
 			var vec = trans.xform(pos)
 			var lookat = trans.xform(pos + Vector3(0,0,-1)*1000)
 			var up = trans.xform(Vector3(0,1,0)) - trans.origin

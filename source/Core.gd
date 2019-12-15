@@ -51,7 +51,7 @@ func create_new_game():
 	gameState.player.credits = 10000;
 	
 	var playerShip = Ship.instance()
-	playerShip.init('Cycles')
+	playerShip.init('Starbridge')
 	gameState.player.ship = playerShip
 	
 	get_node('/root').add_child(gameState.player)

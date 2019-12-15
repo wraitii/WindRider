@@ -25,7 +25,6 @@ func do_ai():
 	if objective == null:
 		var behaviour = randf();
 		if ship.data.ID == "Cycles" and behaviour > 0.6:
-			print("kill")
 			objective = weakref(Core.gameState.playerShip)
 			mode = MODE.KILL
 			ship.navSystem.reset()
@@ -37,9 +36,10 @@ func do_ai():
 			mode = MODE.MOVE
 
 	if mode == MODE.MOVE:
-		ship.align_with(objective - ship.transform.origin)
-		ship.thrust()
-	
+		var comms = get_tree().get_nodes_in_group('command_manager')[0].commands
+		comms.append([ship, 'thrust'])
+		comms.append([ship, ['align_with', [objective - ship.transform.origin]]])
+
 		if (objective - ship.transform.origin).length_squared() < 100:
 			objective = random_point()
 	else:
