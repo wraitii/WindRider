@@ -1,0 +1,16 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://source/tests/ShipHoldTest.gd" type="Script" id=1]
+[ext_resource path="res://source/gui/ShipHoldView.tscn" type="PackedScene" id=2]
+
+[node name="ShipHoldTest" type="Label"]
+anchor_right = 0.5
+anchor_bottom = 1.0
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ShipHoldView" parent="." instance=ExtResource( 2 )]
+anchor_left = 1.0
+anchor_right = 2.0

@@ -1,10 +1,14 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://source/graphics/ship_hold_view/HoldView.tscn" type="PackedScene" id=1]
 [ext_resource path="res://source/gui/viewportPickingFix.gd" type="Script" id=2]
 [ext_resource path="res://source/gui/ShipHoldView.gd" type="Script" id=3]
+[ext_resource path="res://source/gui/VPContainerFix.gd" type="Script" id=4]
 
 [sub_resource type="World" id=1]
+
+[sub_resource type="BoxShape" id=2]
+extents = Vector3( 100, 1, 100 )
 
 [node name="ShipHoldView" type="Control"]
 anchor_right = 1.0
@@ -18,13 +22,16 @@ __meta__ = {
 anchor_left = 0.00115385
 anchor_right = 1.00115
 anchor_bottom = 1.0
+rect_clip_content = true
+mouse_filter = 1
 stretch = true
+script = ExtResource( 4 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="Viewport" type="Viewport" parent="ViewportContainer"]
-size = Vector2( 1300, 800 )
+size = Vector2( 1299, 800 )
 own_world = true
 world = SubResource( 1 )
 handle_input_locally = false
@@ -39,6 +46,12 @@ script = ExtResource( 2 )
 visible = false
 
 [node name="Items" type="Spatial" parent="ViewportContainer/Viewport/HoldView"]
+
+[node name="pseudobackground" type="Area" parent="ViewportContainer/Viewport/HoldView"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -46.833, 0 )
+
+[node name="CollisionShape" type="CollisionShape" parent="ViewportContainer/Viewport/HoldView/pseudobackground"]
+shape = SubResource( 2 )
 
 [node name="Inspector" type="Panel" parent="."]
 anchor_left = 1.0
@@ -71,5 +84,6 @@ margin_top = 30.0
 margin_right = -5.0
 margin_bottom = -5.0
 text = "Description"
+[connection signal="input_event" from="ViewportContainer/Viewport/HoldView/pseudobackground" to="." method="_on_pseudobackground_input_event"]
 
 [editable path="ViewportContainer/Viewport/HoldView"]

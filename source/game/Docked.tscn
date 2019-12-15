@@ -7,6 +7,7 @@
 [node name="Docked" type="Container"]
 anchor_right = 1.0
 anchor_bottom = 1.0
+mouse_filter = 1
 script = ExtResource( 1 )
 __meta__ = {
 "_edit_use_anchors_": false
@@ -86,9 +87,11 @@ margin_bottom = 14.0
 
 [node name="Marketplace" parent="Submenus" instance=ExtResource( 2 )]
 visible = false
+mouse_filter = 1
 
 [node name="CommMarket" parent="Submenus" instance=ExtResource( 3 )]
 visible = false
+mouse_filter = 1
 [connection signal="pressed" from="Refuel" to="." method="_on_Refuel_pressed"]
 [connection signal="pressed" from="Undock" to="." method="_on_Undock_pressed"]
 [connection signal="pressed" from="MarketplaceBtn" to="." method="_on_MarketplaceBtn_pressed"]

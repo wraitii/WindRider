@@ -19,9 +19,15 @@ const inactive = preload('../graphics/ship_hold_view/HoldMat.tres')
 
 func on_cell_selected(cam, inputEvent, a, b, c, holdCell):
 	if not inputEvent.is_action_released('click_main'):
-		return	
+		return
 	selected_cells = [holdCell.get_meta('idx')]
 	emit_signal("hold_cell_selected", holdCell.get_meta('x'),holdCell.get_meta('y'), holdCell.get_meta('z'))
+	_update()
+
+func _on_pseudobackground_input_event(camera, event, click_position, click_normal, shape_idx):
+	if not event.is_action_released('click_main'):
+		return
+	selected_cells = []
 	_update()
 
 func inspect():
@@ -69,4 +75,3 @@ func _update():
 			hi.connect("input_event",self, "on_cell_selected", [hi])
 	
 	inspect()
-

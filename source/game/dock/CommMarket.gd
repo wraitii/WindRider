@@ -22,7 +22,7 @@ func _transaction(commodity, amount):
 		if Core.gameState.player.credits < amount * 50:
 			return
 
-	var ress = Hold.HoldItem.new(commodity, Hold.HoldItem.TYPE.COMMODITY, abs(amount), 0.01)
+	var ress = Hold.HoldItem.new(commodity, Hold.HoldItem.TYPE.COMMODITY, 100, abs(amount))
 	var hold = $ShipHoldView.hold
 
 	var cell;
