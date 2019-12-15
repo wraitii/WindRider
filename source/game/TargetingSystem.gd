@@ -24,15 +24,21 @@ func init(c, s):
 	ownerShip = s;
 	ownerComponent = c;
 
-func pick_new_target():
+# This cycles through all available targets
+func pick_new_target(var first = false):
 	var ships = get_tree().get_nodes_in_group('sector_ships')
 	
+	var ctarget = get_active_target()
 	for ship in ships:
 		if ship == ownerShip:
 			continue
 		if ship.ID in targets:
 			continue
+		if !first and ctarget and ctarget.ID >= ship.ID:
+			continue
 		target(ship.ID)
+		return
+	pick_new_target(true)
 
 func get_active_target():
 	if targets.size() == 0:
