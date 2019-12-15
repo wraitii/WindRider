@@ -22,6 +22,8 @@ var targetingSystem;
 var shipStats;
 var hold;
 
+var graphics;
+
 # Navigation
 var lastSector = null;
 var currentSector = null;
@@ -64,17 +66,23 @@ func init(shipType):
 	hold = get_node('Hold')
 	
 	data = Core.dataMgr.get('ships/' + shipType)
-	shipStats.init(data)
 	hold.init(data)
+	weaponsSystem.init()
 	targetingSystem.init(null, self);
 	
+	if 'components' in data:
+		for comp in data['components']:
+			install_component(comp)
+
+	shipStats._compute_stats()
+
 	shields = stat('max_shields')
 	armour = stat('max_armour')
 	energy = stat('max_energy')
 	hyperfuel = stat('max_hyperfuel')
 
 	var graph = load('res://data/art/ships/' + data['scene'] + '.tscn')
-	var graphics = graph.instance()
+	graphics = graph.instance()
 	self.add_child(graphics)
 	for c in graphics.get_node('Shapes').get_children():
 		graphics.get_node('Shapes').remove_child(c)
@@ -134,6 +142,8 @@ func _process(_delta):
 	pass
 
 func _physics_process(delta):
+	if !is_inside_tree():
+		return
 	energy += stat('energy_gen') * delta
 	if energy > stat('max_energy'):
 		energy = stat('max_energy')
@@ -255,19 +265,40 @@ func follow_vector(var world_vector, var percent_xz = Vector2(1.0,1.0)):
 
 ##############################
 ##############################
+## General Components
+
+const Component = preload('Component.gd')
+
+func install_component(componentID):
+	var comp = Component.new(Core.dataMgr.get('ship_components/' + componentID))
+	
+	if 'max_per_hold' in comp or 'hold_type' in comp:
+		var typ = hold.HoldItem.TYPE.COMPONENT;
+		if 'hold_type' in comp:
+			typ = hold.HoldItem.TYPE[comp['hold_type']]
+		var vol = hold.MAX_HOLD_VOL
+		if 'max_per_hold' in comp:
+			assert(typ != hold.HoldItem.TYPE.WEAPON) # only one weapon per hardmount
+			vol = int(hold.MAX_HOLD_VOL / comp['max_per_hold'])
+
+		var item = hold.HoldItem.new(comp.ID, typ, vol, 1)
+		item.components = [comp]
+		var cs = hold.can_store(item)
+		assert(cs[0])
+		hold.store(item, cs[1])
+		print('comp ' + comp.ID + ' at ' + str(cs[1]))
+	# Component has safely been stored. We install it.
+	shipStats.install(comp)
+
+##############################
+##############################
 ## Weapons system
 
 func start_firing():
-	var weapons = get_node('WeaponsSystem').get_children();
-	for weapon in weapons:
-		weapon.start_firing();
-	pass
+	get_node('WeaponsSystem').start_firing()
 
 func stop_firing():
-	var weapons = get_node('WeaponsSystem').get_children();
-	for weapon in weapons:
-		weapon.stop_firing();
-	pass
+	get_node('WeaponsSystem').stop_firing()
 
 ##############################
 ##############################

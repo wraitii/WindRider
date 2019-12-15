@@ -2,17 +2,18 @@ extends Spatial
 const Projectile = preload('res://data/art/projectiles/BlasterBolt.tscn')
 
 var ownerShip = null;
-var ownerComponent = null;
+var comp = null;
 var weaponData;
 
+var hardpoint;
 var firing = false;
 var firingData = null
 
 func init(c, s, d):
 	ownerShip = s;
-	ownerComponent = c;
+	comp = c;
 	weaponData = d;
-
+	
 func start_firing():
 	firing = true
 	if firingData:
@@ -44,17 +45,21 @@ func _fire_projectile():
 	if ownerShip.energy < weaponData['firing_energy']:
 		return;
 	ownerShip.energy -= weaponData['firing_energy'];
-	
+
 	get_node('WeaponSound').set_stream(preload('res://data/sounds/blaster_crappy_1.wav'));
 	get_node('WeaponSound').play();
-	
+
 	var data = Core.dataMgr.get('projectiles/' + weaponData.kind)
-	
+
 	var proj = Projectile.instance()
 	proj.init(data)
 	
 	var angle = ownerShip.transform.basis.xform(Vector3(0,0,-1))
 	proj.linear_velocity = ownerShip.linear_velocity + angle * weaponData['firing_speed'];
-	proj.translation = ownerShip.translation + angle * 4 + angle * ownerShip.linear_velocity.length() / 10.0
+
+	var pos = ownerShip.graphics.get_node('Hardpoints').get_node(hardpoint).translation
+	var offset = proj.get_node('SpawnPoint').translation
+	pos = ownerShip.transform.basis.xform(pos-offset)
+	proj.translation = ownerShip.translation + pos
 	proj.rotation = ownerShip.rotation
 	Core.gameState.currentScene.add_child(proj)

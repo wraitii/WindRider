@@ -33,38 +33,28 @@ class HoldItem:
 	var type;
 	var amount : int = 0;
 	var volume_per_item : int = MAX_HOLD_VOL;
-	
+
+	# Direct reference to components (including engine/weapons)
+	var components = [];
+
 	func _init(id, t, v = MAX_HOLD_VOL, a = 0):
 		ID = id
 		type = t
 		amount = a
 		volume_per_item = v
 
+func _idx(x,y,z):
+	return PoolIntArray([x,y,z])
+
 func init(shipData):
 	holdSpace = shipData['hold'];
-	
-	# Take up hull space for hull-space-taking-components.
-	if 'components' in shipData:
-		for comp in shipData['components']:
-			var cd = Core.dataMgr.get('ship_components/' + comp['ID'])
-			if !('max_per_hold' in cd):
-				continue
-			var typ = HoldItem.TYPE.COMPONENT;
-			if 'hold_type' in cd:
-				typ = HoldItem.TYPE[cd['hold_type']]
-			var vol = int(MAX_HOLD_VOL / cd['max_per_hold'])
-			print(vol)
-			var item = HoldItem.new('ship_components/' + comp['ID'], typ, vol, 1)
-			var cs = can_store(item)
-			assert(cs[0])
-			store(item, cs[1])
 
 func serialize():
 	var ret = {}
 	ret.holdSpace = holdSpace;
 	ret.content = []
 	for c in holdContent:
-		ret.content.append([[c.x, c.y, c.z], holdContent[c].ID, holdContent[c].type, holdContent[c].amount, holdContent[c].volume_per_item])
+		ret.content.append([c, holdContent[c].ID, holdContent[c].type, holdContent[c].amount, holdContent[c].volume_per_item])
 	return ret
 
 func deserialize(data):
@@ -72,7 +62,7 @@ func deserialize(data):
 		if prop in self:
 			set(prop, data[prop])
 	for i in data.content:
-		var idx = A2V._3(i[0])
+		var idx = i[0]
 		holdContent[idx] = HoldItem.new(i[1], i[2], i[3], i[4])
 
 func same_ress(a, b):
@@ -97,7 +87,7 @@ func fit(ress, z, y, x):
 		if spaceType != HOLD_TYPE.ALL and spaceType != HOLD_TYPE.WEAPON:
 			return false
 
-	var idx = Vector3(x,y,z)
+	var idx = _idx(x,y,z)
 	return !(idx in holdContent) or same_ress(ress, holdContent[idx])
 
 # TODO: implement a 3D packing algorithm.
@@ -109,7 +99,7 @@ func find_space(ress):
 			for x in range(0, len(holdSpace[z][y])):
 				if !fit(ress, z, y, x):
 					continue
-				var idx = Vector3(x,y,z)
+				var idx = _idx(x,y,z)
 				var fa = get_free_amount(ress, idx)
 				if fa <= 0:
 					continue
@@ -127,7 +117,7 @@ func find_holders(ress):
 	for z in range(0, len(holdSpace)):
 		for y in range(0, len(holdSpace[z])):
 			for x in range(0, len(holdSpace[z][y])):
-				var idx = Vector3(x,y,z)
+				var idx = _idx(x,y,z)
 				if !idx in holdContent:
 					continue
 				if !same_ress(ress, holdContent[idx]):
@@ -146,7 +136,6 @@ func can_store(ress, idx = null):
 
 	if !idx:
 		idx = find_space(ress)
-		print(idx)
 		if !idx:
 			return [false, []]
 	elif idx in holdContent and !same_ress(holdContent[idx], ress):
@@ -160,12 +149,18 @@ func store(ress, indices):
 	assert(len(indices) > 0)
 
 	var lo = ress.amount
+	var comps = ress.components.duplicate()
 	for i in indices:
 		if !(i in holdContent):
 			holdContent[i] = HoldItem.new(ress.ID, ress.type, ress.volume_per_item)
 		var free = get_free_amount(ress, i)
 		var amt = min(free, lo)
+		assert(amt > 0)
 		holdContent[i].amount += amt
+		for c in range(min(len(comps), amt)):
+			var comp = comps.pop_back()
+			comp.holdIndices = [i]
+			holdContent[i].components.append(comp)
 		lo -= amt
 
 	emit_signal("hold_content_changed", indices)
@@ -183,15 +178,24 @@ func can_unload(ress, idx = null):
 		idx = [idx]
 	return [true, idx]
 
+# Returns references to popped components, if any
 func unload(ress, indices):
 	assert(len(indices) > 0)
 
+	var popped_components = []
+	
 	var lo = ress.amount
 	for i in indices:
 		var qt = min(holdContent[i].amount, lo)
 		holdContent[i].amount -= qt
+		for c in range(min(len(holdContent[i].components), qt)):
+			var comp = holdContent[i].components.pop_back()
+			comp.holdIndices = []
+			popped_components.append(comp)
 		lo -= qt
 		if holdContent[i].amount == 0:
 			holdContent.erase(i)
 	
 	emit_signal("hold_content_changed", indices)
+	
+	return popped_components

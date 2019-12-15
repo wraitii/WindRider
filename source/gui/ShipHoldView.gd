@@ -24,6 +24,7 @@ func on_cell_selected(cam, inputEvent, a, b, c, holdCell):
 	emit_signal("hold_cell_selected", holdCell.get_meta('x'),holdCell.get_meta('y'), holdCell.get_meta('z'))
 	_update()
 
+## Hack around https://github.com/godotengine/godot/issues/26181
 func _on_pseudobackground_input_event(camera, event, click_position, click_normal, shape_idx):
 	if not event.is_action_released('click_main'):
 		return
@@ -67,11 +68,10 @@ func _update():
 			hi.set_meta('x', x)
 			hi.set_meta('y', y)
 			hi.set_meta('z', 0)
-			hi.set_meta('idx', Vector3(x, y, 0))
+			hi.set_meta('idx', hold._idx(x, y, 0))
 			hi.set_meta('hold', hold)
-			if Vector3(x, y, 0) in selected_cells:
+			if hold._idx(x, y, 0) in selected_cells:
 				hi.get_node('MeshInstance').set_material_override(active)
 			get_node("ViewportContainer/Viewport/HoldView/Items").add_child(hi)
 			hi.connect("input_event",self, "on_cell_selected", [hi])
-	
 	inspect()

@@ -23,7 +23,6 @@ anchor_left = 0.00115385
 anchor_right = 1.00115
 anchor_bottom = 1.0
 rect_clip_content = true
-mouse_filter = 1
 stretch = true
 script = ExtResource( 4 )
 __meta__ = {
