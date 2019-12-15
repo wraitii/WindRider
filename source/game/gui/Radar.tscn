@@ -1,27 +1,30 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=9 format=2]
 
 [ext_resource path="res://source/game/gui/Radar.gd" type="Script" id=1]
 
-[sub_resource type="SpatialMaterial" id=6]
+[sub_resource type="SpatialMaterial" id=1]
 flags_unshaded = true
 albedo_color = Color( 0.870588, 0.309804, 0.309804, 1 )
 
-[sub_resource type="PlaneMesh" id=5]
-material = SubResource( 6 )
+[sub_resource type="PlaneMesh" id=2]
+material = SubResource( 1 )
 size = Vector2( 5, 0.1 )
 
-[sub_resource type="SpatialMaterial" id=7]
+[sub_resource type="SpatialMaterial" id=3]
 flags_unshaded = true
 albedo_color = Color( 0.286275, 0.415686, 0.92549, 1 )
 
 [sub_resource type="PlaneMesh" id=4]
-material = SubResource( 7 )
+material = SubResource( 3 )
 size = Vector2( 0.1, 5 )
 
-[sub_resource type="SpatialMaterial" id=3]
+[sub_resource type="PrismMesh" id=7]
+size = Vector3( 2, 2, 0.1 )
+
+[sub_resource type="SpatialMaterial" id=5]
 flags_unshaded = true
 
-[sub_resource type="SpatialMaterial" id=8]
+[sub_resource type="SpatialMaterial" id=6]
 flags_transparent = true
 flags_unshaded = true
 params_blend_mode = 1
@@ -49,6 +52,7 @@ own_world = true
 transparent_bg = true
 handle_input_locally = false
 hdr = false
+render_target_update_mode = 3
 
 [node name="Camera" type="Camera" parent="VPC/VP"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -3.71028, 0.840215, 8.17713 )
@@ -63,7 +67,7 @@ far = 1000.0
 [node name="X" type="CSGMesh" parent="VPC/VP/XZ"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.1, 0 )
 cast_shadow = 0
-mesh = SubResource( 5 )
+mesh = SubResource( 2 )
 
 [node name="Z" type="CSGMesh" parent="VPC/VP/XZ"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.1, 0 )
@@ -73,9 +77,12 @@ mesh = SubResource( 4 )
 [node name="Ship" type="Spatial" parent="VPC/VP"]
 visible = false
 
-[node name="dot" type="CSGSphere" parent="VPC/VP/Ship"]
-radius = 0.2
-material = SubResource( 3 )
+[node name="dot" type="Spatial" parent="VPC/VP/Ship"]
+
+[node name="dot" type="CSGMesh" parent="VPC/VP/Ship/dot"]
+transform = Transform( 0.15, 0, 0, 0, -2.44381e-08, 0.15, 0, -0.15, -2.44381e-08, 0, 0, 0 )
+mesh = SubResource( 7 )
+material = SubResource( 5 )
 
 [node name="point" type="Spatial" parent="VPC/VP/Ship"]
 
@@ -85,4 +92,4 @@ cast_shadow = 0
 width = 0.1
 height = 0.1
 depth = 1.0
-material = SubResource( 8 )
+material = SubResource( 6 )

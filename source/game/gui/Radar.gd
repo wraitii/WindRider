@@ -25,20 +25,20 @@ func _process(delta):
 			$VPC/VP.add_child(items[ship.ID])
 			ship.connect('tree_exiting', self, "_on_exit", [ship.ID])
 		
+		items[ship.ID].get_node('dot').translation = ship.translation/scale
+		items[ship.ID].get_node('dot').rotation = ship.rotation
+		
 		var p = Plane(u, 0)
 		var o = u
 		var pt = p.intersects_ray(ship.translation/scale - playerShip.translation/scale, -u)
 		if !pt:
 			o = -u
 			pt = p.intersects_ray(ship.translation/scale - playerShip.translation/scale, u)
-	
-		items[ship.ID].get_node('dot').translation = ship.translation/scale
 		if pt:
 			items[ship.ID].get_node('point').show()
 			items[ship.ID].get_node('point').translation = pt + playerShip.translation/scale
 			items[ship.ID].get_node('point').look_at(pt + o + playerShip.translation/scale, Vector3(0,1,0))
 			var d = (ship.translation/scale - pt - playerShip.translation/scale).length()
-			print(d)
 			items[ship.ID].get_node('point').get_node('point').set_scale(Vector3(1,1, d))
 			items[ship.ID].get_node('point').get_node('point').translation = Vector3(0,0,-d/2)
 		else:
