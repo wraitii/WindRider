@@ -176,14 +176,14 @@ func get_commands(delta):
 		if !target:
 			set_mode(MODE.OFF)
 			return commands
-		if ship.translation.distance_squared_to(ship.translation) > 400*400:
+		if ship.translation.distance_squared_to(target.translation) > 400*400:
 			targetSpeed = 1.0
 			var vector = Intercept.simple_intercept(ship, target, ship.stat('max_speed'))[0]
 			if !vector:
 				vector = (target.translation - ship.translation).normalized()
 			commands.append([ship, ['follow_vector', [vector]]])
 		else:
-			targetSpeed = 1.0
+			targetSpeed = 0.05
 			var vector = Intercept.simple_intercept(ship, target, 500)[0]
 			if !vector:
 				vector = (target.translation - ship.translation).normalized()
