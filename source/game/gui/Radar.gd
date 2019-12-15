@@ -33,10 +33,15 @@ func _process(delta):
 		items[ship.ID].get_node('dot').rotation = ship.rotation
 		
 		# Material overrides
-		if ship.ID in Core.gameState.playerShip.targetingSystem.targets and items[ship.ID].get_node('dot/dot').material_override == mat_def:
-			items[ship.ID].get_node('dot/dot').material_override = mat_targ
-		elif !(ship.ID in Core.gameState.playerShip.targetingSystem.targets) and items[ship.ID].get_node('dot/dot').material_override != mat_def:
-			items[ship.ID].get_node('dot/dot').material_override = mat_def
+		var system = Core.gameState.playerShip.targetingSystem
+		if ship.ID in Core.gameState.playerShip.targetingSystem.targets:
+			if items[ship.ID].get_node('dot/dot').material != mat_targ:
+				items[ship.ID].get_node('dot/dot').material = mat_targ
+		elif ship.ID in Core.gameState.playerShip.targetingSystem.threats:
+			if items[ship.ID].get_node('dot/dot').material != mat_threat:
+				items[ship.ID].get_node('dot/dot').material = mat_threat
+		elif items[ship.ID].get_node('dot/dot').material != mat_def:
+			items[ship.ID].get_node('dot/dot').material = mat_def
 		
 		var p = Plane(u, 0)
 		var o = u

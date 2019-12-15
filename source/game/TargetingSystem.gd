@@ -8,11 +8,11 @@ var ownerComponent = null;
 
 signal target(ID)
 signal untarget(ID)
-
 signal lost_target(ID)
 
 # ship ID >> data
 var targets = {};
+var threats = {};
 
 class TargetingData:
 	var targetID;
@@ -60,9 +60,24 @@ func _add_target(shipID):
 	var ship = Core.outsideWorldSim.ship(shipID)
 	ship.connect('tree_exiting', self, '_target_gone', [ship])
 	emit_signal('target', shipID)
+	# Enemy ship will register targeting
+	ship.targetingSystem._on_targeted(get_parent())
 
 func _target_gone(node):
 	if node.ID in targets:
 		emit_signal('lost_target', node.ID)
 		targets.erase(node.ID)
 		emit_signal('untarget', node.ID)
+
+func _on_targeted(targetedBy):
+	threats[targetedBy.ID] = true
+	# To handle being untargeted
+	targetedBy.targetingSystem.connect('untarget', self, "_on_untargeted", [targetedBy.ID])
+
+func _on_untargeted(target, targetedByID):
+	if target != get_parent().ID:
+		return
+	threats.erase(targetedByID)
+	var tg = Core.outsideWorldSim.ship(targetedByID)
+	if tg != null:
+		tg.targetingSystem.disconnect('untarget', self, "_on_untargeted")
