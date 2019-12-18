@@ -18,7 +18,7 @@ func init(ownerSectorID, d):
 		up_dir = Vector3(-1,0,0)
 	
 	look_at_from_position(position, direction*10000, up_dir)
-	get_node("JumpTo Tag/Tag Viewport/Label").set_text(jumpTo);
+	get_node("Tag_Viewport/Label").set_text(jumpTo);
 
 func _ready():
 	add_to_group('JumpZones', true)

@@ -122,10 +122,12 @@ func deserialize(ret):
 	shipStats = get_node('ShipStats')
 	hold = get_node('Hold')
 	hold.deserialize(ret.hold)
-	
-	shipStats.init(data)
+
+	weaponsSystem.init()
 	targetingSystem.init(null, self);
-	
+
+	shipStats._compute_stats()
+
 	var graph = load('res://data/art/ships/' + data['scene'] + '.tscn')
 	var graphics = graph.instance()
 	self.add_child(graphics)

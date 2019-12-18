@@ -6,6 +6,11 @@ const Character = preload('../Character.gd')
 func _init().('Society', 'res://data/societies/'):
 	pass
 
+func populate():
+	.populate()
+	## TODO: if I get an outfitMgr or something this should be replaced
+	assign_outfits()
+
 func _instance(data):
 	var item
 	if data['type'] == "character":

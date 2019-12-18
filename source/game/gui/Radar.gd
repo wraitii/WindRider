@@ -52,7 +52,11 @@ func _process(delta):
 		if pt:
 			items[ship.ID].get_node('point').show()
 			items[ship.ID].get_node('point').translation = pt + playerShip.translation/scale
-			items[ship.ID].get_node('point').look_at(pt + o + playerShip.translation/scale, Vector3(0,1,0))
+			var to = pt + o + playerShip.translation/scale
+			var up = Vector3(0,1,0)
+			if up.cross(to - pt - playerShip.translation/scale).is_equal_approx(Vector3()):
+				up = Vector3(1,0,0)
+			items[ship.ID].get_node('point').look_at(to, up)
 			var d = (ship.translation/scale - pt - playerShip.translation/scale).length()
 			items[ship.ID].get_node('point').get_node('point').set_scale(Vector3(1,1, d))
 			items[ship.ID].get_node('point').get_node('point').translation = Vector3(0,0,-d/2)

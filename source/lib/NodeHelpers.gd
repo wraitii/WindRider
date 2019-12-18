@@ -8,3 +8,4 @@ static func queue_delete(node):
 static func remove_all_children(node):
 	for child in node.get_children():
 		node.remove_child(child)
+
