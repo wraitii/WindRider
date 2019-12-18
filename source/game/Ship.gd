@@ -103,42 +103,34 @@ func serialize():
 	ret.docking = docking
 	
 	ret.hold = hold.serialize()
-	
+	ret.shipStats = shipStats.serialize()
+
 	return ret;
 
 func deserialize(ret):
-	ID = ret.ID
-	data = ret.data
-	
-	lastSector = ret.lastSector
-	currentSector = ret.currentSector
-	dockedAt = ret.dockedAt
-	hyperNavigating = ret.hyperNavigating
-	docking = ret.docking
+	for prop in ret:
+		if prop in self:
+			set(prop, ret[prop])
 	
 	navSystem = get_node('NavSystem');
 	weaponsSystem = get_node('WeaponsSystem');
 	targetingSystem = get_node('TargetingSystem');
 	shipStats = get_node('ShipStats')
 	hold = get_node('Hold')
+	
 	hold.deserialize(ret.hold)
 
 	weaponsSystem.init()
+	shipStats.deserialize(ret.shipStats)
+
 	targetingSystem.init(null, self);
 
-	shipStats._compute_stats()
-
 	var graph = load('res://data/art/ships/' + data['scene'] + '.tscn')
-	var graphics = graph.instance()
+	graphics = graph.instance()
 	self.add_child(graphics)
 	for c in graphics.get_node('Shapes').get_children():
 		graphics.get_node('Shapes').remove_child(c)
 		add_child(c)
-
-	shields = ret.shields
-	armour = ret.armour
-	energy = ret.energy
-	hyperfuel = ret.hyperfuel
 
 func _process(_delta):
 	pass
@@ -272,7 +264,8 @@ func follow_vector(var world_vector, var percent_xz = Vector2(1.0,1.0)):
 const Component = preload('Component.gd')
 
 func install_component(componentID):
-	var comp = Component.new(Core.dataMgr.get('ship_components/' + componentID))
+	var comp = Component.new()
+	comp.init(Core.dataMgr.get('ship_components/' + componentID))
 	
 	if 'max_per_hold' in comp or 'hold_type' in comp:
 		var typ = hold.HoldItem.TYPE.COMPONENT;

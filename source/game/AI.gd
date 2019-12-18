@@ -35,7 +35,7 @@ func do_ai():
 
 	if objective == null:
 		var behaviour = randf();
-		if ship.data.ID == "Cycles" and behaviour > 0.6:
+		if ship.data.ID == "Cycles" and behaviour > 1.6: # deactivated for now
 			objective = weakref(Core.gameState.playerShip)
 			mode = MODE.KILL
 			ship.navSystem.reset()

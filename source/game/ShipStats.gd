@@ -1,10 +1,22 @@
 extends Node
 
 const Component = preload('Component.gd')
-const WeaponSystem = preload('WeaponSystem.tscn')
 const StatsHelper = preload('StatsHelper.gd')
 
 var stats : StatsHelper;
+
+func serialize():
+	var ret = []
+	for c in get_children():
+		ret.append(c.serialize())
+	return ret
+
+func deserialize(data):
+	for c in data:
+		var comp = Component.new()
+		self.add_child(comp)
+		comp.deserialize(c)
+	_compute_stats()
 
 func get(s):
 	if !(s in stats.statsCache):
@@ -28,15 +40,7 @@ func get_components(comp_id):
 
 func install(component):
 	self.add_child(component)
-	if 'weapons' in component:
-		_create_weapons(component);
-
-func _create_weapons(comp):
-	for weap in comp['weapons']:
-		var weapon = WeaponSystem.instance()
-		comp.weaponSystem = weapon
-		weapon.init(comp, get_parent(), weap)
-		get_parent().get_node('WeaponsSystem').find_hardpoint(weapon)
+	component.create_weapons()
 
 func _compute_stats():
 	# Fetch stat item from ship & components
