@@ -30,6 +30,9 @@ func deserialize(data):
 	for prop in data:
 		if prop in ['ID','_raw','holdIndices']:
 			set(prop, data[prop])
+	for h in holdIndices:
+		var ship = get_parent().get_parent()
+		ship.hold.holdContent[h].components.append(self)
 	create_weapons()
 
 func create_weapons():

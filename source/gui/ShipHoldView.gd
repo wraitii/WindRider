@@ -8,7 +8,6 @@ var hold
 #hold = load('res://source/game/ShipHold.gd').new()
 #hold.init(IO.read_json('res://data/ships/Cycles.json'))
 
-
 func init(h):
 	hold = h
 	hold.connect('hold_content_changed', self, '_on_hold_changed')
@@ -16,6 +15,8 @@ func init(h):
 
 const active = preload('../graphics/ship_hold_view/HoldMatActive.tres')
 const inactive = preload('../graphics/ship_hold_view/HoldMat.tres')
+const engine = preload('../graphics/ship_hold_view/HoldMatEngine.tres')
+const hardpoint = preload('../graphics/ship_hold_view/HoldMatHardPoint.tres')
 
 func on_cell_selected(cam, inputEvent, a, b, c, holdCell):
 	if not inputEvent.is_action_released('click_main'):
@@ -42,11 +43,12 @@ func inspect():
 		$Inspector/Title.text = 'Empty'
 		$Inspector/Desc.text = 'Nothing in there.'
 	else:
-		print(hold.holdContent)
-		print(hold.holdContent[cell])
 		var t = hold.holdContent[cell]
 		$Inspector/Title.text = hold.holdContent[cell].ID
-		$Inspector/Desc.text = str(hold.holdContent[cell].amount)
+		var st = str(hold.holdContent[cell].amount)
+		st += '/' + str(hold.holdContent[cell].max_amount())
+		st += '\n' + str(hold.holdContent[cell].components)
+		$Inspector/Desc.text = st
 
 func _on_hold_changed(idx):
 	_update()
@@ -65,6 +67,8 @@ func _update():
 			pos -= Vector3(x_range/2 * 2, 0, y_range/2 * 1.6)
 			hi.translation = pos
 			hi.visible = true;
+			if hold._idx(x, y, 0) in hold.holdContent:
+				hi.get_node('Full').visible = true
 			hi.set_meta('x', x)
 			hi.set_meta('y', y)
 			hi.set_meta('z', 0)
@@ -72,6 +76,11 @@ func _update():
 			hi.set_meta('hold', hold)
 			if hold._idx(x, y, 0) in selected_cells:
 				hi.get_node('MeshInstance').set_material_override(active)
+			elif hold.holdSpace[0][y][x] == hold.HOLD_TYPE.ENGINE:
+				hi.get_node('MeshInstance').set_material_override(engine)
+			elif hold.holdSpace[0][y][x] == hold.HOLD_TYPE.WEAPON:
+				hi.get_node('MeshInstance').set_material_override(hardpoint)
+				
 			get_node("ViewportContainer/Viewport/HoldView/Items").add_child(hi)
 			hi.connect("input_event",self, "on_cell_selected", [hi])
 	inspect()

@@ -35,6 +35,7 @@ class HoldItem:
 	var volume_per_item : int = MAX_HOLD_VOL;
 
 	# Direct reference to components (including engine/weapons)
+	# Not serialized (components set it back again)
 	var components = [];
 
 	func _init(id, t, v = MAX_HOLD_VOL, a = 0):
@@ -42,6 +43,9 @@ class HoldItem:
 		type = t
 		amount = a
 		volume_per_item = v
+	
+	func max_amount():
+		return int(MAX_HOLD_VOL / volume_per_item)
 
 func _idx(x,y,z):
 	return PoolIntArray([x,y,z])
@@ -54,7 +58,7 @@ func serialize():
 	ret.holdSpace = holdSpace;
 	ret.content = []
 	for c in holdContent:
-		ret.content.append([c, holdContent[c].ID, holdContent[c].type, holdContent[c].amount, holdContent[c].volume_per_item])
+		ret.content.append([c, holdContent[c].ID, holdContent[c].type, holdContent[c].volume_per_item, holdContent[c].amount])
 	return ret
 
 func deserialize(data):
@@ -70,9 +74,9 @@ func same_ress(a, b):
 
 func get_free_amount(ress, idx):
 	if !(idx in holdContent):
-		return int(MAX_HOLD_VOL / ress.volume_per_item);
+		return ress.max_amount();
 	else:
-		return int(MAX_HOLD_VOL / holdContent[idx].volume_per_item) - holdContent[idx].amount
+		return holdContent[idx].max_amount() - holdContent[idx].amount
 
 func fit(ress, z, y, x):
 	# Hold type check
