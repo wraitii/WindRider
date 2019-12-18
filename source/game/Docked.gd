@@ -11,6 +11,7 @@ func init(l):
 	$Submenus/Marketplace.init(landable)
 	$Submenus/Marketplace.connect('close', self, 'on_marketplace_closed')
 	
+	$Submenus/CommMarket.init(landable)
 	var admin = landable.administrator
 	get_node('GeneralInfo').text = str(admin.get_opinion(Core.gameState.player))
 

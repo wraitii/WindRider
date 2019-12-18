@@ -5,6 +5,7 @@ extends Node
 ## Basically an entity that can have an opinion on other societies and characters
 
 const Opinion = preload('Opinion.gd')
+const TraitsMgr = preload('TraitsManager.gd')
 
 var ID;
 var type;
@@ -13,6 +14,8 @@ var _raw;
 var opinions = {};
 var outfits = [];
 var credits = 10000;
+
+var traits = TraitsMgr.new()
 
 func init(d):
 	ID = d.ID
