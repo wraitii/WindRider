@@ -41,6 +41,10 @@ func _fire():
 		'projectile':
 			_fire_projectile();
 
+func max_angle(angle, max_angle):
+	var best = max_angle * PI / 180
+	return max(-best, min(angle, best))
+
 func _fire_projectile():
 	if ownerShip.energy < weaponData['firing_energy']:
 		return;
@@ -55,11 +59,34 @@ func _fire_projectile():
 	proj.init(data)
 	
 	var angle = ownerShip.transform.basis.xform(Vector3(0,0,-1))
+	var rot = ownerShip.transform.basis
+	var pos = ownerShip.graphics.get_node('Hardpoints').get_node(hardpoint).translation
+	
+	if ownerShip.targetingSystem.get_active_target():
+		if 'turret_angle' in weaponData:
+			# Adjust angle-of-firing.
+			# TODO: support the hardpoint having a max angle
+			var idealAngle = Intercept.simple_intercept(ownerShip, ownerShip.targetingSystem.get_active_target(), weaponData['firing_speed'])[0]
+			if !idealAngle:
+				idealAngle = (ownerShip.targetingSystem.get_active_target().translation - ownerShip.translation - pos).normalized()
+			var best = Transform.looking_at(idealAngle, Vector3(0,1,0))
+			var current = Transform.looking_at(angle, Vector3(0,1,0))
+			var angles = (best.basis * current.basis.transposed()).get_euler();
+			angles[0] = max_angle(angles[0], weaponData['turret_angle'][0])
+			angles[1] = max_angle(angles[1], weaponData['turret_angle'][0])
+			angles[2] = max_angle(angles[2], weaponData['turret_angle'][0])
+			
+			var rot_adj = Basis()
+			rot_adj = rot_adj.rotated(Vector3(0,0,1), angles[2])
+			rot_adj = rot_adj.rotated(Vector3(1,0,0), angles[0])
+			rot_adj = rot_adj.rotated(Vector3(0,1,0), angles[1])
+			angle = rot_adj.xform(ownerShip.transform.basis.xform(Vector3(0,0,-1)))
+			rot = rot_adj*rot
+			
 	proj.linear_velocity = ownerShip.linear_velocity + angle * weaponData['firing_speed'];
 
-	var pos = ownerShip.graphics.get_node('Hardpoints').get_node(hardpoint).translation
 	var offset = proj.get_node('SpawnPoint').translation
 	pos = ownerShip.transform.basis.xform(pos-offset)
 	proj.translation = ownerShip.translation + pos
-	proj.rotation = ownerShip.rotation
+	proj.rotation = rot.get_euler()
 	Core.gameState.currentScene.add_child(proj)

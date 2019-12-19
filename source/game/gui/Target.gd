@@ -18,7 +18,7 @@ func _process(delta):
 	
 	get_node('aligner/TargetName').text = target.get_ref().data.ID;
 	var txt = "";
-	txt += 'S/A ' + str(target.get_ref().shields) + '/' + str(target.get_ref().shields) + '\n'
+	txt += 'S/A ' + str(target.get_ref().shields) + '/' + str(target.get_ref().armour) + '\n'
 	get_node('aligner/TargetInfo').text = txt;
 	
 	var dist = target.get_ref().translation.distance_to(from.get_ref().translation)
