@@ -1,5 +1,4 @@
 extends Spatial
-const Projectile = preload('res://data/art/projectiles/BlasterBolt.tscn')
 
 var ownerShip = null;
 var comp = null;
@@ -55,7 +54,7 @@ func _fire_projectile():
 
 	var data = Core.dataMgr.get('projectiles/' + weaponData.kind)
 
-	var proj = Projectile.instance()
+	var proj = load('res://data/art/projectiles/' + data['scene'] + '.tscn').instance()
 	proj.init(data)
 	
 	var angle = ownerShip.transform.basis.xform(Vector3(0,0,-1))

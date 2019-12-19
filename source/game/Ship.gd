@@ -23,8 +23,9 @@ var data;
 # subsystems shorthand
 var AI;
 var navSystem;
-var weaponsSystem;
 var targetingSystem;
+var autopilot;
+var weaponsSystem;
 var shipStats;
 var hold;
 
@@ -69,8 +70,9 @@ func init(shipData):
 	data = Core.dataMgr.get('ships/' + shipData['model'])
 
 	navSystem = get_node('NavSystem');
-	weaponsSystem = get_node('WeaponsSystem');
 	targetingSystem = get_node('TargetingSystem');
+	autopilot = get_node('Autopilot')
+	weaponsSystem = get_node('WeaponsSystem');
 	shipStats = get_node('ShipStats');
 	AI = get_node('AI');
 	hold = get_node('Hold')
@@ -122,8 +124,9 @@ func deserialize(ret):
 			set(prop, ret[prop])
 	
 	navSystem = get_node('NavSystem');
-	weaponsSystem = get_node('WeaponsSystem');
 	targetingSystem = get_node('TargetingSystem');
+	autopilot = get_node('Autopilot')
+	weaponsSystem = get_node('WeaponsSystem');
 	shipStats = get_node('ShipStats')
 	hold = get_node('Hold')
 	
@@ -189,7 +192,7 @@ func safe_stat(stat, percent):
 
 # Called before delivering from a landable
 func reset_speed_params():
-	navSystem.targetSpeed = 0
+	autopilot.targetSpeed = 0
 	railroading = 0
 
 func _phys_vec(vec, stat, power):
@@ -249,19 +252,6 @@ func align_with(vec, percent_xz = Vector2(1.0,1.0)):
 
 func reverse():
 	align_with(-get_linear_velocity())
-
-func aim_towards_target():
-	var target = targetingSystem.get_active_target();
-	if target == null:
-		target = navSystem.get_next_waypoint_position()
-
-	if target == null:
-		return
-
-	if target is RigidBody:
-		align_with(Intercept.simple_intercept(self, target, 1000)[0])
-	else:
-		align_with(target - get_transform().origin)
 
 func follow_vector(var world_vector, var percent_xz = Vector2(1.0,1.0)):
 	align_with(world_vector, percent_xz)
@@ -385,7 +375,7 @@ func teleport(to, pos):
 
 func _jump_out():
 	assert(currentSector)
-	navSystem.reset()
+	autopilot.reset()
 	emit_signal('jump_out', self)
 	lastSector = currentSector
 	currentSector = null

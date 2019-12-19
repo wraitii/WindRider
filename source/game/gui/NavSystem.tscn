@@ -28,14 +28,3 @@ text = "default text"
 __meta__ = {
 "_edit_use_anchors_": false
 }
-
-[node name="Autopilot" type="Label" parent="."]
-anchor_left = 1.0
-anchor_right = 1.0
-margin_top = 5.0
-grow_horizontal = 0
-text = "ON"
-align = 2
-__meta__ = {
-"_edit_use_anchors_": false
-}

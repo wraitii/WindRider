@@ -36,7 +36,7 @@ func _exit_tree():
 	ai_only = []
 
 func random_point():
-	return Vector3((randf() - 0.5) * 1000, (randf() - 0.5) * 1000, (randf() - 0.5) * 1000)
+	return Vector3((randf() - 0.5) * 5000, (randf() - 0.5) * 5000, (randf() - 0.5) * 5000)
 
 func do_ai():
 	if ship == null: # probably not yet in scene
@@ -47,10 +47,10 @@ func do_ai():
 		if ship.data.ID == "Cycles" and behaviour > 1.6: # deactivated for now
 			objective = weakref(Core.gameState.playerShip)
 			mode = MODE.KILL
-			ship.navSystem.reset()
+			ship.autopilot.reset()
 			ship.targetingSystem.reset()
 			ship.targetingSystem.target(objective.get_ref().ID)
-			ship.navSystem.activate()
+			ship.autopilot.activate()
 		else:
 			objective = random_point()
 			mode = MODE.MOVE

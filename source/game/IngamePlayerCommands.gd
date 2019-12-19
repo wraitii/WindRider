@@ -38,9 +38,10 @@ func _process(delta):
 		ship.dockingConvo = null;
 		ship.navSystem.reset()
 		ship.targetingSystem.reset()
+		ship.autopilot.reset()
 
 	if Input.is_action_just_released('ship_switch_driving_mode'):
-		ship.navSystem.switch_driving_mode()
+		ship.autopilot.switch_driving_mode()
 
 	if Input.is_action_just_released('ship_switch_controlling_mode'):
 		TargetingMode = TargetingMode + 1
@@ -48,7 +49,7 @@ func _process(delta):
 			TargetingMode = 0
 
 	if Input.is_action_just_released("ship_activate_autopilot"):
-		ship.navSystem.activate()
+		ship.autopilot.activate()
 
 	if Input.is_action_just_released('ship_next_target'):
 		ship.targetingSystem.pick_new_target()
@@ -98,18 +99,21 @@ func moveCommandProcess():
 		commands.push_back(['rotate_down', [warp_multiplier]])
 
 	if Input.is_action_pressed("ship_thrust"):
-		if ship.navSystem.drivingMode == ship.navSystem.DRIVING_MODE.AUTOTHRUST:
-			ship.navSystem.targetSpeed = min(1.0, ship.navSystem.targetSpeed + 0.02 * warp_multiplier)
+		if ship.autopilot.drivingMode == ship.autopilot.DRIVING_MODE.AUTOTHRUST:
+			ship.autopilot.targetSpeed = min(1.0, ship.autopilot.targetSpeed + 0.02 * warp_multiplier)
 		else:
 			commands.push_back(['thrust', [warp_multiplier]])
 	elif Input.is_action_pressed('ship_reverse'):
-		if ship.navSystem.drivingMode == ship.navSystem.DRIVING_MODE.AUTOTHRUST:
-			ship.navSystem.targetSpeed = max(0.0, ship.navSystem.targetSpeed - 0.02 * warp_multiplier)
+		if ship.autopilot.drivingMode == ship.autopilot.DRIVING_MODE.AUTOTHRUST:
+			ship.autopilot.targetSpeed = max(0.0, ship.autopilot.targetSpeed - 0.02 * warp_multiplier)
 		else:
 			commands.push_back(['reverse', [warp_multiplier]])
 
 	if Input.is_action_pressed("ship_aim_towards_target"):
-		commands.push_back('aim_towards_target')
+		ship.autopilot.update_target()
+		var vec = ship.autopilot.get_firing_vector()
+		if vec:
+			commands.push_back(['follow_vector', [vec]])
 
 	if TargetingMode == TARGETING_MODE.FOLLOW_MOUSE:
 		var dir = get_viewport().get_camera().project_ray_normal(get_viewport().get_mouse_position())
@@ -125,7 +129,7 @@ func moveCommandProcess():
 	for c in commands:
 		ret.push_back([Core.gameState.playerShip, c])
 
-	ret += ship.navSystem.autothrust()
-	ship.navSystem.autorailroad()
+	ret += ship.autopilot.autothrust()
+	ship.autopilot.autorailroad()
 
 	return ret
