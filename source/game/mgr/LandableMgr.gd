@@ -5,10 +5,7 @@ const Landable = preload('../Landable.gd')
 func _init().('Landable', 'res://data/landables/'):
 	pass
 
-func _instance(data):
+func _instance(d):
 	var item = Landable.new();
-	item.init(data);
+	item.init(d);
 	return item;
-
-func validation(data, path):
-	return true

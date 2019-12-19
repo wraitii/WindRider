@@ -11,20 +11,20 @@ func populate():
 	## TODO: if I get an outfitMgr or something this should be replaced
 	assign_outfits()
 
-func _instance(data):
+func _instance(d):
 	var item
-	if data['type'] == "character":
+	if d['type'] == "character":
 		item = Character.new();
 	else:
 		item = Society.new();
-	item.init(data);
+	item.init(d);
 	return item;
 
-func validation(data, path):
-	if !('short_name' in data):
+func validation(d, path):
+	if !('short_name' in d):
 		print("Missing short name in Society: " + path)
 		return false
-	if !('type' in data) or (data['type'] != 'character' and data['type'] != 'society'):
+	if !('type' in d) or (d['type'] != 'character' and d['type'] != 'society'):
 		print("Missing type ('character' or 'society') in Society: " + path)
 		return false
 	return true

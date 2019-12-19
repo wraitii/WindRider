@@ -13,9 +13,15 @@ _global_script_classes=[ {
 "class": "Intercept",
 "language": "GDScript",
 "path": "res://source/lib/Intercept.gd"
+}, {
+"base": "Node",
+"class": "Utils",
+"language": "GDScript",
+"path": "res://source/lib/Utils.gd"
 } ]
 _global_script_class_icons={
-"Intercept": ""
+"Intercept": "",
+"Utils": ""
 }
 
 [application]

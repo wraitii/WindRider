@@ -22,7 +22,10 @@ func _process(delta):
 
 	# Compute the cross for aiming.
 	var faraway = Core.gameState.playerShip.get_transform().xform(Vector3(0,0,-5000.0))
-	get_node("Firing Reticule").position = get_viewport().get_camera().unproject_position(faraway)
+	var closer = Core.gameState.playerShip.get_transform().xform(Vector3(0,0,-150.0))
+	var fr = $"Firing Reticule/Line"
+	fr.points[0] = get_viewport().get_camera().unproject_position(faraway)
+	fr.points[1] = get_viewport().get_camera().unproject_position(closer)
 	
 	# Compute the cross for instant firing.
 	if target == null:

@@ -18,19 +18,3 @@ func _get(prop):
 		return position
 
 	return _raw.get(prop)
-
-# Called by the world manager when the player jumps in a system.
-# The role of this function is to load the sector with ships
-# To make it look like we are simulating stuff properly.
-
-const Character = preload('Character.tscn')
-const Ship = preload('Ship.tscn')
-
-func generate_activity():
-	for i in range(ceil(rand_range(5,25))):
-		var ship = Ship.instance()
-		var type = 'Cycles'
-		if randi() % 2 == 1:
-			type = 'Manta'
-		ship.init(type)
-		ship.teleport(ID, Vector2((randf()-0.5)*500, (randf()-0.5)*500))

@@ -3,15 +3,21 @@ extends RigidBody
 # intended for the human player only
 signal add_chat_message(message)
 
+
 signal ship_death(ship)
+
+signal will_dock(ship)
+signal docked(ship)
+signal will_undock(ship)
+signal undocked(ship)
+signal jump_out(ship)
+signal will_jump_in(ship)
+signal jumped_in(ship)
 
 const NavSystem = preload('res://source/game/NavSystem.gd')
 const Docking = preload('res://source/game/comms/Docking.gd')
 
 var ID;
-
-var dockingProcedure = null
-
 var data;
 
 # subsystems shorthand
@@ -29,8 +35,10 @@ var lastSector = null;
 var currentSector = null;
 var dockedAt = null;
 var hyperNavigating = null;
-var docking = null;
+var dockingProcess = null;
+var dockingConvo = null
 
+# Holds command until _integrate_forces is called
 var commands = [];
 # Temporary global to process commands in integrate_forces
 var physState;
@@ -56,8 +64,10 @@ func _init():
 	set_angular_damp(0.98);
 	pass
 
-func init(shipType):
-	Core.outsideWorldSim.assign_id(self);
+func init(shipData):
+	ID = shipData.ID
+	data = Core.dataMgr.get('ships/' + shipData['model'])
+
 	navSystem = get_node('NavSystem');
 	weaponsSystem = get_node('WeaponsSystem');
 	targetingSystem = get_node('TargetingSystem');
@@ -65,7 +75,6 @@ func init(shipType):
 	AI = get_node('AI');
 	hold = get_node('Hold')
 	
-	data = Core.dataMgr.get('ships/' + shipType)
 	hold.init(data)
 	weaponsSystem.init()
 	targetingSystem.init(null, self);
@@ -83,7 +92,7 @@ func init(shipType):
 
 	var graph = load('res://data/art/ships/' + data['scene'] + '.tscn')
 	graphics = graph.instance()
-	self.add_child(graphics)
+	add_child(graphics)
 	for c in graphics.get_node('Shapes').get_children():
 		graphics.get_node('Shapes').remove_child(c)
 		add_child(c)
@@ -100,7 +109,7 @@ func serialize():
 	ret.currentSector = currentSector
 	ret.dockedAt = dockedAt
 	ret.hyperNavigating = hyperNavigating
-	ret.docking = docking
+	ret.dockingProcess = dockingProcess
 	
 	ret.hold = hold.serialize()
 	ret.shipStats = shipStats.serialize()
@@ -127,7 +136,7 @@ func deserialize(ret):
 
 	var graph = load('res://data/art/ships/' + data['scene'] + '.tscn')
 	graphics = graph.instance()
-	self.add_child(graphics)
+	add_child(graphics)
 	for c in graphics.get_node('Shapes').get_children():
 		graphics.get_node('Shapes').remove_child(c)
 		add_child(c)
@@ -325,12 +334,11 @@ func get_armour(): return armour;
 
 ##############################
 ##############################
-## Jumping-related helpers
+## Jump/Dock-ing 
+## The jumping and docking are jointly handled by the ship and the outsideWorldSim
+## functions starting with '_on' are to be solely called by the outsideWorldSim.
 
-signal docked(ID, at)
-signal undocked(ID, from)
-signal jumped(ID, from)
-signal unjumped(ID, into)
+#### Jumping
 
 class HypernavigationData:
 	var method = null;
@@ -355,6 +363,42 @@ class HypernavigationData:
 			{ 'position': pos }
 		)
 
+func jump(to):
+	if hyperfuel < 100:
+		emit_signal('add_chat_message', 'Not enough fuel for Hyperjump')
+		return;
+	else:
+		hyperfuel -= 100;
+	hyperNavigating = HypernavigationData.hyperjump(to, currentSector)
+	_jump_out()
+
+func teleport(to, pos):
+	if to != currentSector:
+		hyperNavigating = HypernavigationData.teleport(to, pos)
+		if currentSector:
+			_jump_out()
+		else:
+			# This is the exceptional bit in teleport
+			_on_jump_in()
+	else:
+		translation = pos;
+
+func _jump_out():
+	assert(currentSector)
+	navSystem.reset()
+	emit_signal('jump_out', self)
+	lastSector = currentSector
+	currentSector = null
+
+func _on_jump_in():
+	assert(hyperNavigating.to)
+	currentSector = hyperNavigating.to
+	emit_signal('will_jump_in', self)
+	hyperNavigating = null;
+	emit_signal('jumped_in', self)
+
+#### Docking
+
 class DockingData:
 	var status = null;
 	var dock = null;
@@ -374,77 +418,25 @@ class DockingData:
 			from
 		)
 
-func _jump_out():
-	navSystem.reset()
-	if ID == Core.gameState.playerShipID:
-		Core.unload_scene();
-	lastSector = currentSector
-	currentSector = null
-	emit_signal('jumped', ID, lastSector)
-
-func _do_jump(to):
-	assert(to != currentSector)
-	hyperNavigating = HypernavigationData.hyperjump(to, currentSector)
-	_jump_out()
-
-func _teleport(to, pos):
-	if to != currentSector:
-		hyperNavigating = HypernavigationData.teleport(to, pos)
-		_jump_out()
-	else:
-		translation = pos;
-
-func _do_dock(to):
-	dockingProcedure = null;
-	if ID == Core.gameState.playerShipID:
-		Core.unload_scene();
-	docking = null
-	dockedAt = to;
-	emit_signal('docked', ID, dockedAt)
-
-## These helpers will be called by the outside world or the player
-## But they don't handle actual in-scene logic
-
-func _do_undock():
+func undock():
 	assert(dockedAt != null)
-	if ID == Core.gameState.playerShipID:
-		Core.unload_scene();
-	docking = DockingData.undock(dockedAt)
-	dockedAt = null;
-	emit_signal('undocked', ID, docking.dock)
-	_undocking_done()
-
-func _do_unjump():
-	assert(hyperNavigating != null)
-	currentSector = hyperNavigating.to
-	emit_signal('unjumped', ID, hyperNavigating.to)
-	_unjumping_done()
-
-func _undocking_done():
-	docking = null;
-
-func _unjumping_done():
-	hyperNavigating = null;
-
-##############################
-##############################
-## External jumping interface
-
-func jump(to):
-	if hyperfuel < 100:
-		emit_signal('add_chat_message', 'Not enough fuel for Hyperjump')
-		return;
-	else:
-		hyperfuel -= 100;
-	_do_jump(to)
-
-## Teleporting is a bit of a special function anyways
-## Player can't trigger it.
-func teleport(to, pos):
-	_teleport(to, pos)
+	dockingProcess = DockingData.undock(dockedAt)
+	emit_signal('will_undock', self)
 
 func dock(to):
-	_do_dock(to)
+	dockingProcess = DockingData.dock(to)
+	emit_signal("will_dock", self)
+
+func _on_dock():
+	dockedAt = dockingProcess.dock;
+	dockingConvo = null;
+	dockingProcess = null
+	emit_signal('docked', self)
+
+func _on_undock():
+	dockedAt = null;
+	dockingProcess = null;
+	emit_signal('undocked', self)
 
 ##############################
 ##############################
@@ -458,12 +450,12 @@ func try_dock():
 	if target.type != target.TARGET_TYPE.LANDABLE:
 		return;
 
-	if dockingProcedure != null:
-		dockingProcedure.ask_for_docking()
+	if dockingConvo != null:
+		dockingConvo.ask_for_docking()
 		return
 
-	dockingProcedure = Docking.new(self, Core.landablesMgr.get(target.ID))
-	dockingProcedure.ask_for_docking()
+	dockingConvo = Docking.new(self, Core.landablesMgr.get(target.ID))
+	dockingConvo.ask_for_docking()
 
 func on_received_chat(convo, sender, chatData):
 	emit_signal('add_chat_message', chatData.message)

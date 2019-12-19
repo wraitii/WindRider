@@ -5,16 +5,16 @@ const SystemData = preload('../SystemData.gd')
 func _init().('Systems', 'res://data/systems/'):
 	pass
 
-func _instance(data):
+func _instance(d):
 	var item = SystemData.new();
-	item.init(data);
+	item.init(d);
 	return item;
 
 func get_systems():
 	return data
 
-func validation(data, path):
-	if !('position' in data):
+func validation(d, path):
+	if !('position' in d):
 		print("Error: System without position" + path)
 		return false
 	return true

@@ -5,16 +5,16 @@ const SectorData = preload('../SectorData.gd')
 func _init().('Sectors', 'res://data/sectors/'):
 	pass
 
-func _instance(data):
+func _instance(d):
 	var item = SectorData.new();
-	item.init(data);
+	item.init(d);
 	return item;
 
 func get_sectors():
 	return data
 
-func validation(data, path):
-	if !('position' in data):
+func validation(d, path):
+	if !('position' in d):
 		print("Error: Sector without position" + path)
 		return false
 	return true

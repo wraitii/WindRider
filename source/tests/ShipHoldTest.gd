@@ -7,6 +7,7 @@ func _pr(x):
 	text += str(x) + '\n'
 
 func _ready():
+
 	var data = {
 		"hold" : [
 			[

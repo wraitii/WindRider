@@ -7,6 +7,8 @@ var objective = null;
 
 var mode = MODE.MOVE;
 
+var ai_only = []
+
 ## TODO: figure this out.
 func _enter_tree():
 	ship = get_parent()
@@ -17,14 +19,21 @@ func _enter_tree():
 	collisionWarning.extents = Vector3(5,5,50)
 	var cs = CollisionShape.new()
 	cs.shape = collisionWarning
+
 	var area = Area.new()
 	area.add_child(cs)
 	area.translation = Vector3(0,0,-50)
 	area.connect('body_entered', self, 'on_collision_warning')
+	ai_only.append(area)
 	ship.call_deferred("add_child", area)
 
 func _exit_tree():
 	ship = null;
+	var c = get_children()
+	for i in ai_only:
+		if i.get_parent():
+			NodeHelpers.call_deferred("queue_delete", i)
+	ai_only = []
 
 func random_point():
 	return Vector3((randf() - 0.5) * 1000, (randf() - 0.5) * 1000, (randf() - 0.5) * 1000)

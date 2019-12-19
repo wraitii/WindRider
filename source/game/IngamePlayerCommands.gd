@@ -35,7 +35,7 @@ func _process(delta):
 		Core.gameState.currentScene.get_node('Camera').switch_mode()
 
 	if Input.is_action_just_released('ship_reset_systems'):
-		ship.dockingProcedure = null;
+		ship.dockingConvo = null;
 		ship.navSystem.reset()
 		ship.targetingSystem.reset()
 

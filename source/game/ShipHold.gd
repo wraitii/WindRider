@@ -161,7 +161,7 @@ func store(ress, indices):
 		var amt = min(free, lo)
 		assert(amt > 0)
 		holdContent[i].amount += amt
-		for c in range(min(len(comps), amt)):
+		for _c in range(min(len(comps), amt)):
 			var comp = comps.pop_back()
 			comp.holdIndices = [i]
 			holdContent[i].components.append(comp)
@@ -192,7 +192,7 @@ func unload(ress, indices):
 	for i in indices:
 		var qt = min(holdContent[i].amount, lo)
 		holdContent[i].amount -= qt
-		for c in range(min(len(holdContent[i].components), qt)):
+		for _c in range(min(len(holdContent[i].components), qt)):
 			var comp = holdContent[i].components.pop_back()
 			comp.holdIndices = []
 			popped_components.append(comp)

@@ -18,4 +18,4 @@ func _physics_process(delta):
 func _collide(body):
 	## TODO: determine whether we hit.
 	Core.damageMgr.try_deal_damage(self, body)
-	call_deferred("NodeHelpers.queue_delete", self)
+	NodeHelpers.call_deferred("queue_delete", self)

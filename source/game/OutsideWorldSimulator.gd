@@ -1,25 +1,30 @@
-extends Node
+extends "res://source/lib/EntityMgr.gd"
 
-## Because of computational, programmer, and Godot limitations
-## (can only run one instance of Bullet for example)
-## The world outside the current sector cannot be played
+## Because of computational and practical limitations
+## The world outside the current sector shan't be played
 ## with the same level of detail.
 ## To keep continuity and make it feel alive,
 ## we thus rely on the OutsideWorldSimulator,
 ## whose job is to make the player think we are actually
 ## playing those outside sectors.
-
-const Ship = preload('Ship.gd')
-
+## This will get tricky.
 ## This is also essentially the galaxy-wide ship manager
-## because of that.
+## because of that (hence why it inherits EntityMgr)
 
-var _ships = {
-}
+const Ship = preload('Ship.tscn')
 
-#### Optimizations
+var counter = 0;
+func _uid():
+	var id = 'custom_' + str(counter) + '_' + str(OS.get_system_time_msecs());
+	counter += 1
+	assert(!(id in data))
+	# We support creating up to 500K items in a single millisecond
+	if counter > 500000:
+		counter = 0
+	return id
 
-# array-per-landable of ships navigating in a sector (not docked)
+#### 'Indexes' for optimised access to ships.
+# array-per-landable of ships navigating in a sector (_not_ including docked ships)
 var _shipIDsInSector = {
 }
 
@@ -29,120 +34,56 @@ var _shipIDsDockedAt = {
 
 signal bring_ship_in(ID)
 
-func get_ships_to_save():
-	var ret = []
-	for ship in _ships.values():
-		#if ship == Core.gameState.playerShip:
-		ret.push_back(ship);
-	return ret;
+# No resource path in this class, as we'll load ships from characters initially for now.
+func _init().('Ships', ''):
+	pass
 
-func deserialize_ship(ship):
-	_ships[ship.ID] = ship
-	if ids <= ship.ID:
-		ids = ship.ID + 1;
+func _instance(sd):
+	var ship = Ship.instance();
+	sd.ID = _uid();
+	ship.init(sd);
+	_setup_connections(ship)
+	return ship;
 
+func serialize():
+	var ret = {}
+	for ship in data:
+		ret[ship.ID] = ship.serialize()
+	return ret
+
+func deserialize(data):
+	for id in data:
+		var s = Ship.new()
+		s.deserialize(data[id])
+		data[s.ID] = s
+		_setup_connections(s)
+		
+		if s.dockedAt:
+			Utils.safe_push(_shipIDsDockedAt, s.dockedAt, s.ID)
+		elif s.currentSector:
+			Utils.safe_push(_shipIDsInSector, s.currentSector, s.ID)
+
+func _setup_connections(ship):
+	ship.connect('will_dock', self, 'ship_will_dock')
 	ship.connect('docked', self, 'ship_docked')
+	ship.connect('will_undock', self, 'ship_will_undock')
 	ship.connect('undocked', self, 'ship_undocked')
-	ship.connect('jumped', self, 'ship_jumped')
-	ship.connect('unjumped', self, 'ship_unjumped')
-	ship.connect('ship_death', self, 'ship_death')
-	
-	if (ship.dockedAt):
-		if !(ship.dockedAt in _shipIDsDockedAt):
-			_shipIDsDockedAt[ship.dockedAt] = []
-		_shipIDsDockedAt[ship.dockedAt].push_back(ship.ID)
-	elif (ship.currentSector):
-		if !(ship.currentSector in _shipIDsInSector):
-			_shipIDsInSector[ship.currentSector] = []
-		_shipIDsInSector[ship.currentSector].push_back(ship.ID)
 
-var ids = 0;
-	
+	ship.connect('jump_out', self, 'ship_jump_out')
+	ship.connect('will_jump_in', self, 'ship_will_jump_in')
+	ship.connect('jumped_in', self, 'ship_jumped_in')
+
+	ship.connect('ship_death', self, 'ship_death')
+
+# Explicitly named alias for get
 func ship(ID):
-	assert(ID in _ships)
-	return _ships[ID];
-	
-func assign_id(ship):
-	ship.ID = ids;
-	ids += 1;
-	_ships[ship.ID] = ship
+	assert(ID in data)
+	return get(ID);
 
-	ship.connect('docked', self, 'ship_docked')
-	ship.connect('undocked', self, 'ship_undocked')
-	ship.connect('jumped', self, 'ship_jumped')
-	ship.connect('unjumped', self, 'ship_unjumped')
-	ship.connect('ship_death', self, 'ship_death')
-
-func _ship_appears(shipID):
-	var sector = ship(shipID).currentSector
-	
-	if !(sector in _shipIDsInSector):
-		_shipIDsInSector[sector] = []
-	_shipIDsInSector[sector].push_back(shipID)
-
-	if Core.gameState.playerShipID == shipID:
-		Core.load_scene()
-		# Create new ships in this sector.
-		Core.sectorsMgr.get(sector).generate_activity()
-
-		# Bring in all ships navigating in this sector
-		for shipID in _shipIDsInSector[sector]:
-			emit_signal("bring_ship_in", shipID)
-
-	elif Core.gameState.playerShip.currentSector == sector:
-		emit_signal("bring_ship_in", shipID)
-
-func ship_docked(shipID, at):
-	assert(shipID in _ships)
-	
-	if !(at in _shipIDsDockedAt):
-		_shipIDsDockedAt[at] = []
-	_shipIDsDockedAt[at].push_back(shipID)
-
-	if Core.landablesMgr.get(at).sectorID in _shipIDsInSector:
-		if shipID in _shipIDsInSector[Core.landablesMgr.get(at).sectorID]:
-			_shipIDsInSector[Core.landablesMgr.get(at).sectorID].erase(shipID)
-
-	if Core.gameState.playerShipID == shipID:
-		Core.load_scene()
-
-func ship_jumped(shipID, from):
-	assert(shipID in _ships)
-	# May be null in case we teleport out of thin air
-	if from != null:
-		assert(from in _shipIDsInSector)
-		_shipIDsInSector[from].erase(shipID)
-		if _shipIDsInSector[from].empty():
-			_shipIDsInSector.erase(from)
-	
-	var ship = ship(shipID);
-	if ship.hyperNavigating.method == Enums.HYPERNAVMETHOD.TELEPORTING:
-		ship._do_unjump()
-		return;
-	
-	if shipID == Core.gameState.playerShipID:
-		# so here we would simulate time passing.
-		ship(shipID)._do_unjump()
-
-func ship_undocked(shipID, at):
-	assert(shipID in _ships)
-	assert(at in _shipIDsDockedAt)
-	_shipIDsDockedAt[at].erase(shipID)
-	if _shipIDsDockedAt[at].empty():
-		_shipIDsDockedAt.erase(at)
-	
-	_ship_appears(shipID)
-
-func ship_unjumped(shipID, into):
-	assert(shipID in _ships)
-	_ship_appears(shipID)
-
-func ship_death(ship):
-	if ship.dockedAt != null:
-		_shipIDsDockedAt[ship.dockedAt].erase(ship.ID)
-	else:
-		_shipIDsInSector[ship.currentSector].erase(ship.ID)
-	_ships.erase(ship.ID)
+func get_ships_in(sector):
+	if sector in _shipIDsInSector:
+		return _shipIDsInSector[sector]
+	return []
 
 func advance(delta):
 	if Core.gameState.playerShip == null:
@@ -156,3 +97,87 @@ func advance(delta):
 		if ship(ship).AI == null:
 			continue
 		ship(ship).AI.do_ai()
+
+
+################################################
+################################################
+## General ship-event handlers
+
+# Called when a ship jumps out of a sector.
+func ship_jump_out(ship):
+	assert(ship.ID in data)
+	
+	# May be null in case we teleport out of thin air
+	if ship.currentSector != null:
+		Utils.full_erase(_shipIDsInSector, ship.currentSector, ship.ID)
+	
+	if ship == Core.gameState.playerShip:
+		Core.clear_sector()
+		Core.unload_scene()
+		# so here we would simulate time passing.	
+	# Deferred call for cleanup purposes and we don't really need instant effects.
+	ship.call_deferred('_on_jump_in')
+
+func ship_will_jump_in(ship):
+	if ship == Core.gameState.playerShip:
+		Core.setup_sector()
+	_ship_appears(ship)
+
+func ship_jumped_in(ship):
+	if ship == Core.gameState.playerShip:
+		Core.load_scene()
+
+# Called right before a ship docks
+func ship_will_dock(ship):
+	assert(ship.ID in data)
+	Utils.full_erase(_shipIDsInSector, ship.currentSector, ship.ID)
+
+	if ship == Core.gameState.playerShip:
+		Core.clear_sector()
+		Core.unload_scene()
+
+	ship._on_dock()
+
+# Called once a ship has docked.
+func ship_docked(ship):
+	assert(ship.ID in data)
+	var docked_at = ship.dockedAt
+	
+	Utils.safe_push(_shipIDsDockedAt, docked_at, ship.ID)
+
+	if Core.gameState.playerShip == ship:
+		Core.load_scene()
+
+# Called right before a ship undocks
+func ship_will_undock(ship):
+	Utils.full_erase(_shipIDsDockedAt, ship.dockedAt, ship.ID)
+	if ship == Core.gameState.playerShip:
+		Core.unload_scene()
+		Core.setup_sector()
+	
+	_ship_appears(ship)
+	ship._on_undock()
+
+# Called once a ship has undocked.
+func ship_undocked(ship):	
+	if Core.gameState.playerShip == ship:
+		Core.load_scene()
+
+func ship_death(ship):
+	_destroy_ship(ship)
+
+## Called to bring in  a ship
+func _ship_appears(ship):
+	var sector = ship.currentSector
+	
+	Utils.safe_push(_shipIDsInSector, sector, ship.ID)
+
+	if Core.runningSector.ID == sector:
+		Core.runningSector.bring_ship_in(ship.ID)
+
+func _destroy_ship(ship):
+	if ship.dockedAt != null:
+		Utils.full_erase(_shipIDsDockedAt, ship.DockedAt, ship.ID)
+	else:
+		Utils.full_erase(_shipIDsInSector, ship.currentSector, ship.ID)
+	data.erase(ship.ID)

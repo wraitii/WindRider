@@ -9,7 +9,8 @@ func _enter_tree():
 	add_to_group('command_manager')
 
 func _physics_process(delta):
-	commands += get_node('../PlayerCommands').moveCommandProcess()
+	if Core.gameState.currentScene.has_node('PlayerCommands'):
+		commands += Core.gameState.currentScene.get_node('PlayerCommands').moveCommandProcess()
 
 	for node in get_tree().get_nodes_in_group('autopilot_running'):
 		commands += node.get_commands(delta)

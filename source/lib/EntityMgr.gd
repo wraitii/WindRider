@@ -1,17 +1,15 @@
 extends Node
 
 ## EntityMgr
-## Generic abstraction around and ID->Script
+## Generic abstraction around ID->Script KV database of sorts.
+## Also deals with raw_data for 'from data-file' objects,
+## though the class also supports data-less objects.
 
-var data = {} setget __nos, __nog
-var raw_data = {} setget __nos, __nog
-var paths = {} setget __nos, __nog
+var data = {}
+var raw_data = {}
+var paths = {}
 var kind;
 var resource_path;
-
-# Fake getters
-func __nos(_a): pass
-func __nog(): pass
 
 func _init(k, p):
 	kind = k
@@ -25,24 +23,22 @@ func populate():
 	for f in files:
 		create_resource(IO.read_json(resource_path + f), resource_path + f);
 
-func has(s):
-	return s in data
-
 # Create a new resource at the given path, and instance it.
-# if path is null, this will auto-assign a path.
-func create_resource(data, path = null):
-	if path == null:
-		path = 'custom_' + data.ID + '_' + str(OS.get_unix_time());
-	# Hack in case the above is _still_ not sufficient.
-	while path in paths:
-		path += '_'
-
-	if !validation(data, path):
+func create_resource(d, path = null):
+	if !validation(d, path):
 		return null
 
-	var obj = _instance(data)
-	_register(obj, data, path);
+	var obj = _instance(d)
+	
+	# As a fallback for no-data resources, use the ID.
+	if path == null:
+		assert(d.ID)
+		path = d.ID
+	_register(obj, d, path);
 	return obj
+
+func has(s):
+	return s in data
 
 func get(s):
 	if !(s in data):
@@ -86,4 +82,4 @@ func _instance(_data):
 	pass
 
 func validation(_data, _path):
-	pass
+	return true

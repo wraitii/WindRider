@@ -50,12 +50,11 @@ func init(data):
 
 func deliver(obj):
 	assert(graphics.has_node('Exit'))
-	obj.global_transform.origin = graphics.get_node('Exit').global_transform.origin
-	obj.global_transform.basis = Basis(graphics.get_node('Exit').global_transform.basis.get_rotation_quat())
+	obj.transform.origin = graphics.get_node('Exit').global_transform.origin
+	obj.transform.basis = Basis(graphics.get_node('Exit').global_transform.basis.get_rotation_quat())
 	obj.reset_speed_params()
 	obj.linear_velocity = Vector3(0,0,0)
 	obj.angular_velocity = Vector3(0,0,0)
-	get_parent().get_parent().add_child(obj)
 
 signal trigger_dock
 

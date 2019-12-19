@@ -16,7 +16,7 @@ func init(l):
 	get_node('GeneralInfo').text = str(admin.get_opinion(Core.gameState.player))
 
 func _on_Undock_pressed():
-	Core.gameState.playerShip._do_undock()
+	Core.gameState.playerShip.undock()
 
 func _check_hyperfuel():
 	if Core.gameState.playerShip.hyperfuel == Core.gameState.playerShip.stat('max_hyperfuel'):

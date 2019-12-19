@@ -26,9 +26,6 @@ func _ready():
 	# TODO: get a whole convo going and gorce going through all 3 jump zones.
 	$WarpFinal.connect('body_entered', self, 'on_body_entered')
 
-func _exit_tree():
-	remove_from_group('JumpZones')
-
 func deliver(obj):
 	var target = direction
 	var up = Vector3(0,1,0)
@@ -36,7 +33,6 @@ func deliver(obj):
 		up = Vector3(1,0,0)
 	obj.look_at_from_position(translation + target * 50, translation + target * 100, up)
 	obj.linear_velocity = Vector3()
-	get_parent().get_parent().add_child(obj)
 
 const Ship = preload('res://source/game/Ship.gd')
 
