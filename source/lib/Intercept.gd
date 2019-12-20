@@ -11,8 +11,8 @@ class_name Intercept
 # helpfully cancel out neatly to make a quadratic equation.
 
 # Thus assumes chaser is a Spatial and target a RigidBody.
-static func simple_intercept(chaser, target, chase_speed):
-	var target_to_chaser = chaser.translation - target.translation
+static func simple_intercept(chaserPos, target, chase_speed):
+	var target_to_chaser = chaserPos - target.translation
 	var target_vel = target.linear_velocity
 	
 	# Chaser speed is insignificant, assume failure.
@@ -50,6 +50,6 @@ static func simple_intercept(chaser, target, chase_speed):
 			return [null, null, null]
 	
 	var intercept_pos = target.translation + target_vel * time_to_intercept
-	return [(intercept_pos - chaser.translation).normalized(), intercept_pos, time_to_intercept]
+	return [(intercept_pos - chaserPos).normalized(), intercept_pos, time_to_intercept]
 
 # TODO: fancier intercepts, possibly assuming a constant-velocity bezier?

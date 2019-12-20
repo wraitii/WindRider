@@ -33,7 +33,7 @@ func _process(delta):
 		return
 	
 	# Assume weapon speed for now
-	var dir_pos = Intercept.simple_intercept(Core.gameState.playerShip, Core.outsideWorldSim.ship(target), 500)
+	var dir_pos = Intercept.simple_intercept(Core.gameState.playerShip.translation, Core.outsideWorldSim.ship(target), 500)
 
 	if dir_pos[1] == null:
 		get_node("Aim Reticule").hide()

@@ -42,6 +42,11 @@ func do_ai():
 	if ship == null: # probably not yet in scene
 		return
 
+	var comms = get_tree().get_nodes_in_group('command_manager')[0]
+	
+	comms.commands += ship.autopilot.autothrust()
+	ship.autopilot.autorailroad()
+
 	if objective == null:
 		var behaviour = randf();
 		if ship.data.ID == "Cycles" and behaviour > 1.6: # deactivated for now
@@ -56,10 +61,9 @@ func do_ai():
 			mode = MODE.MOVE
 
 	if mode == MODE.MOVE:
-		var comms = get_tree().get_nodes_in_group('command_manager')[0].commands
-		comms.append([ship, 'thrust'])
-		comms.append([ship, ['align_with', [objective - ship.transform.origin]]])
-
+		ship.autopilot.targetSpeed = 1
+		comms.commands.append([ship, ['align_with', [objective - ship.transform.origin]]])
+		print(comms)
 		if (objective - ship.transform.origin).length_squared() < 100:
 			objective = null
 	else:

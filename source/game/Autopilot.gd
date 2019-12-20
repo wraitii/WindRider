@@ -77,12 +77,7 @@ func get_commands(delta):
 	if autopilotMode == MODE.OFF:
 		assert(!is_in_group('autopilot_running'))
 		return commands
-
-	# AI ships need this.
-	if ship != Core.gameState.playerShip:
-		commands += autothrust()
-		autorailroad()
-
+	
 	if autopilotMode == MODE.INTERCEPT:
 		commands += _intercept()
 	elif autopilotMode == MODE.NAVTARGET:
@@ -154,7 +149,7 @@ func get_firing_vector(speed = 500):
 	if !(get_target() is RigidBody):
 		return null
 	
-	return Intercept.simple_intercept(ship, get_target(), speed)[0]
+	return Intercept.simple_intercept(ship.translation, get_target(), speed)[0]
 
 func get_interception_vector(speed = null):
 	if !has_target():
@@ -168,6 +163,6 @@ func get_interception_vector(speed = null):
 		speed = ship.stat('max_speed') * targetSpeed
 	
 	if target is RigidBody:
-		return Intercept.simple_intercept(ship, target, speed)[0]
+		return Intercept.simple_intercept(ship.translation, target, speed)[0]
 	else:
 		return (target - ship.translation).normalized()

@@ -61,11 +61,14 @@ func _fire_projectile():
 	var rot = ownerShip.transform.basis
 	var pos = ownerShip.graphics.get_node('Hardpoints').get_node(hardpoint).translation
 	
+	# TODO: adjust fixed guns so that they fire in an X fashion
+	# since that will make them more viable.
+	
 	if ownerShip.targetingSystem.get_active_target():
 		if 'turret_angle' in weaponData:
 			# Adjust angle-of-firing.
 			# TODO: support the hardpoint having a max angle
-			var idealAngle = Intercept.simple_intercept(ownerShip, ownerShip.targetingSystem.get_active_target(), weaponData['firing_speed'])[0]
+			var idealAngle = Intercept.simple_intercept(ownerShip.translation + rot.xform(pos), ownerShip.targetingSystem.get_active_target(), weaponData['firing_speed'])[0]
 			if !idealAngle:
 				idealAngle = (ownerShip.targetingSystem.get_active_target().translation - ownerShip.translation - pos).normalized()
 			var best = Transform.looking_at(idealAngle, Vector3(0,1,0))

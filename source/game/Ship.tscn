@@ -10,6 +10,7 @@
 [ext_resource path="res://source/game/Autopilot.gd" type="Script" id=8]
 
 [node name="Ship" type="RigidBody"]
+continuous_cd = true
 can_sleep = false
 script = ExtResource( 1 )
 
