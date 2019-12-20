@@ -98,6 +98,15 @@ func advance(delta):
 			continue
 		ship(ship).AI.do_ai()
 
+func evaluate_ship_keeping(sector):
+	if !(sector in _shipIDsInSector):
+		return
+
+	for ship in _shipIDsInSector[sector]:
+		# sanity
+		if ship == Core.gameState.playerShip.ID:
+			continue
+		destroy_ship(ship(ship))
 
 ################################################
 ################################################
@@ -112,9 +121,12 @@ func ship_jump_out(ship):
 		Utils.full_erase(_shipIDsInSector, ship.currentSector, ship.ID)
 	
 	if ship == Core.gameState.playerShip:
+		if ship.currentSector != null:
+			evaluate_ship_keeping(ship.currentSector)
 		Core.clear_sector()
 		Core.unload_scene()
-		# so here we would simulate time passing.	
+		# so here we would simulate time passing.
+	
 	# Deferred call for cleanup purposes and we don't really need instant effects.
 	ship.call_deferred('_on_jump_in')
 
@@ -164,7 +176,7 @@ func ship_undocked(ship):
 		Core.load_scene()
 
 func ship_death(ship):
-	_destroy_ship(ship)
+	destroy_ship(ship)
 
 ## Called to bring in  a ship
 func _ship_appears(ship):
@@ -175,9 +187,11 @@ func _ship_appears(ship):
 	if Core.runningSector.ID == sector:
 		Core.runningSector.bring_ship_in(ship.ID)
 
-func _destroy_ship(ship):
+# Removes a ship from the game cleanly.
+func destroy_ship(ship):
 	if ship.dockedAt != null:
 		Utils.full_erase(_shipIDsDockedAt, ship.DockedAt, ship.ID)
 	else:
 		Utils.full_erase(_shipIDsInSector, ship.currentSector, ship.ID)
 	data.erase(ship.ID)
+	NodeHelpers.queue_delete(ship);

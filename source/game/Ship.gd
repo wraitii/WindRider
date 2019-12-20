@@ -318,7 +318,6 @@ func set_armour(a):
 		armour = 0;
 	if armour == 0:
 		emit_signal('ship_death', self)
-		NodeHelpers.queue_delete(self);
 
 func get_armour(): return armour;
 

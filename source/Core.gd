@@ -43,20 +43,9 @@ func create_new_game():
 	gameState = GameStatus.new()
 	
 	gameState.galacticTime = GalacticTime.new(3065, 04, 12, 13, 48)
-	
-	gameState.player = societyMgr.create_resource({
-		"ID": "player_character",
-		"short_name": "Player",
-		"type": "character"
-	})
-	gameState.player.credits = 10000;
-	
-	var playerShip = outsideWorldSim.create_resource({'model': 'Starbridge'})
-	gameState.player.ship = playerShip
-	
-	gameState.playerShip.teleport('Kerguelen', Vector3(-2000, 0, 0))
 
-	#gameState.save_game();
+	var start = load('res://data/missions/NewGame.gd').new()
+	start.start()
 
 func load_saved_game():
 	NodeHelpers.queue_delete(get_node('/root/MainMenu'))
@@ -70,13 +59,16 @@ func unload_scene():
 		return
 	NodeHelpers.queue_delete(gameState.currentScene)
 
-func load_scene():
-	if gameState.playerShip.dockedAt != null:
-		gameState.currentScene = Docked.instance()
-		#gameState.currentScene.init(landablesMgr.get(gameState.playerShip.dockedAt));
+func load_scene(scene = null):
+	if scene == null:
+		if gameState.playerShip.dockedAt != null:
+			gameState.currentScene = Docked.instance()
+			#gameState.currentScene.init(landablesMgr.get(gameState.playerShip.dockedAt));
+		else:
+			gameState.currentScene = InGame.instance()
+			#gameState.currentScene.init(runningSector)
 	else:
-		gameState.currentScene = InGame.instance()
-		#gameState.currentScene.init(runningSector)
+		gameState.currentScene = scene
 	get_node('/root').add_child(gameState.currentScene)
 
 const Sector = preload('game/Sector.tscn')
