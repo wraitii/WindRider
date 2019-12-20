@@ -21,7 +21,7 @@ var temporary_nodes = []
 func init(system):
 	currentSystem = system
 	for node in temporary_nodes:
-		remove_child(node)
+		NodeHelpers.queue_delete(node)
 		temporary_nodes = []
 	setup(Core.systemsMgr.get(system))
 	

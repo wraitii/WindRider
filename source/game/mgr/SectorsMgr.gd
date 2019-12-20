@@ -18,3 +18,14 @@ func validation(d, path):
 		print("Error: Sector without position" + path)
 		return false
 	return true
+
+func extra_validation(d, path):
+	if !validation(d, path):
+		return false
+	
+	if 'jump_zones' in d:
+		for j in d['jump_zones']:
+			if !(j['jump_to'] in data):
+				print("Error: Invalid jump to " + j['jump_to'] + " for " + path)
+				return false
+	return true

@@ -66,6 +66,9 @@ func init():
 func _on_input_event(a, input_event, c, d, e, system):
 	if input_event.is_action_released('click_main'):
 		emit_signal('system_selected', system)
+		$Camera.translation = A2V._3(system.position) + Vector3(-50,50,50)
+		init()
+
 
 #func _process(delta):
 #	for lab in labels:

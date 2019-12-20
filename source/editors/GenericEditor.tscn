@@ -1,0 +1,119 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://source/editors/GenericEditor.gd" type="Script" id=1]
+
+[node name="Editor" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="FileDialog" type="FileDialog" parent="."]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -300.0
+margin_top = -200.0
+margin_right = 300.0
+margin_bottom = 200.0
+rect_min_size = Vector2( 400, 140 )
+popup_exclusive = true
+show_hidden_files = true
+
+[node name="GUI" type="Panel" parent="."]
+anchor_left = 0.8
+anchor_right = 1.0
+anchor_bottom = 1.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Title" type="Label" parent="GUI"]
+anchor_left = 0.5
+anchor_right = 0.5
+margin_left = -100.0
+margin_top = 20.0
+margin_right = 100.0
+text = "Galaxy Map
+"
+align = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Identifier" type="Label" parent="GUI"]
+anchor_top = 0.07
+anchor_bottom = 0.07
+margin_left = 20.0
+text = "SystemName"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Code" type="TextEdit" parent="GUI"]
+anchor_top = 0.2
+anchor_right = 1.0
+anchor_bottom = 0.95
+margin_left = 20.0
+margin_right = -20.0
+highlight_current_line = true
+syntax_highlighting = true
+show_line_numbers = true
+highlight_all_occurrences = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Validate" type="Button" parent="GUI"]
+anchor_top = 0.2
+anchor_right = 0.4
+anchor_bottom = 0.2
+margin_left = 20.0
+margin_top = -20.0
+text = "Validate"
+
+[node name="Save" type="Button" parent="GUI"]
+anchor_left = 0.6
+anchor_top = 0.2
+anchor_right = 1.0
+anchor_bottom = 0.2
+margin_top = -20.0
+margin_right = -20.0
+text = "Save"
+
+[node name="New" type="Button" parent="GUI"]
+anchor_left = 0.6
+anchor_top = 0.97
+anchor_right = 1.0
+anchor_bottom = 0.97
+margin_top = -6.0
+margin_right = -20.0
+margin_bottom = 6.0
+text = "New"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Reload" type="Button" parent="GUI"]
+anchor_top = 0.97
+anchor_right = 0.4
+anchor_bottom = 0.97
+margin_left = 20.0
+margin_top = -6.0
+margin_bottom = 6.0
+text = "Reload"
+
+[node name="Graphics" type="Control" parent="."]
+anchor_right = 0.8
+anchor_bottom = 1.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+[connection signal="text_changed" from="GUI/Code" to="." method="_on_Code_text_changed"]
+[connection signal="pressed" from="GUI/Validate" to="." method="_on_Validate_pressed"]
+[connection signal="pressed" from="GUI/Save" to="." method="_on_Save_pressed"]
+[connection signal="pressed" from="GUI/New" to="." method="_on_New_pressed"]
+[connection signal="pressed" from="GUI/Reload" to="." method="_on_Reload_pressed"]
