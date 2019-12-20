@@ -63,7 +63,6 @@ func do_ai():
 	if mode == MODE.MOVE:
 		ship.autopilot.targetSpeed = 1
 		comms.commands.append([ship, ['align_with', [objective - ship.transform.origin]]])
-		print(comms)
 		if (objective - ship.transform.origin).length_squared() < 100:
 			objective = null
 	else:
