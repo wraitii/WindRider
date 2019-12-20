@@ -15,6 +15,6 @@ func get_systems():
 
 func validation(d, path):
 	if !('position' in d):
-		print("Error: System without position" + path)
+		print("Error: System without position " + path)
 		return false
 	return true

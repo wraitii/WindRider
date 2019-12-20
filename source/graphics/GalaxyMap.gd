@@ -24,8 +24,8 @@ func _ready():
 func init():
 	if sys.size() > 0:
 		sys = {};
-		for child in get_children():
-			remove_child(child);
+		for child in $Objects.get_children():
+			NodeHelpers.queue_delete(child)
 
 	var systems = Core.systemsMgr.get_systems()
 
@@ -35,10 +35,10 @@ func init():
 		var data = systems[name]
 		var system = System.instance()
 		system.translation = A2V._3(data.position);
-		if Core.gameState.playerShip:
+		if Core.gameState and Core.gameState.playerShip:
 			if Core.sectorsMgr.get(Core.gameState.playerShip.currentSector).system == data.ID:
 				system.get_node("ActiveSystem").show()
-		add_child(system)
+		$Objects.add_child(system)
 		system.connect('input_event', self, '_on_input_event', [data])
 		
 		var jump_to_systems = {}
@@ -53,7 +53,7 @@ func init():
 			var hl = HyperLink.instance()
 			hl.look_at_from_position(system.translation, A2V._3(target.position), Vector3(0,1,0))
 			hl.scale = Vector3(1,1,dir.length())
-			add_child(hl)
+			$Objects.add_child(hl)
 		
 		var label = [Label.new(), data]
 		label[0].text = name
@@ -61,7 +61,7 @@ func init():
 		label[0].rect_position = pos
 		
 		sys[system] = label
-		add_child(label[0])
+		$Objects.add_child(label[0])
 
 func _on_input_event(a, input_event, c, d, e, system):
 	if input_event.is_action_released('click_main'):

@@ -44,3 +44,5 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 7.5 )
 height = 0.1
 depth = 15.0
 material = SubResource( 3 )
+
+[node name="Objects" type="Node" parent="."]
