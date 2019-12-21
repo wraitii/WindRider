@@ -8,6 +8,7 @@ func _enter_tree():
 
 func _ready():
 	_loaded_player_ship()
+	$"Layer-Widgets/GalaxyMap".connect("system_selected", self, "_on_sys_selected")
 
 func _exit_tree():
 	if Core.runningSector:
@@ -23,3 +24,8 @@ func _physics_process(delta):
 	Core.gameState.galacticTime.add_time(delta*60*1000);
 	Core.outsideWorldSim.advance(delta*60*1000);
 	pass
+
+func _on_sys_selected(systemID):
+	if !Core.gameState.playerShip:
+		return
+	Core.gameState.playerShip.navSystem.set_target_node(Core.systemsMgr.get(systemID))

@@ -12,8 +12,8 @@ func get_may_hide():
 func _ready():
 	get_node("ViewportContainer/Viewport/SystemMap").connect("sector_selected", self, "on_sector_selected")
 
-func _gui_input(event):
-	if may_hide and event.is_action_released("default_escape_action"):
+func _input(event):
+	if visible and may_hide and event.is_action_released("default_escape_action"):
 		hide()
 		accept_event()
 

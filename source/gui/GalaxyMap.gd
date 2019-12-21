@@ -2,6 +2,8 @@ extends Control
 
 var may_hide = true setget set_may_hide, get_may_hide
 
+signal system_selected(systemID)
+
 func set_may_hide(v):
 	$CloseMap.visible = v
 	may_hide = v
@@ -12,8 +14,8 @@ func get_may_hide():
 func _ready():
 	get_node("ViewportContainer/Viewport/GalaxyMap").connect("system_selected", self, "on_system_selected")
 
-func _gui_input(event):
-	if may_hide and event.is_action_released("default_escape_action"):
+func _input(event):
+	if visible and may_hide and event.is_action_released("default_escape_action"):
 		hide()
 		accept_event()
 
@@ -30,4 +32,4 @@ func _on_CloseMap_pressed():
 	hide()
 
 func on_system_selected(systemData):
-	pass
+	emit_signal("system_selected", systemData.ID)

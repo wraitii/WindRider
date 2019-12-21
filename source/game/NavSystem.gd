@@ -46,8 +46,17 @@ func reset(send_signal = true):
 
 func set_target_node(node):
 	reset(false)
+	
+	var tg = Target.new(node)
+	if tg.type == Target.TARGET_TYPE.SYSTEM:
+		for sec in node.sectors:
+			compute_path(sec)
+
 	navTargetsIDs.append(Target.new(node))
 	emit_signal('navsystem_target_change')
+
+func compute_path(targetSectorID):
+	print(Core.sectorsMgr.astar.get_path(ship.currentSector, targetSectorID))
 
 func has_target():
 	return len(navTargetsIDs) > 0
