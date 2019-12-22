@@ -11,7 +11,7 @@ func init(ownerSectorID, d):
 	position = Vector3(d['position'][0], 0.0, d['position'][1]);
 	var jumpSys = Core.systemsMgr.get(Core.sectorsMgr.get(jumpTo).system)
 	var currSys = Core.systemsMgr.get(Core.sectorsMgr.get(ownerSector).system)
-	direction = (A2V._3(currSys.position) - A2V._3(jumpSys.position)).normalized()
+	direction = (A2V._3(jumpSys.position) - A2V._3(currSys.position)).normalized()
 
 	var up_dir = Vector3(0, 1, 0)
 	if direction.is_equal_approx(up_dir):
@@ -31,7 +31,7 @@ func deliver(obj):
 	var up = Vector3(0,1,0)
 	if target == up:
 		up = Vector3(1,0,0)
-	obj.look_at_from_position(translation + target * 50, translation + target * 100, up)
+	obj.look_at_from_position(translation - target * 50, translation - target * 100, up)
 	obj.linear_velocity = Vector3()
 
 const Ship = preload('res://source/game/Ship.gd')

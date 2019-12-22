@@ -26,10 +26,10 @@ emission_on_uv2 = false
 emission_texture = SubResource( 2 )
 
 [node name="JumpZone" type="Spatial"]
-transform = Transform( 10, 0, 0, 0, 10, 0, 0, 0, 10, 0, 0, 0 )
 script = ExtResource( 1 )
 
 [node name="CSGCombiner" type="CSGCombiner" parent="."]
+transform = Transform( -11.1, 0, -9.70393e-07, 0, 11.1, 0, 9.70393e-07, 0, -11.1, 1.12062e-07, -63.4386, 1.3973 )
 operation = 2
 
 [node name="OuterBit" type="CSGCylinder" parent="CSGCombiner"]
@@ -48,21 +48,21 @@ sides = 16
 smooth_faces = false
 
 [node name="WarpOne" type="Area" parent="."]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -8.5 )
+transform = Transform( -11.1, 0, -9.70393e-07, 0, 11.1, 0, 9.70393e-07, 0, -11.1, 8.3604e-06, -63.4386, 95.7473 )
 
 [node name="Collision" type="CollisionShape" parent="WarpOne"]
 transform = Transform( 1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0, 0 )
 shape = SubResource( 1 )
 
 [node name="WarpTwo" type="Area" parent="."]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -3.5 )
+transform = Transform( -11.1, 0, -9.70393e-07, 0, 11.1, 0, 9.70393e-07, 0, -11.1, 3.50844e-06, -63.4386, 40.2473 )
 
 [node name="Collision" type="CollisionShape" parent="WarpTwo"]
 transform = Transform( 1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0, 0 )
 shape = SubResource( 1 )
 
 [node name="WarpFinal" type="Area" parent="."]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 9.29642 )
+transform = Transform( -11.1, 0, -9.70393e-07, 0, 11.1, 0, 9.70393e-07, 0, -11.1, -8.90912e-06, -63.4386, -101.793 )
 
 [node name="Collision" type="CollisionShape" parent="WarpFinal"]
 transform = Transform( 1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0, 0 )
@@ -84,7 +84,7 @@ valign = 1
 uppercase = true
 
 [node name="JumpTo_Tag" type="CSGBox" parent="."]
-transform = Transform( 0.996195, 0, 0.0871557, 0, 1, 0, -0.0871557, 0, 0.996195, 0, 12.5621, -9.06546 )
+transform = Transform( -11.0578, 0, -0.967429, 0, 11.1, 0, 0.967429, 0, -11.0578, 8.90912e-06, 76.0007, 102.024 )
 cast_shadow = 0
 width = 20.0
 height = 5.0

@@ -111,9 +111,27 @@ func _nav():
 		return []
 	
 	target_ref = weakref(target)
-	targetSpeed = min(1, (target.translation - ship.translation).length_squared() / (400*400))
+	var tgnode = target.nodeRef.get_ref()
+	if !tgnode:
+		set_mode(MODE.OFF)
+		ship.emit_signal('add_chat_message', 'Autopilot: target no longer valid.')
+		return []
 
-	return [[ship, 'follow_vector', [get_interception_vector()]]]
+	if target.type == target.TARGET_TYPE.LANDABLE:
+		targetSpeed = min(1, (tgnode.translation - ship.translation).length_squared() / (400*400))
+		return [[ship, ['follow_vector', [get_interception_vector(tgnode.translation)]]]]
+
+	assert(target.type == target.TARGET_TYPE.JUMPZONE)
+	var dis = (tgnode.translation - ship.translation).length()
+	# TODO: cleverer, this gets stuck if we mess up inside the zone.
+	if dis > 150:
+		var pp = tgnode.translation + tgnode.transform.basis.xform(Vector3(0,0,min(500, (dis-200)/2)))
+		targetSpeed = 1
+		return [[ship, ['follow_vector', [get_interception_vector(pp)]]]]
+	else:
+		var pp = tgnode.translation - tgnode.transform.basis.xform(Vector3(0,0,50))
+		targetSpeed = 1
+		return [[ship, ['follow_vector', [get_interception_vector(pp)]]]]
 
 func update_target():
 	var target
@@ -138,11 +156,6 @@ func has_target():
 func get_target():
 	return target_ref.get_ref()
 
-func get_target_position():
-	if !has_target():
-		return null
-	return get_target().translation
-
 func get_firing_vector(speed = 500):
 	if !has_target():
 		return null
@@ -151,14 +164,7 @@ func get_firing_vector(speed = 500):
 	
 	return Intercept.simple_intercept(ship.translation, get_target(), speed)[0]
 
-func get_interception_vector(speed = null):
-	if !has_target():
-		return null
-	
-	var target = get_target()
-	if !target.translation:
-		return null
-	
+func get_interception_vector(target, speed = null):
 	if speed == null:
 		speed = ship.stat('max_speed') * targetSpeed
 	

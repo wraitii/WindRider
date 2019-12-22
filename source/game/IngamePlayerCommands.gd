@@ -82,7 +82,7 @@ func moveCommandProcess():
 	var ship = Core.gameState.playerShip;
 
 	# Input commands slower when warping so things remain controllable.
-	var warp_multiplier = (1/Engine.get_time_scale());
+	var warp_multiplier = (1/sqrt(Engine.get_time_scale()))
 	
 	if Input.is_action_pressed('ship_rotate_left'):
 		commands.push_back(['rotate_left', [warp_multiplier]])

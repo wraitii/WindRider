@@ -45,4 +45,3 @@ func _describe(target):
 		return text
 	else:
 		return target.ID
-

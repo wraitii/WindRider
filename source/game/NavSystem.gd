@@ -5,7 +5,7 @@ signal navsystem_target_change()
 # More stable targets
 var navTargetsIDs = [];
 
-class Target:
+class Target extends Reference:
 	enum TARGET_TYPE { JUMPZONE, LANDABLE, SECTOR, SYSTEM }
 	var type;
 	var ID;
@@ -38,11 +38,19 @@ var ship = null;
 
 func _enter_tree():
 	ship = get_parent();
+	if (!ship.is_connected('jump_out', self, '_on_jump_out')):
+		ship.connect('jump_out', self, '_on_jump_out')
+		ship.connect('jumped_in', self, '_on_jumped_in')
 
 func reset(send_signal = true):
 	navTargetsIDs.clear()
 	if send_signal:
 		emit_signal('navsystem_target_change')
+
+func _reached_wpt():
+	get_final_target().waypoints.pop_front()
+	compute_inner_sector_path(get_final_target().waypoints[0])
+	emit_signal('navsystem_target_change')
 
 func set_target_node(node):
 	reset(false)
@@ -56,17 +64,21 @@ func set_target_node(node):
 		compute_sector_path_to(ship.currentSector, tg)
 	
 	# Step 3: Compute a path to the first waypoint.
-	var waypoint = _get_first_wpt(tg)
-	if waypoint.type == Target.TARGET_TYPE.SECTOR:
-		var jzs = get_tree().get_nodes_in_group("JumpZones")
-		for jz in jzs:
-			if jz.jumpTo == waypoint.ID:
-				waypoint.waypoints.push_front(Target.new(jz))
-				break
-		assert(!waypoint.waypoints.empty())
+	compute_inner_sector_path(_get_first_wpt(tg))
 
 	navTargetsIDs.append(tg)
 	emit_signal('navsystem_target_change')
+
+func compute_inner_sector_path(waypoint):
+	if waypoint.type != Target.TARGET_TYPE.SECTOR:
+		return
+	var jzs = get_tree().get_nodes_in_group("JumpZones")
+	for jz in jzs:
+		if jz.jumpTo == waypoint.ID:
+			waypoint.waypoints.push_front(Target.new(jz))
+			break
+	assert(!waypoint.waypoints.empty())
+
 
 func compute_sector_path_to(from, target):
 	assert(target.type == Target.TARGET_TYPE.SYSTEM or target.type == Target.TARGET_TYPE.SECTOR)
@@ -108,7 +120,6 @@ func get_final_target():
 		return null
 	return navTargetsIDs[0]
 
-
 func target_closest_nav_object():
 	var landables = get_tree().get_nodes_in_group('Landables') + get_tree().get_nodes_in_group('JumpZones')
 	var bestLandable = [null,null]
@@ -120,3 +131,14 @@ func target_closest_nav_object():
 			bestLandable[1] = dist;
 	set_target_node(bestLandable[0])
 
+func _on_jump_out(_s):
+	pass
+
+func _on_jumped_in(_s):
+	if !has_target():
+		return
+	if get_final_target().waypoints.empty():
+		return
+	assert(get_final_target().waypoints[0].type == Target.TARGET_TYPE.SECTOR)
+	if _s.currentSector == get_final_target().waypoints[0].ID:
+		_reached_wpt()

@@ -192,7 +192,6 @@ func safe_stat(stat, percent):
 
 # Called before delivering from a landable
 func reset_speed_params():
-	autopilot.targetSpeed = 0
 	railroading = 0
 
 func _phys_vec(vec, stat, power):
@@ -374,7 +373,6 @@ func teleport(to, pos):
 
 func _jump_out():
 	assert(currentSector)
-	autopilot.reset()
 	emit_signal('jump_out', self)
 	lastSector = currentSector
 	currentSector = null
