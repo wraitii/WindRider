@@ -1,10 +1,12 @@
-[gd_scene load_steps=2 format=2]
+[gd_scene load_steps=3 format=2]
 
 [ext_resource path="res://source/editors/GenericEditor.gd" type="Script" id=1]
+[ext_resource path="res://data/art/WindRiderTheme.tres" type="Theme" id=2]
 
 [node name="Editor" type="Control"]
 anchor_right = 1.0
 anchor_bottom = 1.0
+theme = ExtResource( 2 )
 script = ExtResource( 1 )
 __meta__ = {
 "_edit_use_anchors_": false
@@ -63,6 +65,8 @@ highlight_current_line = true
 syntax_highlighting = true
 show_line_numbers = true
 highlight_all_occurrences = true
+context_menu_enabled = false
+shortcut_keys_enabled = false
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -83,6 +87,9 @@ anchor_bottom = 0.2
 margin_top = -20.0
 margin_right = -20.0
 text = "Save"
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="New" type="Button" parent="GUI"]
 anchor_left = 0.6
@@ -109,6 +116,8 @@ text = "Reload"
 [node name="Graphics" type="Control" parent="."]
 anchor_right = 0.8
 anchor_bottom = 1.0
+margin_left = -1.57477
+margin_right = -1.57471
 __meta__ = {
 "_edit_use_anchors_": false
 }

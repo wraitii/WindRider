@@ -1,11 +1,11 @@
-extends Container
+extends Panel
 
 var landable
 
 func _enter_tree():
 	Core.gameState.save_game();
 	landable = Core.landablesMgr.get(Core.gameState.playerShip.dockedAt);
-	get_node('PlanetName').text = landable.ID
+	$LandableName.text = landable.ID
 	_check_hyperfuel();
 	
 	$Submenus/Marketplace.init(landable)
@@ -13,14 +13,14 @@ func _enter_tree():
 	
 	$Submenus/CommMarket.init(landable)
 	var admin = landable.administrator
-	get_node('GeneralInfo').text = str(admin.get_opinion(Core.gameState.player))
+	$GeneralInfo.text = str(admin.get_opinion(Core.gameState.player))
 
 func _on_Undock_pressed():
 	Core.gameState.playerShip.undock()
 
 func _check_hyperfuel():
 	if Core.gameState.playerShip.hyperfuel == Core.gameState.playerShip.stat('max_hyperfuel'):
-		get_node('Refuel').disabled = true
+		$RBCon/Refuel.disabled = true
 
 func _on_Refuel_pressed():
 	Core.gameState.playerShip.hyperfuel = Core.gameState.playerShip.stat('max_hyperfuel')

@@ -1,87 +1,117 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=9 format=2]
 
 [ext_resource path="res://source/game/Docked.gd" type="Script" id=1]
 [ext_resource path="res://source/game/dock/Marketplace.tscn" type="PackedScene" id=2]
 [ext_resource path="res://source/game/dock/CommMarket.tscn" type="PackedScene" id=3]
+[ext_resource path="res://data/art/WindRiderTheme.tres" type="Theme" id=4]
+[ext_resource path="res://data/art/fonts/Potra.tres" type="DynamicFontData" id=5]
+[ext_resource path="res://data/art/ui/station_background/blue-and-red-galaxy-artwork-1629236.jpg" type="Texture" id=6]
 
-[node name="Docked" type="Container"]
+[sub_resource type="DynamicFont" id=5]
+size = 80
+use_filter = true
+font_data = ExtResource( 5 )
+
+[sub_resource type="StyleBoxTexture" id=6]
+texture = ExtResource( 6 )
+region_rect = Rect2( 0, 0, 3000, 1688 )
+axis_stretch_horizontal = 2
+
+[node name="Docked" type="Panel"]
 anchor_right = 1.0
 anchor_bottom = 1.0
 mouse_filter = 1
+theme = ExtResource( 4 )
 script = ExtResource( 1 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="PlanetName" type="Label" parent="."]
+[node name="LandableName" type="Label" parent="."]
 anchor_left = 0.5
 anchor_right = 0.5
-margin_left = -200.0
 margin_top = 30.0
-margin_right = 200.0
 margin_bottom = 40.0
-text = "Nom de la planète"
+grow_horizontal = 2
+theme = ExtResource( 4 )
+custom_fonts/font = SubResource( 5 )
+text = "Name of the station"
 align = 1
 
-[node name="Refuel" type="Button" parent="."]
-anchor_left = 1.0
-anchor_top = 1.0
+[node name="RBCon" type="VBoxContainer" parent="."]
+anchor_left = 0.8
+anchor_top = 0.5
 anchor_right = 1.0
-anchor_bottom = 1.0
-margin_left = -200.0
-margin_top = -230.0
-margin_right = -100.0
-margin_bottom = -200.0
-grow_horizontal = 0
-grow_vertical = 0
-text = "Refuel"
+anchor_bottom = 0.9
+margin_left = 30.0
+margin_right = -30.0
+alignment = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
-[node name="Undock" type="Button" parent="."]
-anchor_left = 1.0
-anchor_top = 1.0
-anchor_right = 1.0
-anchor_bottom = 1.0
-margin_left = -200.0
-margin_top = -180.0
-margin_right = -100.0
-margin_bottom = -150.0
+[node name="CommoditiesBtn" type="Button" parent="RBCon"]
+margin_right = 200.0
+margin_bottom = 77.0
 grow_horizontal = 0
 grow_vertical = 0
-text = "Undock"
-
-[node name="MarketplaceBtn" type="Button" parent="."]
-anchor_left = 1.0
-anchor_top = 1.0
-anchor_right = 1.0
-anchor_bottom = 1.0
-margin_left = -200.0
-margin_top = -280.0
-margin_right = -100.0
-margin_bottom = -250.0
-grow_horizontal = 0
-grow_vertical = 0
-text = "Marketplace"
-
-[node name="CommoditiesBtn" type="Button" parent="."]
-anchor_left = 1.0
-anchor_top = 1.0
-anchor_right = 1.0
-anchor_bottom = 1.0
-margin_left = -200.0
-margin_top = -330.0
-margin_right = -100.0
-margin_bottom = -300.0
-grow_horizontal = 0
-grow_vertical = 0
+size_flags_vertical = 7
 text = "Commodities"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="MarketplaceBtn" type="Button" parent="RBCon"]
+margin_top = 81.0
+margin_right = 200.0
+margin_bottom = 158.0
+grow_horizontal = 0
+grow_vertical = 0
+size_flags_vertical = 7
+text = "Marketplace"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Refuel" type="Button" parent="RBCon"]
+margin_top = 162.0
+margin_right = 200.0
+margin_bottom = 239.0
+grow_horizontal = 0
+grow_vertical = 0
+size_flags_vertical = 7
+text = "Refuel"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Undock" type="Button" parent="RBCon"]
+margin_top = 243.0
+margin_right = 200.0
+margin_bottom = 320.0
+grow_horizontal = 0
+grow_vertical = 0
+size_flags_vertical = 7
+text = "Undock"
 
 [node name="GeneralInfo" type="Label" parent="."]
 anchor_left = 0.2
+anchor_top = 0.65
+anchor_right = 0.8
+anchor_bottom = 0.9
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="LandableImage" type="Panel" parent="."]
+anchor_left = 0.2
 anchor_top = 0.2
 anchor_right = 0.8
-anchor_bottom = 0.8
-margin_right = 40.0
-margin_bottom = 14.0
+anchor_bottom = 0.6
+custom_styles/panel = SubResource( 6 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="Submenus" type="CanvasLayer" parent="."]
 
@@ -92,7 +122,7 @@ mouse_filter = 1
 [node name="CommMarket" parent="Submenus" instance=ExtResource( 3 )]
 visible = false
 mouse_filter = 1
-[connection signal="pressed" from="Refuel" to="." method="_on_Refuel_pressed"]
-[connection signal="pressed" from="Undock" to="." method="_on_Undock_pressed"]
-[connection signal="pressed" from="MarketplaceBtn" to="." method="_on_MarketplaceBtn_pressed"]
-[connection signal="pressed" from="CommoditiesBtn" to="." method="_on_CommoditiesBtn_pressed"]
+[connection signal="pressed" from="RBCon/CommoditiesBtn" to="." method="_on_CommoditiesBtn_pressed"]
+[connection signal="pressed" from="RBCon/MarketplaceBtn" to="." method="_on_MarketplaceBtn_pressed"]
+[connection signal="pressed" from="RBCon/Refuel" to="." method="_on_Refuel_pressed"]
+[connection signal="pressed" from="RBCon/Undock" to="." method="_on_Undock_pressed"]

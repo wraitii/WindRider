@@ -1,8 +1,12 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=8 format=2]
 
 [ext_resource path="res://source/game/dock/Marketplace.gd" type="Script" id=1]
 [ext_resource path="res://source/gui/Chat.tscn" type="PackedScene" id=2]
 [ext_resource path="res://source/game/dock/MarketPlaceItem.gd" type="Script" id=3]
+[ext_resource path="res://data/art/WindRiderTheme.tres" type="Theme" id=4]
+
+[sub_resource type="StyleBoxFlat" id=7]
+bg_color = Color( 0.0196078, 0.0196078, 0.113725, 1 )
 
 [sub_resource type="InputEventAction" id=1]
 action = "default_escape_action"
@@ -10,15 +14,13 @@ action = "default_escape_action"
 [sub_resource type="ShortCut" id=2]
 shortcut = SubResource( 1 )
 
-[node name="Marketplace" type="Control"]
+[node name="Marketplace" type="Panel"]
 anchor_right = 1.0
 anchor_bottom = 1.0
 margin_top = -1.0
 margin_bottom = -1.0
+theme = ExtResource( 4 )
 script = ExtResource( 1 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="ItemDetail" type="Control" parent="."]
 margin_right = 200.0
@@ -31,6 +33,8 @@ __meta__ = {
 [node name="Panel" type="Panel" parent="ItemDetail"]
 margin_right = 200.0
 margin_bottom = 140.0
+theme = ExtResource( 4 )
+custom_styles/panel = SubResource( 7 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -108,6 +112,8 @@ __meta__ = {
 anchor_left = 0.8
 anchor_right = 1.0
 anchor_bottom = 1.0
+theme = ExtResource( 4 )
+custom_styles/panel = SubResource( 7 )
 __meta__ = {
 "_edit_use_anchors_": false
 }

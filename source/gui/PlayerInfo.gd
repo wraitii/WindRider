@@ -4,6 +4,9 @@ func _ready():
 	$"Tabs/ShipHoldView".init(Core.gameState.playerShip.hold)
 	
 	var st = "Credits: " + str(Core.gameState.player.credits)
+	
+	for j in Core.gameState.playerShip.shipStats.stats.statsCache:
+		st += '\n' + j + ':' + str(Core.gameState.playerShip.shipStats.stats.statsCache[j])
 	$Tabs/Player/Desc.text = st
 
 	for t in Core.gameState.player.traits.traits:
