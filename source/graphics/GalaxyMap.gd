@@ -5,6 +5,8 @@ const HyperLink = preload('GMjump.tscn')
 
 const JumpZone = preload('../game/JumpZone.gd')
 
+const look = Vector3(-1, 2, 1) * 100
+
 ### Galaxy Map
 ## This file is responsible for graphics of the galaxy map
 
@@ -19,8 +21,13 @@ func _init():
 	InputMap.action_add_event('galaxy_map_click', event)
 	
 func _ready():
+	var sys = "Sol"
+	if Core.gameState and Core.gameState.playerShip:
+		sys = Core.sectorsMgr.get(Core.gameState.playerShip.currentSector).system
+	sys = Core.systemsMgr.get(sys)
+	$Camera.look_at_from_position(A2V._3(sys.position) + look, A2V._3(sys.position), Vector3(0,1,0))
 	init()
-	
+
 func init():
 	if sys.size() > 0:
 		sys = {};
@@ -66,7 +73,7 @@ func init():
 func _on_input_event(a, input_event, c, d, e, system):
 	if input_event.is_action_released('click_main'):
 		emit_signal('system_selected', system)
-		$Camera.translation = A2V._3(system.position) + Vector3(-50,50,50)
+		$Camera.look_at_from_position(A2V._3(system.position) + look, A2V._3(system.position), Vector3(0,1,0))
 		init()
 
 

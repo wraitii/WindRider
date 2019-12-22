@@ -2,6 +2,8 @@ extends Panel
 
 var landable
 
+const traitIcn = preload('res://source/graphics/TraitCtl.tscn')
+
 func _enter_tree():
 	Core.gameState.save_game();
 	landable = Core.landablesMgr.get(Core.gameState.playerShip.dockedAt);
@@ -14,6 +16,12 @@ func _enter_tree():
 	$Submenus/CommMarket.init(landable)
 	var admin = landable.administrator
 	$GeneralInfo.text = str(admin.get_opinion(Core.gameState.player))
+
+	for trait in landable.administrator.traits.traits:
+		var tctl = traitIcn.instance()
+		tctl.visible = true
+		$Traits.add_child(tctl)
+		tctl.hint_tooltip = trait
 
 func _on_Undock_pressed():
 	Core.gameState.playerShip.undock()

@@ -41,9 +41,14 @@ func init(data):
 	for c in data['society_presence']:
 		assert(Core.societyMgr.get(c['ID']) != null)
 		societyPresence[c['ID']] = c['presence']
-	
+
 	administrator = Society.new()
 	
+	if 'traits' in data:
+		for trait in data['traits']:
+			var t = load('res://source/game/traits/' + data['traits'][trait]['type'] + '.gd')
+			administrator.traits.add(trait, t)
+
 ################
 ################
 ### Docking

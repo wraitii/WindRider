@@ -83,7 +83,7 @@ func ship(ID):
 
 func get_ships_in(sector):
 	if sector in _shipIDsInSector:
-		return _shipIDsInSector[sector]
+		return _shipIDsInSector[sector].duplicate()
 	return []
 
 func advance(delta):

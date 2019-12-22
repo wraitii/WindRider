@@ -79,7 +79,6 @@ func compute_inner_sector_path(waypoint):
 			break
 	assert(!waypoint.waypoints.empty())
 
-
 func compute_sector_path_to(from, target):
 	assert(target.type == Target.TARGET_TYPE.SYSTEM or target.type == Target.TARGET_TYPE.SECTOR)
 	var bestPath = null
@@ -92,9 +91,8 @@ func compute_sector_path_to(from, target):
 				bestJ = len(p)
 	else:
 		bestPath = Core.sectorsMgr.astar.get_path(from, target.ID)
-	# Remove current and target sectors from the list, add as waypoints.
+	# Remove current sector from the list, add as waypoints.
 	bestPath.pop_front()
-	bestPath.pop_back()
 	bestPath.invert()
 	for wpt in bestPath:
 		target.waypoints.push_front(Target.new(Core.sectorsMgr.get(wpt)))

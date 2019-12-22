@@ -40,8 +40,10 @@ func generate_activity():
 	for shipID in ships_already_there:
 		bring_ship_in(shipID)
 
+	var activity = Core.sectorsMgr.get(ID)['activity']
+	
 	var l = len(ships_already_there)
-	for i in range(ceil(rand_range(5-l,25-l))):
+	for i in range(ceil(rand_range(activity-5-l,activity+5-l))):
 		var shipType = 'Cycles'
 		if randi() % 2 == 1:
 			shipType = 'Manta'

@@ -4,6 +4,10 @@ var ID;
 var _raw;
 var position;
 
+# Estimate of the # of ship in the system.
+# TODO: improve on this
+var activity = 20;
+
 func init(data):
 	_raw = data;
 	ID = _raw.ID

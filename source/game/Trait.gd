@@ -5,8 +5,13 @@ extends Node
 ## Somewhat similar to CKII traits in functionality.
 
 var type : String;
+# Traits have an ID that is sort of self-assigned, but may generically have a name
+var traitName : String;
 var society;
 
 # Return a human-readable string narrating the trait
 func describe():
-	pass
+	return traitName
+
+func load_from_data(data):
+	return
