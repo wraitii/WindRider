@@ -28,7 +28,7 @@ func _init():
 	event.scancode = KEY_I
 	InputMap.action_add_event('player_open_player_info', event)
 
-func _process(delta):
+func _input(delta):
 	var ship = Core.gameState.playerShip;
 	
 	if Input.is_action_just_released('switch_camera'):

@@ -30,10 +30,10 @@ func reset():
 
 func activate():
 	if ship.targetingSystem.get_active_target() != null:
-		if ship.navSystem.get_target() == null:
+		if ship.navSystem.get_active_target() == null:
 			set_mode(MODE.INTERCEPT)
 			return
-	elif ship.navSystem.get_target() != null:
+	elif ship.navSystem.get_active_target() != null:
 		set_mode(MODE.NAVTARGET)
 	else:
 		set_mode(MODE.OFF)
@@ -103,7 +103,7 @@ func _intercept():
 	return [[ship, ['follow_vector', [get_firing_vector(speed)]]]]
 
 func _nav():
-	var target = ship.navSystem.get_target()
+	var target = ship.navSystem.get_active_target()
 	
 	if !target:
 		set_mode(MODE.OFF)
@@ -122,14 +122,14 @@ func update_target():
 		if !target:
 			return
 	elif autopilotMode == MODE.NAVTARGET:
-		target = ship.navSystem.get_target()
+		target = ship.navSystem.get_active_target()
 		if !target:
 			return
 	else:
 		if ship.targetingSystem.get_active_target():
 			target = ship.targetingSystem.get_active_target()
 		else:
-			target = ship.navSystem.get_target()
+			target = ship.navSystem.get_active_target()
 	target_ref = weakref(target)
 
 func has_target():

@@ -435,7 +435,7 @@ func try_dock():
 	if !navSystem.has_target():
 		return;
 
-	var target = navSystem.get_target()
+	var target = navSystem.get_active_target()
 	if target.type != target.TARGET_TYPE.LANDABLE:
 		return;
 

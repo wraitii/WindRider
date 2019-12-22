@@ -17,18 +17,32 @@ func _must_update():
 
 	get_node('CurrentSector').text = 'In ' + Core.gameState.playerShip.currentSector;
 	
-	if !system.get_ref():
+	var sys = system.get_ref()
+	
+	if !sys:
 		get_node('Targeting').text = 'Nav systems offline';
 		return
 	
-	if !len(system.get_ref().navTargetsIDs):
+	if !sys.has_target():
 		get_node('Targeting').text = 'No nav target';
 		return
 	
 	var targetName = ""
-	var target = system.get_ref().navTargetsIDs[0];
-	if target.type == target.TARGET_TYPE.JUMPZONE:
-		targetName = "JumpZone to " + str(target.ID)
-	else:
-		targetName = target.ID
+	var target = sys.get_final_target()
+	targetName = _describe(target)
+
+	var waypoint = sys.get_active_target()
+	if waypoint != target:
+		targetName += "\nWPT " + _describe(waypoint)
 	get_node('Targeting').text = 'Targeting: ' + targetName;
+
+func _describe(target):
+	if target.type == target.TARGET_TYPE.JUMPZONE:
+		return "JumpZone to " + str(target.ID)
+	elif target.type == target.TARGET_TYPE.SECTOR:
+		var text = target.ID + " Sector"
+		text += '\n' + Core.systemsMgr.get(target.nodeRef.system).ID
+		return text
+	else:
+		return target.ID
+
