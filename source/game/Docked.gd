@@ -2,9 +2,9 @@ extends Container
 
 var landable
 
-func init(l):
+func _enter_tree():
 	Core.gameState.save_game();
-	landable = l;
+	landable = Core.landablesMgr.get(Core.gameState.playerShip.dockedAt);
 	get_node('PlanetName').text = landable.ID
 	_check_hyperfuel();
 	

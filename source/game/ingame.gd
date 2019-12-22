@@ -1,4 +1,4 @@
-extends Node
+extends Control
 
 func _enter_tree():
 	Core.remove_child(Core.runningSector)

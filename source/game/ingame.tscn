@@ -1,13 +1,14 @@
-[gd_scene load_steps=15 format=2]
+[gd_scene load_steps=16 format=2]
 
 [ext_resource path="res://source/game/ingame.gd" type="Script" id=1]
 [ext_resource path="res://source/game/Camera.gd" type="Script" id=2]
+[ext_resource path="res://data/art/WindRiderTheme.tres" type="Theme" id=3]
 [ext_resource path="res://source/game/Speed.gd" type="Script" id=4]
 [ext_resource path="res://source/game/gui/NavSystem.tscn" type="PackedScene" id=5]
 [ext_resource path="res://source/game/gui/Radar.tscn" type="PackedScene" id=6]
 [ext_resource path="res://source/game/gui/ShipStatusGUI.tscn" type="PackedScene" id=7]
 [ext_resource path="res://source/game/gui/TargetingSystemGUI.gd" type="Script" id=8]
-[ext_resource path="res://source/game/gui/Chat.tscn" type="PackedScene" id=9]
+[ext_resource path="res://source/gui/Chat.tscn" type="PackedScene" id=9]
 [ext_resource path="res://source/game/IngamePlayerCommands.gd" type="Script" id=10]
 [ext_resource path="res://source/game/gui/TargetingReticule.tscn" type="PackedScene" id=11]
 [ext_resource path="res://source/gui/GalaxyMap.tscn" type="PackedScene" id=12]
@@ -15,8 +16,12 @@
 [ext_resource path="res://source/gui/SectorMap.tscn" type="PackedScene" id=14]
 [ext_resource path="res://source/gui/PlayerInfo.tscn" type="PackedScene" id=15]
 
-[node name="InGameRoot" type="Node"]
+[node name="InGameRoot" type="Control"]
+theme = ExtResource( 3 )
 script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="Layer-HUD" type="CanvasLayer" parent="."]
 layer = 0

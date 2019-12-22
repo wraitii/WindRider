@@ -41,7 +41,7 @@ func save_game():
 	
 	file.store_var(playerShip.ID)
 	
-	Core.outsideWorldSim.serialize();
+	file.store_var(Core.outsideWorldSim.serialize());
 
 	return true;
 

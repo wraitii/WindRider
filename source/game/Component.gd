@@ -8,9 +8,13 @@ var _raw;
 var holdIndices = [];
 var weaponSystems = [];
 
+# Default -> can store 100 per cell
+const DEFAULT_STORAGE_VOLUME = 100;
+
 func init(data):
 	ID = data.ID
 	_raw = data;
+	return self
 
 func _get(prop):
 	if prop == 'holdIndices':
@@ -43,3 +47,17 @@ func create_weapons():
 		weaponSystems.append(weapon)
 		weapon.init(self, get_parent().get_parent(), weap)
 		get_parent().get_parent().get_node('WeaponsSystem').find_hardpoint(weapon)
+
+const Hold = preload("ShipHold.gd")
+
+# Return the component as a resource type
+static func ress(data):
+	var vol = DEFAULT_STORAGE_VOLUME
+
+	if 'max_per_hold' in data:
+		# Only one weapon per hardmount (for now?)
+		if data['hold_type'] and data['hold_type'] == "WEAPON":
+			assert(data['max_per_hold'] == 1)
+		vol = int(Hold.MAX_HOLD_VOL / data['max_per_hold'])
+	
+	return Hold.HoldItem.new(data.ID, Hold.HoldItem.TYPE.COMPONENT, vol, 1)

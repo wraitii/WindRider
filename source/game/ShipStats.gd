@@ -5,6 +5,9 @@ const StatsHelper = preload('StatsHelper.gd')
 
 var stats : StatsHelper;
 
+# Key -> []
+var installedComps = {}
+
 func serialize():
 	var ret = []
 	for c in get_children():
@@ -16,6 +19,7 @@ func deserialize(data):
 		var comp = Component.new()
 		self.add_child(comp)
 		comp.deserialize(c)
+		Utils.safe_push(installedComps, comp.ID, comp)
 	_compute_stats()
 
 func get(s):
@@ -40,7 +44,16 @@ func get_components(comp_id):
 
 func install(component):
 	self.add_child(component)
+	Utils.safe_push(installedComps, component.ID, component)
 	component.create_weapons()
+
+# Called with comp already removed from installedComps so no need to handle here.
+func uninstall(comp):
+	remove_child(comp)
+	for weapon in comp.weaponSystems:
+		get_parent().weaponsSystem.remove_weapon(weapon)
+		NodeHelpers.queue_delete(weapon)
+	NodeHelpers.queue_delete(comp)
 
 func _compute_stats():
 	# Fetch stat item from ship & components

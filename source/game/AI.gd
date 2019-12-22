@@ -1,13 +1,16 @@
 extends Node
 
-enum MODE { MOVE, KILL }
+enum MODE { MOVE, KILL, EVADE }
 
 var ship = null;
 var objective = null;
 
 var mode = MODE.MOVE;
 
+# Store nodes for AI ships only (TODO: improve this)
 var ai_only = []
+
+var evade_rand_vec
 
 ## TODO: figure this out.
 func _enter_tree():
@@ -60,11 +63,33 @@ func do_ai():
 			objective = random_point()
 			mode = MODE.MOVE
 
+	for threatID in ship.targetingSystem.threats:
+		var threat = Core.outsideWorldSim.ship(threatID)
+		if threat.translation.distance_to(ship.translation) < 1000:
+			mode = MODE.EVADE
+			objective = weakref(threat)
+			_pick_random_evade_vector()
+			
 	if mode == MODE.MOVE:
 		ship.autopilot.targetSpeed = 1
 		comms.commands.append([ship, ['align_with', [objective - ship.transform.origin]]])
 		if (objective - ship.transform.origin).length_squared() < 100:
 			objective = null
+
+	elif mode == MODE.EVADE:
+		ship.autopilot.targetSpeed = 1
+		if !objective.get_ref():
+			objective = null
+			return
+		
+		var threat = objective.get_ref()
+		var dir = (ship.transform.origin - threat.translation).normalized() + evade_rand_vec
+		comms.commands.append([ship, ['align_with', [dir]]])
+		if (threat.translation - ship.transform.origin).length_squared() > 1500*1500:
+			objective = null
+		if randf() > 0.997:
+			_pick_random_evade_vector()
+
 	else:
 		var target = objective.get_ref()
 		if !target:
@@ -78,3 +103,6 @@ func do_ai():
 func on_collision_warning(body):
 	# super dumb
 	objective = null
+
+func _pick_random_evade_vector():
+	evade_rand_vec = Vector3(randf() - 0.5, randf() - 0.5, randf() - 0.5).normalized()

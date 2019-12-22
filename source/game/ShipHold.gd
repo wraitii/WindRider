@@ -28,7 +28,7 @@ signal hold_content_changed(indices)
 const MAX_HOLD_VOL = 100000
 
 class HoldItem:
-	enum TYPE { COMMODITY, COMPONENT, ENGINE, WEAPON }
+	enum TYPE { COMMODITY, COMPONENT }
 	var ID;
 	var type;
 	var amount : int = 0;
@@ -69,8 +69,19 @@ func deserialize(data):
 		var idx = i[0]
 		holdContent[idx] = HoldItem.new(i[1], i[2], i[3], i[4])
 
+# Importantly, this doesn't check for volume - that is so we don't have to always fetch volume.
 func same_ress(a, b):
 	return a.type == b.type and a.ID == b.ID
+
+# Returns # of items in the hold, as cargo.
+# This does not count installed components.
+func get_stocked_amount(ress):
+	var holders = find_holders(ress, true)
+	var am = 0
+	for idx in holders:
+		am += holdContent[idx].amount
+		am -= len(holdContent[idx].components)
+	return am
 
 func get_free_amount(ress, idx):
 	if !(idx in holdContent):
@@ -81,29 +92,24 @@ func get_free_amount(ress, idx):
 func fit(ress, z, y, x):
 	# Hold type check
 	var spaceType = holdSpace[z][y][x]
-	if ress.type == HoldItem.TYPE.COMMODITY or ress.type == HoldItem.TYPE.COMPONENT:
-		if spaceType == HOLD_TYPE.NONE:
-			return false
-	elif ress.type == HoldItem.TYPE.ENGINE:
-		if spaceType != HOLD_TYPE.ALL and spaceType != HOLD_TYPE.ENGINE:
-			return false
-	elif ress.type == HoldItem.TYPE.WEAPON:
-		if spaceType != HOLD_TYPE.ALL and spaceType != HOLD_TYPE.WEAPON:
-			return false
-
+	if spaceType == HOLD_TYPE.NONE:
+		return false
+	
 	var idx = _idx(x,y,z)
 	return !(idx in holdContent) or same_ress(ress, holdContent[idx])
 
 # TODO: implement a 3D packing algorithm.
-func find_space(ress):
+func find_space(ress, only_type = null):
 	var ret = [];
 	var lo = ress.amount
 	for z in range(0, len(holdSpace)):
 		for y in range(0, len(holdSpace[z])):
 			for x in range(0, len(holdSpace[z][y])):
+				var idx = _idx(x,y,z)
+				if only_type and holdSpace[z][y][x] != only_type:
+					continue
 				if !fit(ress, z, y, x):
 					continue
-				var idx = _idx(x,y,z)
 				var fa = get_free_amount(ress, idx)
 				if fa <= 0:
 					continue
@@ -115,7 +121,7 @@ func find_space(ress):
 	return []
 
 # TODO: possibly switch to something cleverer
-func find_holders(ress):
+func find_holders(ress, all = false):
 	var ret = []
 	var lo = ress.amount
 	for z in range(0, len(holdSpace)):
@@ -128,18 +134,19 @@ func find_holders(ress):
 					continue
 				ret.append(idx)
 				lo -= holdContent[idx].amount
-				if lo <= 0:
+				if !all and lo <= 0:
 					return ret
-	# We failed, return nothing
+	if lo <= 0:
+		return ret
 	return []
 
 # TODO: extend to indices
-func can_store(ress, idx = null):
+func can_store(ress, idx = null, holdType = null):
 	if ress.amount <= 0:
 		return [false, []]
 
 	if !idx:
-		idx = find_space(ress)
+		idx = find_space(ress, holdType)
 		if !idx:
 			return [false, []]
 	elif idx in holdContent and !same_ress(holdContent[idx], ress):
@@ -169,11 +176,25 @@ func store(ress, indices):
 
 	emit_signal("hold_content_changed", indices)
 
+# Returns the best Hold Cell to unload from
+# It goes for the one with the most available items.
+class BestHoldToUnload:
+	var holdContent
+	func sort(a, b):
+		var aa = holdContent[a].amount - len(holdContent[a].components)
+		var bb = holdContent[b].amount - len(holdContent[b].components)
+		return aa > bb
+
 func can_unload(ress, idx = null):
 	if !idx:
-		idx = find_holders(ress)
+		var try_all = ress.type == HoldItem.TYPE.COMPONENT
+		idx = find_holders(ress, try_all)
 		if !len(idx):
 			return [false, []]
+		if try_all:
+			var bh = BestHoldToUnload.new()
+			bh.holdContent = holdContent
+			idx.sort_custom(bh, "sort")
 	elif !same_ress(holdContent[idx], ress):
 		return [false, []]
 	elif ress.amount > holdContent[idx].amount:
@@ -199,6 +220,8 @@ func unload(ress, indices):
 		lo -= qt
 		if holdContent[i].amount == 0:
 			holdContent.erase(i)
+		if lo <= 0:
+			break
 	
 	emit_signal("hold_content_changed", indices)
 	

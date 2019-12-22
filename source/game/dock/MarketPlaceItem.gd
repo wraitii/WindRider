@@ -7,6 +7,7 @@ func on_pressed():
 var focused : bool setget set_focused, get_focused;
 
 var owned : int = 0 setget set_owned, get_owned;
+var installed : int = 0 setget set_installed, get_installed;
 
 # Key of the item
 var key;
@@ -25,6 +26,13 @@ func set_owned(o):
 func get_owned():
 	return owned;
 
+func set_installed(o):
+	installed = o
+	get_node('Panel/Installed').text = str(installed)
+
+func get_installed():
+	return installed;
+	
 func init(k):
 	key = k
 	var item = Core.dataMgr.get(k)

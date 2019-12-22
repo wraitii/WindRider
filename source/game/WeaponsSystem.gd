@@ -26,6 +26,12 @@ func find_hardpoint(weapon):
 	# Add as child to trigger timers
 	add_child(weapon)
 
+func remove_weapon(weapon):
+	assert(weapon.hardpoint)
+	assert(weapon.hardpoint in hardpoints)
+	hardpoints[weapon.hardpoint].erase(weapon)
+	remove_child(weapon)
+
 func start_firing():
 	for mount in hardpoints:
 		for weapon in hardpoints[mount]:

@@ -99,7 +99,8 @@ func _intercept():
 	targetSpeed = min(1, (distance - 100) / 500)
 
 	# Assume weapon speed is 450
-	var speed = lerp(450, targetSpeed * ship.stat('max_speed'), min(max((distance - 300)/1000,0),1))
+	var speed = lerp(450, targetSpeed * ship.stat('max_speed') * 2, min(max((distance - 300)/1000,0),1))
+
 	return [[ship, ['follow_vector', [get_firing_vector(speed)]]]]
 
 func _nav():

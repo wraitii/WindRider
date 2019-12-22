@@ -20,6 +20,9 @@ const Docking = preload('res://source/game/comms/Docking.gd')
 var ID;
 var data;
 
+# Link to Character owning the ship
+var ownerChar = null;
+
 # subsystems shorthand
 var AI;
 var navSystem;
@@ -83,7 +86,7 @@ func init(shipData):
 	
 	if 'components' in data:
 		for comp in data['components']:
-			install_component(comp)
+			install_component(comp, false)
 
 	shipStats._compute_stats()
 
@@ -261,27 +264,58 @@ func follow_vector(var world_vector, var percent_xz = Vector2(1.0,1.0)):
 
 const Component = preload('Component.gd')
 
-func install_component(componentID):
+
+func can_install(componentID):
+	var data = Core.dataMgr.get('ship_components/' + componentID)
+	var ress = Component.ress(data)
+	if !('max_per_hold' in data):
+		return true
+
+	var cs;
+	if ('hold_type' in data):
+		cs = hold.can_store(ress, null, hold.HOLD_TYPE[data['hold_type']])
+	else:
+		cs = hold.can_store(ress)
+	return cs[0]
+
+func install_component(componentID, flush_stats = true):
 	var comp = Component.new()
 	comp.init(Core.dataMgr.get('ship_components/' + componentID))
 	
-	if 'max_per_hold' in comp or 'hold_type' in comp:
-		var typ = hold.HoldItem.TYPE.COMPONENT;
-		if 'hold_type' in comp:
-			typ = hold.HoldItem.TYPE[comp['hold_type']]
-		var vol = hold.MAX_HOLD_VOL
-		if 'max_per_hold' in comp:
-			assert(typ != hold.HoldItem.TYPE.WEAPON) # only one weapon per hardmount
-			vol = int(hold.MAX_HOLD_VOL / comp['max_per_hold'])
-
-		var item = hold.HoldItem.new(comp.ID, typ, vol, 1)
-		item.components = [comp]
-		var cs = hold.can_store(item)
+	if 'max_per_hold' in comp:
+		var ress = Component.ress(comp)
+		var cs;
+		if ('hold_type' in comp):
+			cs = hold.can_store(ress, null, hold.HOLD_TYPE[comp['hold_type']])
+		else:
+			cs = hold.can_store(ress)
 		assert(cs[0])
-		hold.store(item, cs[1])
+		ress.components = [comp]
+		hold.store(ress, cs[1])
 
 	# Component has safely been stored. We install it.
 	shipStats.install(comp)
+
+	if flush_stats:
+		shipStats._compute_stats()
+
+func uninstall_component(ID, flush_stats = true):
+	if !(ID in shipStats.installedComps):
+		return
+	var comp = shipStats.installedComps[ID].pop_back()
+
+	for idx in comp.holdIndices:
+		hold.holdContent[idx].components.erase(comp)
+
+	shipStats.uninstall(comp)
+
+	if flush_stats:
+		shipStats._compute_stats()
+
+func get_installed(ID):
+	if ID in shipStats.installedComps:
+		return shipStats.installedComps[ID]
+	return []
 
 ##############################
 ##############################

@@ -1,7 +1,8 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://source/game/dock/Marketplace.gd" type="Script" id=1]
-[ext_resource path="res://source/graphics/MarketPlaceItem.tscn" type="PackedScene" id=2]
+[ext_resource path="res://source/gui/Chat.tscn" type="PackedScene" id=2]
+[ext_resource path="res://source/game/dock/MarketPlaceItem.gd" type="Script" id=3]
 
 [sub_resource type="InputEventAction" id=1]
 action = "default_escape_action"
@@ -15,41 +16,101 @@ anchor_bottom = 1.0
 margin_top = -1.0
 margin_bottom = -1.0
 script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
-[node name="ItemGrid" type="GridContainer" parent="."]
+[node name="ItemDetail" type="Control" parent="."]
+margin_right = 200.0
+margin_bottom = 140.0
+script = ExtResource( 3 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Panel" type="Panel" parent="ItemDetail"]
+margin_right = 200.0
+margin_bottom = 140.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Focus" type="Line2D" parent="ItemDetail/Panel"]
+visible = false
+points = PoolVector2Array( 0, 0, 200, 0, 200, 140, 0, 140, 0, 0 )
+width = 2.0
+texture_mode = 1065353216
+
+[node name="Name" type="Label" parent="ItemDetail/Panel"]
+anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-margin_right = -250.0
+margin_bottom = -5.0
+grow_vertical = 0
+text = "Item Name"
+align = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Owned" type="Label" parent="ItemDetail/Panel"]
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_right = -5.0
+margin_bottom = -5.0
+grow_horizontal = 0
+grow_vertical = 0
+text = "3"
+align = 2
+valign = 2
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Installed" type="Label" parent="ItemDetail/Panel"]
+anchor_left = 1.0
+anchor_right = 1.0
+margin_top = 5.0
+margin_right = -5.0
+margin_bottom = -5.0
+grow_horizontal = 0
+text = "0"
+align = 2
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Button" type="ToolButton" parent="ItemDetail/Panel"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_right = 4.0
+margin_bottom = 8.0
+focus_mode = 0
+shortcut_in_tooltip = false
+enabled_focus_mode = 0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ItemGrid" type="GridContainer" parent="."]
+anchor_right = 0.8
+anchor_bottom = 1.0
 custom_constants/vseparation = 150
 custom_constants/hseparation = 210
-columns = 4
-
-[node name="MarketPlaceItem" parent="ItemGrid" instance=ExtResource( 2 )]
-anchor_right = 0.0
-anchor_bottom = 0.0
-
-[node name="MarketPlaceItem2" parent="ItemGrid" instance=ExtResource( 2 )]
-anchor_right = 0.0
-anchor_bottom = 0.0
-margin_left = 210.0
-margin_right = 210.0
-
-[node name="MarketPlaceItem3" parent="ItemGrid" instance=ExtResource( 2 )]
-anchor_right = 0.0
-anchor_bottom = 0.0
-margin_left = 420.0
-margin_right = 420.0
-
-[node name="MarketPlaceItem4" parent="ItemGrid" instance=ExtResource( 2 )]
-anchor_right = 0.0
-anchor_bottom = 0.0
-margin_left = 630.0
-margin_right = 630.0
+columns = 5
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="Panel" type="Panel" parent="."]
 anchor_left = 0.8
 anchor_right = 1.0
 anchor_bottom = 1.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="Close" type="Button" parent="Panel"]
 anchor_left = 0.5
@@ -67,6 +128,9 @@ anchor_bottom = 0.8
 margin_left = 10.0
 margin_right = -10.0
 readonly = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="Label" type="Label" parent="Panel"]
 anchor_right = 1.0
@@ -86,6 +150,9 @@ margin_right = -20.0
 grow_horizontal = 0
 grow_vertical = 0
 text = "Credits: XXX"
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="Buy" type="Button" parent="Panel"]
 anchor_left = 1.0
@@ -109,3 +176,9 @@ margin_right = 120.0
 margin_bottom = -20.0
 grow_vertical = 0
 text = "Sell"
+
+[node name="Chat" parent="." instance=ExtResource( 2 )]
+anchor_left = 0.1
+anchor_top = 1.0
+anchor_right = 0.7
+margin_top = -100.0

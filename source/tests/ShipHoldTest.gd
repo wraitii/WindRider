@@ -70,17 +70,27 @@ func _ready():
 	# So we can't unload 2
 	cs = hold.can_unload(ress)
 	assert(!cs[0])
+
 	# Add 1 to another cell
 	ress.amount = 1
 	hold.store(ress, [PoolIntArray([2, 0, 0])])
-	# Now we unload 2
+	# Now we can unload 2
 	ress.amount = 2
 	cs = hold.can_unload(ress)
 	assert(cs[0])
-	ress = hold.HoldItem.new("Engine",hhit.ENGINE, 100000, 1)
-	cs = hold.can_store(ress)
+	
+	ress = hold.HoldItem.new("Engine", hhit.COMPONENT, 100000, 1)
+	cs = hold.can_store(ress, null, SH.HOLD_TYPE.ENGINE)
 	_pr(cs)
 	assert(cs[0])
 	hold.store(ress, cs[1])
 	_pr(hold.holdContent)
-
+	# Hack
+	hold.holdContent[cs[1][0]].components = ["test"]
+	
+	cs = hold.can_store(ress, null)
+	hold.store(ress, cs[1])
+	cs = hold.can_store(ress, null)
+	hold.store(ress, cs[1])
+	## Should show hold cell X=2 in last
+	print(hold.can_unload(ress))

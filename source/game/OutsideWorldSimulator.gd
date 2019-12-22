@@ -47,14 +47,15 @@ func _instance(sd):
 
 func serialize():
 	var ret = {}
-	for ship in data:
-		ret[ship.ID] = ship.serialize()
+	for sid in data:
+		ret[sid] = data[sid].serialize()
 	return ret
 
-func deserialize(data):
-	for id in data:
-		var s = Ship.new()
-		s.deserialize(data[id])
+func deserialize(d):
+	for id in d:
+		var s = Ship.instance()
+		s.deserialize(d[id])
+		s.ID = id
 		data[s.ID] = s
 		_setup_connections(s)
 		
