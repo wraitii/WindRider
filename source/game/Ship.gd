@@ -317,6 +317,9 @@ func get_installed(ID):
 		return shipStats.installedComps[ID]
 	return []
 
+func get_all_installed():
+	return shipStats.installedComps
+
 ##############################
 ##############################
 ## Weapons system

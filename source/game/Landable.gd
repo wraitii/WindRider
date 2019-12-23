@@ -12,6 +12,9 @@ var sectorID;
 
 var administrator;
 
+## Affected by traits
+var techLevel = 0
+
 ### 0-100
 var societyPresence = {};
 
@@ -36,18 +39,24 @@ func init(data):
 	
 	# For convenience elsewhere, move the Landable itself instead of only its graphics.
 	translate(position)
-	scale_object_local(Vector3(10,10,10))
 
-	for c in data['society_presence']:
-		assert(Core.societyMgr.get(c['ID']) != null)
-		societyPresence[c['ID']] = c['presence']
+#	for c in data['society_presence']:
+#		assert(Core.societyMgr.get(c['ID']) != null)
+#		societyPresence[c['ID']] = c['presence']
 
-	administrator = Society.new()
-	
+	administrator = Core.societyMgr.create_resource({
+		"ID": ID + "_aut",
+		"short_name": ID + " authorities",
+		"type": "society"
+	})
+	# So that this can be fetched
+	add_child(administrator)
+
 	if 'traits' in data:
 		for trait in data['traits']:
-			var t = load('res://source/game/traits/' + data['traits'][trait]['type'] + '.gd')
+			var t = load('res://source/game/traits/' + data['traits'][trait]['type'] + '.gd').new()
 			administrator.traits.add(trait, t)
+			t.load_from_data(data['traits'][trait])
 
 ################
 ################

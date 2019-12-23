@@ -5,6 +5,9 @@ const WeaponSystem = preload('WeaponSystem.tscn')
 var ID;
 var _raw;
 
+var techLevel = 5
+var creatorPresence = 50
+
 var holdIndices = [];
 var weaponSystems = [];
 
@@ -14,6 +17,10 @@ const DEFAULT_STORAGE_VOLUME = 100;
 func init(data):
 	ID = data.ID
 	_raw = data;
+	if 'technology_level' in data:
+		techLevel = data['technology_level']
+	if 'creator_presence' in data:
+		creatorPresence = data['creator_presence']
 	return self
 
 func _get(prop):

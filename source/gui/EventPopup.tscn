@@ -36,6 +36,7 @@ lorem ipsum
 lorem ipsum
 
 lorem ipsum"
+autowrap = true
 __meta__ = {
 "_edit_use_anchors_": false
 }

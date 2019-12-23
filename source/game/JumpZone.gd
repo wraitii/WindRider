@@ -9,15 +9,22 @@ func init(ownerSectorID, d):
 	ownerSector = ownerSectorID
 	jumpTo = d['jump_to'];
 	position = A2V._3(d['position']);
-	var jumpSys = Core.systemsMgr.get(Core.sectorsMgr.get(jumpTo).system)
-	var currSys = Core.systemsMgr.get(Core.sectorsMgr.get(ownerSector).system)
-	direction = (A2V._3(jumpSys.position) - A2V._3(currSys.position)).normalized()
+	
+	var jumpSec = Core.sectorsMgr.get(jumpTo)
+	var currSec = Core.sectorsMgr.get(ownerSector)
+	if jumpSec.system != currSec.system:
+		var jumpSys = Core.systemsMgr.get(Core.sectorsMgr.get(jumpTo).system)
+		var currSys = Core.systemsMgr.get(Core.sectorsMgr.get(ownerSector).system)
+		direction = (A2V._3(jumpSys.position) - A2V._3(currSys.position)).normalized()
+	else:
+		direction = (jumpSec.position - currSec.position).normalized()
 
 	var up_dir = Vector3(0, 1, 0)
+	
 	if direction.is_equal_approx(up_dir):
 		up_dir = Vector3(-1,0,0)
 	
-	look_at_from_position(position, direction*10000, up_dir)
+	look_at_from_position(position, position + direction*10000, up_dir)
 	get_node("Tag_Viewport/Label").set_text(jumpTo);
 
 func _ready():

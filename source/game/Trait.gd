@@ -7,11 +7,21 @@ extends Node
 var type : String;
 # Traits have an ID that is sort of self-assigned, but may generically have a name
 var traitName : String;
-var society;
+var parentSociety : String;
 
 # Return a human-readable string narrating the trait
 func describe():
 	return traitName
 
-func load_from_data(data):
+func load_from_data(_data):
 	return
+
+func should_serialize():
+	return false
+
+func serialize():
+	return {}
+
+func deserialize(d):
+	return
+

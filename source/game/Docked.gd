@@ -21,7 +21,7 @@ func _enter_tree():
 		var tctl = traitIcn.instance()
 		tctl.visible = true
 		$Traits.add_child(tctl)
-		tctl.hint_tooltip = trait
+		tctl.hint_tooltip = landable.administrator.traits.traits[trait].describe()
 
 func _on_Undock_pressed():
 	Core.gameState.playerShip.undock()

@@ -5,14 +5,14 @@
 [ext_resource path="res://source/game/dock/MarketPlaceItem.gd" type="Script" id=3]
 [ext_resource path="res://data/art/WindRiderTheme.tres" type="Theme" id=4]
 
-[sub_resource type="StyleBoxFlat" id=7]
-bg_color = Color( 0.0196078, 0.0196078, 0.113725, 1 )
+[sub_resource type="StyleBoxFlat" id=1]
+bg_color = Color( 0.0313726, 0.0313726, 0.141176, 1 )
 
-[sub_resource type="InputEventAction" id=1]
+[sub_resource type="InputEventAction" id=2]
 action = "default_escape_action"
 
-[sub_resource type="ShortCut" id=2]
-shortcut = SubResource( 1 )
+[sub_resource type="ShortCut" id=3]
+shortcut = SubResource( 2 )
 
 [node name="Marketplace" type="Panel"]
 anchor_right = 1.0
@@ -21,38 +21,48 @@ margin_top = -1.0
 margin_bottom = -1.0
 theme = ExtResource( 4 )
 script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="ItemDetail" type="Control" parent="."]
+visible = false
 margin_right = 200.0
 margin_bottom = 140.0
+size_flags_horizontal = 3
+size_flags_vertical = 0
 script = ExtResource( 3 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="Panel" type="Panel" parent="ItemDetail"]
-margin_right = 200.0
+anchor_right = 1.0
 margin_bottom = 140.0
+grow_horizontal = 0
+grow_vertical = 0
 theme = ExtResource( 4 )
-custom_styles/panel = SubResource( 7 )
+custom_styles/panel = SubResource( 1 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="Focus" type="Line2D" parent="ItemDetail/Panel"]
 visible = false
-points = PoolVector2Array( 0, 0, 200, 0, 200, 140, 0, 140, 0, 0 )
+points = PoolVector2Array( 0, 0, 1, 0, 1, 1, 0, 1, 0, 0 )
 width = 2.0
 texture_mode = 1065353216
 
 [node name="Name" type="Label" parent="ItemDetail/Panel"]
+anchor_left = 0.1
 anchor_top = 1.0
-anchor_right = 1.0
+anchor_right = 0.9
 anchor_bottom = 1.0
-margin_bottom = -5.0
+margin_bottom = -3.0
 grow_vertical = 0
-text = "Item Name"
+text = "Item Name Item Name Item Name"
 align = 1
+autowrap = true
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -62,8 +72,8 @@ anchor_left = 1.0
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-margin_right = -5.0
-margin_bottom = -5.0
+margin_right = -3.0
+margin_bottom = -3.0
 grow_horizontal = 0
 grow_vertical = 0
 text = "3"
@@ -76,9 +86,8 @@ __meta__ = {
 [node name="Installed" type="Label" parent="ItemDetail/Panel"]
 anchor_left = 1.0
 anchor_right = 1.0
-margin_top = 5.0
-margin_right = -5.0
-margin_bottom = -5.0
+margin_top = -3.0
+margin_right = -3.0
 grow_horizontal = 0
 text = "0"
 align = 2
@@ -89,8 +98,6 @@ __meta__ = {
 [node name="Button" type="ToolButton" parent="ItemDetail/Panel"]
 anchor_right = 1.0
 anchor_bottom = 1.0
-margin_right = 4.0
-margin_bottom = 8.0
 focus_mode = 0
 shortcut_in_tooltip = false
 enabled_focus_mode = 0
@@ -99,21 +106,22 @@ __meta__ = {
 }
 
 [node name="ItemGrid" type="GridContainer" parent="."]
-anchor_right = 0.8
+anchor_right = 0.75
 anchor_bottom = 1.0
+grow_horizontal = 0
+grow_vertical = 2
 custom_constants/vseparation = 150
-custom_constants/hseparation = 210
-columns = 5
+columns = 4
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="Panel" type="Panel" parent="."]
-anchor_left = 0.8
-anchor_right = 1.0
+anchor_left = 0.74932
+anchor_right = 0.99932
 anchor_bottom = 1.0
 theme = ExtResource( 4 )
-custom_styles/panel = SubResource( 7 )
+custom_styles/panel = SubResource( 1 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -124,11 +132,48 @@ anchor_right = 0.5
 margin_top = 80.0
 grow_horizontal = 2
 grow_vertical = 2
-shortcut = SubResource( 2 )
+shortcut = SubResource( 3 )
 text = "Leave"
 
-[node name="Specs" type="TextEdit" parent="Panel"]
+[node name="ItemName" type="Label" parent="Panel"]
 anchor_top = 0.08
+anchor_right = 0.75
+anchor_bottom = 0.08
+margin_left = 10.0
+margin_right = -10.0
+autowrap = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ItemPrice" type="Label" parent="Panel"]
+anchor_left = 0.75
+anchor_top = 0.08
+anchor_right = 1.0
+anchor_bottom = 0.08
+margin_left = 10.0
+margin_right = -10.0
+align = 2
+autowrap = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Description" type="Label" parent="Panel"]
+anchor_top = 0.14
+anchor_right = 1.0
+anchor_bottom = 0.32
+margin_left = 10.0
+margin_right = -10.0
+align = 3
+autowrap = true
+clip_text = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Specs" type="TextEdit" parent="Panel"]
+anchor_top = 0.33
 anchor_right = 1.0
 anchor_bottom = 0.8
 margin_left = 10.0
@@ -182,6 +227,9 @@ margin_right = 120.0
 margin_bottom = -20.0
 grow_vertical = 0
 text = "Sell"
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="Chat" parent="." instance=ExtResource( 2 )]
 anchor_left = 0.1

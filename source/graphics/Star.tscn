@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=2]
 
-[ext_resource path="res://source/game/Star.gd" type="Script" id=1]
+[ext_resource path="res://source/graphics/FakePos.gd" type="Script" id=1]
 
 [sub_resource type="SpatialMaterial" id=1]
 flags_unshaded = true
@@ -20,7 +20,7 @@ directional_shadow_split_2 = 0.5
 directional_shadow_split_3 = 0.8
 directional_shadow_max_distance = 3000.0
 
-[node name="CSGSphere" type="CSGSphere" parent="."]
+[node name="Mesh" type="CSGSphere" parent="."]
 layers = 2
 rings = 8
 smooth_faces = false

@@ -26,14 +26,38 @@ func init(d):
 
 func _setup_products():
 	NodeHelpers.remove_all_children($ItemGrid)
-	for socName in ownerDock.societyPresence:
+	
+	var socPres = {}
+	for ID in ownerDock.administrator.traits.traits:
+		var trait = ownerDock.administrator.traits.traits[ID]
+		if trait.type != 'SocietyPresence':
+			continue
+		if !(trait.targetSociety in socPres):
+			socPres[trait.targetSociety] = 0
+		socPres[trait.targetSociety] += trait.socPres
+	
+	for socName in socPres:
 		var society = Core.societyMgr.get(socName)
 		for k in society.outfits:
-			var item = $ItemDetail.duplicate()
-			item.init(k);
-			item.connect('pressed', self, 'on_item_pressed', [item])
-			$ItemGrid.add_child(item);
+			var c = Component.new().init(Core.dataMgr.get(k))
+			if socPres[socName] < c.creatorPresence:
+				continue
+			if ownerDock.techLevel < c.techLevel:
+				continue
+			_setup_product(k)
+
+	for ID in ship.get_all_installed():
+		_setup_product("ship_components/" + ID)
+	
 	update_products()
+
+func _setup_product(k):
+	var item = $ItemDetail.duplicate()
+	item.visible = true
+	item.init(k);
+	item.connect('pressed', self, 'on_item_pressed', [item])
+	$ItemGrid.add_child(item);
+
 
 func _setup_listeners():
 	get_node('Panel/Close').connect('pressed', self, 'on_close');
@@ -57,11 +81,21 @@ func on_item_pressed(item):
 	focusedItem = item;
 	
 	$Panel/Sell.disabled = focusedItem.owned == 0
-	
-	if item.has_method('describe'):
-		get_node('Panel/Specs').text = item.describe()
+
+	var c = Component.new().init(Core.dataMgr.get(item.key))
+
+	$Panel/ItemName.text = c['name']
+	if 'buy_price' in c:
+		$Panel/ItemPrice.text = str(c['buy_price'])
 	else:
-		get_node('Panel/Specs').text = JSON.print(Core.dataMgr.get(item.key), "\t")
+		$Panel/ItemPrice.text = "N/A"
+	
+	if 'description' in c:
+		$Panel/Description.text = c['description']
+	else:
+		$Panel/Description.text = ""
+
+	get_node('Panel/Specs').text = JSON.print(c._raw, "\t")
 
 func on_buy():
 	var player = ship.ownerChar

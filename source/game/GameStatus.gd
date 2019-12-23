@@ -61,8 +61,7 @@ func load_save(root):
 	var playerShipID = file.get_var()
 	Core.outsideWorldSim.deserialize(file.get_var());
 	
-	## TODO: fetch from the societies
-	player = Character.instance()
+	player = Core.societyMgr.get("player_character")
 	player.ship = Core.outsideWorldSim.ship(playerShipID)
 	
 	root.add_child(player)

@@ -9,6 +9,8 @@ func _ready():
 		st += '\n' + j + ':' + str(Core.gameState.playerShip.shipStats.stats.statsCache[j])
 	$Tabs/Player/Desc.text = st
 
+	var p = Core.gameState.player
+	
 	for t in Core.gameState.player.traits.traits:
 		var trait = $Tabs/Player/TraitCtl.duplicate()
 		trait.hint_tooltip = t + ' - ' + Core.gameState.player.traits.traits[t].describe()

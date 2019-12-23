@@ -1,6 +1,6 @@
 extends Spatial
 
-const Star = preload('Star.tscn')
+const Star = preload('res://source/graphics/Star.tscn')
 const JumpZone = preload('JumpZone.tscn')
 const Landable = preload('Landable.gd')
 const Ship = preload('Ship.gd')
@@ -107,10 +107,18 @@ func _parse_stars(sectorData):
 	for starDef in systemData['stars']:
 		var star = Star.instance()
 		add_child(star)
-		var pos = (A2V._3(starDef['position']) - sectorData.position) * 100
-		star.translate(pos)
-		star.scale_object_local(Vector3(100,100,100))
-		star.lightDir = -pos
+		var pos = A2V._3(starDef['position']) - sectorData.position
+		star.pos = pos * 100
+		star.scale_object_local(Vector3(1,1,1) * starDef['scale'])
+		
+		star.get_node('Mesh').material.albedo_color = Color(starDef["star_color"][0], starDef["star_color"][1], starDef["star_color"][2])
+		
+		var light = star.get_node('Light')
+		light.look_at(-pos, Vector3(0,1,0))
+		# Quadratic falloff, at a distance of 10 regular intensity
+		var falloff = 10*10/pos.length_squared()
+		light.light_energy = starDef['energy'] * falloff
+		light.light_color = Color(starDef["light_color"][0], starDef["light_color"][1], starDef["light_color"][2])
 
 func _parse_landables(sysData):
 	if !("landables" in sysData):

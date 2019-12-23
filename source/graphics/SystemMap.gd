@@ -1,6 +1,6 @@
 extends Node
 
-const Star = preload('../game/Star.tscn')
+const Star = preload('res://source/graphics/Star.tscn')
 
 const Sector = preload('SMSector.tscn')
 const SectorJumpZone = preload('SysMapJump.tscn')

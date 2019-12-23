@@ -9,8 +9,9 @@ func _init():
 var techLevel = 0
 
 func load_from_data(data):
-	techLevel = data['technologyLevel']
+	techLevel = data['technology_level']
 	traitName = data['name']
+	Core.societyMgr.get(parentSociety).get_parent().techLevel += techLevel
 
 func describe():
 	return traitName

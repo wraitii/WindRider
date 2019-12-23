@@ -15,12 +15,13 @@ var opinions = {};
 var outfits = [];
 var credits = 10000;
 
-var traits = TraitsMgr.new()
+var traits
 
 func init(d):
 	ID = d.ID
 	type = d.type
 	_raw = d
+	traits = TraitsMgr.new(ID)
 	if 'relations' in d:
 		for rel in d['relations']:
 			var tgt = Core.societyData.get(rel['target']);
@@ -35,17 +36,21 @@ func serialize():
 	var ret = {}
 	ret._raw = _raw
 	ret.type = type
-	ret.credits = credits	
+	ret.credits = credits
 	ret.opinions_ = {}
 	for op in opinions:
 		ret.opinions_[op] = opinions[op].serialize()
 	# no need to serialize outfits atm
+	
+	ret.traits = traits.serialize()
+
 	return ret
 
 func deserialize(data):
 	for prop in data:
 		if prop in self:
 			set(prop, data[prop])
-
+	traits = TraitsMgr.new(ID)
+	traits.deserialize(data.traits)
 	for op in data.opinions_:
 		opinions[op] = Opinion.deserialize(data.opinions[op])
