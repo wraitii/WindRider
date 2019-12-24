@@ -252,8 +252,8 @@ func align_with(vec, percent_xz = Vector2(1.0,1.0)):
 	
 	## TODO: rotate towards sector-up when idle-ish.
 
-func reverse():
-	align_with(-get_linear_velocity())
+func reverse(percent):
+	align_with(-get_linear_velocity(), Vector2(1,1) * percent)
 
 func follow_vector(var world_vector, var percent_xz = Vector2(1.0,1.0)):
 	align_with(world_vector, percent_xz)

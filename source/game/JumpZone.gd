@@ -5,6 +5,10 @@ var jumpTo : String;
 var position : Vector3;
 var direction : Vector3;
 
+var ongoingJumps = {}
+
+const jzconv = preload('comms/JumpZone.gd')
+
 func init(ownerSectorID, d):
 	ownerSector = ownerSectorID
 	jumpTo = d['jump_to'];
@@ -30,8 +34,7 @@ func init(ownerSectorID, d):
 func _ready():
 	add_to_group('JumpZones', true)
 	
-	# TODO: get a whole convo going and gorce going through all 3 jump zones.
-	$WarpFinal.connect('body_entered', self, 'on_body_entered')
+	$WarpOne.connect('body_entered', self, 'on_body_entered')
 
 func deliver(obj):
 	var target = direction
@@ -45,7 +48,15 @@ const Ship = preload('res://source/game/Ship.gd')
 
 func on_body_entered(body):
 	if body is Ship:
-		body.call_deferred('jump', jumpTo)
+		if body.ID in ongoingJumps:
+			return
+		Core.gameState.playerShip.emit_signal('add_chat_message', 'Entering Jump Zone to ' + jumpTo)
+		var conv = jzconv.new(self, body)
+		add_child(conv)
+		$GeneralArea.connect('body_exited', conv, "_exit")
+		$WarpTwo.connect('body_entered', conv, "_step", [1])
+		$WarpFinal.connect('body_entered', conv, "_step", [0])
+		ongoingJumps[body.ID] = conv
 
 const Docking = preload('res://source/game/comms/Docking.gd')
 	
@@ -53,3 +64,8 @@ func on_received_chat(convo, sender, chatData):
 	if convo is Docking:
 		convo.allow_docking()
 		return
+
+var jzt = 0
+func _process(delta):
+	jzt += delta
+	$JZ_viz/JZ_viz_0.material.albedo_texture.noise.period = 5 + 5 - abs(wrapf(jzt, 0, 10) - 5)
