@@ -413,6 +413,7 @@ func _jump_out():
 	emit_signal('jump_out', self)
 	lastSector = currentSector
 	currentSector = null
+	targetingSystem.reset()
 
 func _on_jump_in():
 	assert(hyperNavigating.to)
@@ -449,6 +450,7 @@ func undock():
 
 func dock(to):
 	dockingProcess = DockingData.dock(to)
+	targetingSystem.reset()
 	emit_signal("will_dock", self)
 
 func _on_dock():

@@ -1,0 +1,33 @@
+[gd_resource type="ShaderMaterial" load_steps=3 format=2]
+
+[ext_resource path="res://source/game/gui/TargetRadar/hologram_tex.tres" type="Texture" id=1]
+
+[sub_resource type="Shader" id=1]
+code = "shader_type canvas_item;
+render_mode blend_add;
+
+uniform sampler2D nomamap;
+
+void fragment()
+{
+	//vec4 col = vec4(UV, .2, round(UV.r));
+	//vec4 col = vec4(0.0, .0, .0, 1.0);
+	vec4 col = texture(TEXTURE, UV);
+	
+	vec4 emm = texture(nomamap, UV * vec2(0,2) + vec2(TIME/20.0, TIME*0.2)) * 1.4;
+	emm *= emm;
+	vec4 noise = texture(nomamap, UV + vec2(TIME, TIME)) * texture(nomamap, UV + vec2(-TIME, TIME)).r;
+	emm += (noise - 0.3) / 2.0;
+	float bg = emm.r;
+	vec4 outt = mix(vec4(col.rgb, bg * col.a), vec4(0.0,0.0,0.0,0.3), clamp(bg - col.a,0.0,1.0));
+	outt += vec4(0.2, 0.2, 0.2, 0.0) * outt.a;
+	COLOR = outt;
+	//vec4 outt = mix(col * clamp(bg + 0.4,0.0,1.0), vec4(0.0,0.0,0.0,1.0-bg), 1.0-bg);//1.0-emm.r);
+	//COLOR = vec4(outt.rgb, outt.a * bg*2.0);
+	//COLOR = vec4(noise);
+	//COLOR = col * bg * texture(nomamap, UV + vec2(TIME, TIME)) * 5.0 * texture(nomamap, UV + vec2(-TIME, TIME)).r;
+}"
+
+[resource]
+shader = SubResource( 1 )
+shader_param/nomamap = ExtResource( 1 )

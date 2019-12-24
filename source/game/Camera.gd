@@ -39,7 +39,8 @@ func _physics_process(delta):
 			rotate_object_local(Vector3(1,0,0),-PI/2.0)
 		CAMERA_STATES.FOLLOW_FROM_SHIP:
 			if followerShip == null:
-				switch_mode();
+				switch_mode()
+				return
 			var pos = trans.origin
 			var dir = trans.origin - followerShip.transform.origin
 			pos = pos - dir.normalized() * 10

@@ -38,7 +38,8 @@ func pick_new_target(var first = false):
 			continue
 		target(ship.ID)
 		return
-	pick_new_target(true)
+	if !first:
+		pick_new_target(true)
 
 func get_active_target():
 	if targets.size() == 0:

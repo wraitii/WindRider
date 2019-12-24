@@ -20,5 +20,5 @@ func _on_target(targetID):
 	add_child(target)
 
 func _on_untarget(targetID):
-	remove_child(targets[targetID])
+	NodeHelpers.queue_delete(targets[targetID])
 	targets.erase(targetID)
