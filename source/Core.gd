@@ -34,27 +34,15 @@ var damageMgr = DamageMgr.new()
 var gameState;
 var runningSector = null;
 
-func create_new_game():
-	societyMgr.populate()
-	landablesMgr.populate()
-	systemsMgr.populate()
-	sectorsMgr.populate()
-	missionsMgr.populate()
-	
+func _on_new_game():
 	NodeHelpers.queue_delete(get_node('/root/MainMenu'))
-	
 	gameState = GameStatus.new()
-	
-	gameState.galacticTime = GalacticTime.new(3065, 04, 12, 13, 48)
+	gameState.create_new_game()
 
-	var start = load('res://source/game/missions/NewGame.gd').new()
-	start.start()
-
-func load_saved_game():
+func _onload_saved_game():
 	NodeHelpers.queue_delete(get_node('/root/MainMenu'))
 	gameState = GameStatus.new();
-	gameState.load_save(get_node('/root'));
-	load_scene();
+	gameState.load_save();
 
 func unload_scene():
 	## May happen at the Start

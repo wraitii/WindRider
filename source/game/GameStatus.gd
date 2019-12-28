@@ -21,48 +21,68 @@ var cameraMode = null;
 const warp_factors = [0.5, 1, 1.5, 2, 4, 8]
 var warp_factor = 1;
 
-### Serialization
-
 const Character = preload('Character.tscn')
 const Ship = preload('Ship.tscn')
 const GalacticTime = preload('GalacticTime.gd')
+
+func create_new_game():
+	Core.societyMgr.populate()
+	Core.landablesMgr.populate()
+	Core.systemsMgr.populate()
+	Core.sectorsMgr.populate()
+	Core.missionsMgr.populate()
+
+	galacticTime = GalacticTime.new(3065, 04, 12, 13, 48)
+
+	var start = Core.missionsMgr.create_resource({ 'type': 'NewGame' })
+	start.start()
+
+#### Serialization
 
 func save_game():
 	var file = File.new()
 	if file.open('user://save_game.wdrr', File.WRITE) != OK:
 		return null;
 	
-	file.store_var(Core.societyMgr.serialize())
-	file.store_var(Core.landablesMgr.serialize())
-	file.store_var(Core.systemsMgr.serialize())
-	file.store_var(Core.sectorsMgr.serialize())
-
-	file.store_var(galacticTime.serialize());
-	
-	file.store_var(playerShip.ID)
-	
-	file.store_var(Core.outsideWorldSim.serialize());
+	file.store_var({
+		"societyMgr" : Core.societyMgr.serialize(),
+		"landablesMgr" : Core.landablesMgr.serialize(),
+		"systemsMgr" : Core.systemsMgr.serialize(),
+		"sectorsMgr" : Core.sectorsMgr.serialize(),
+		"missionsMgr" : Core.missionsMgr.serialize(),
+		"outsideWorldSim" : Core.outsideWorldSim.serialize(),
+		"galacticTime" : galacticTime.serialize(),
+	})
 
 	return true;
 
-func load_save(root):
+func load_save():
 	var file = File.new()
 	if file.open('user://save_game.wdrr', File.READ) != OK:
 		return null;
 
-	Core.societyMgr.deserialize(file.get_var())
-	Core.landablesMgr.deserialize(file.get_var())
-	Core.systemsMgr.deserialize(file.get_var())
-	Core.sectorsMgr.deserialize(file.get_var())
+	var savedData = file.get_var();
+
+	Core.societyMgr.deserialize(savedData["societyMgr"])
+	Core.landablesMgr.deserialize(savedData["landablesMgr"])
+	Core.systemsMgr.deserialize(savedData["systemsMgr"])
+	Core.sectorsMgr.deserialize(savedData["sectorsMgr"])
+	Core.missionsMgr.deserialize(savedData["missionsMgr"])
+	Core.outsideWorldSim.deserialize(savedData["outsideWorldSim"])
 
 	galacticTime = GalacticTime.new(0,0,0,0,0)
-	galacticTime.deserialize(file.get_var());
+	galacticTime.deserialize(savedData["galacticTime"])
+	
+	for ID in Core.outsideWorldSim.data:
+		var owner = Core.outsideWorldSim.data[ID].ownerChar
+		if owner:
+			owner = Core.societyMgr.get(owner)
+			Core.outsideWorldSim.data[ID].ownerChar = owner
+			owner.ship = Core.outsideWorldSim.data[ID]
 
-	var playerShipID = file.get_var()
-	Core.outsideWorldSim.deserialize(file.get_var());
-	
 	player = Core.societyMgr.get("player_character")
-	player.ship = Core.outsideWorldSim.ship(playerShipID)
-	
-	root.add_child(player)
+	playerShip = player.ship
+
+	Core.load_scene()
+
 	return true

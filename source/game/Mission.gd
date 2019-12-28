@@ -11,4 +11,4 @@ func init(_data):
 	return
 
 func finish():
-	Core.missionsMgr.unregister(ID)
+	Core.missionsMgr._unregister(self)

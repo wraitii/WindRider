@@ -106,6 +106,7 @@ func serialize():
 	var ret = {}
 	ret.ID = ID
 	ret.data = data
+
 	ret.shields = shields
 	ret.armour = armour
 	ret.energy = energy
@@ -118,6 +119,10 @@ func serialize():
 	
 	ret.hold = hold.serialize()
 	ret.shipStats = shipStats.serialize()
+
+	# Bit of a hack, store the ID in place of the direct link when serializing.
+	if ownerChar:
+		ret.ownerChar = ownerChar.ID;
 
 	return ret;
 

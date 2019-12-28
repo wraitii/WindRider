@@ -32,8 +32,8 @@ func create_resource(d, path = null):
 	
 	# As a fallback for no-data resources, use the ID.
 	if path == null:
-		assert(d.ID)
-		path = d.ID
+		assert(obj.ID)
+		path = obj.ID
 	_register(obj, d, path);
 	return obj
 
