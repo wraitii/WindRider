@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=2]
+[gd_scene load_steps=10 format=2]
 
 [ext_resource path="res://source/game/Docked.gd" type="Script" id=1]
 [ext_resource path="res://source/game/dock/Marketplace.tscn" type="PackedScene" id=2]
@@ -6,6 +6,7 @@
 [ext_resource path="res://data/art/WindRiderTheme.tres" type="Theme" id=4]
 [ext_resource path="res://data/art/fonts/Potra.tres" type="DynamicFontData" id=5]
 [ext_resource path="res://data/art/ui/station_background/blue-and-red-galaxy-artwork-1629236.jpg" type="Texture" id=6]
+[ext_resource path="res://source/game/dock/MissionBoard.tscn" type="PackedScene" id=7]
 
 [sub_resource type="DynamicFont" id=1]
 size = 80
@@ -145,7 +146,10 @@ mouse_filter = 1
 [node name="CommMarket" parent="Submenus" instance=ExtResource( 3 )]
 visible = false
 mouse_filter = 1
-[connection signal="pressed" from="RBCon/MissionsBtn" to="." method="_on_CommoditiesBtn_pressed"]
+
+[node name="MissionBoard" parent="Submenus" instance=ExtResource( 7 )]
+visible = false
+[connection signal="pressed" from="RBCon/MissionsBtn" to="." method="_on_MissionsBtn_pressed"]
 [connection signal="pressed" from="RBCon/CommoditiesBtn" to="." method="_on_CommoditiesBtn_pressed"]
 [connection signal="pressed" from="RBCon/MarketplaceBtn" to="." method="_on_MarketplaceBtn_pressed"]
 [connection signal="pressed" from="RBCon/Refuel" to="." method="_on_Refuel_pressed"]

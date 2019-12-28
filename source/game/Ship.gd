@@ -359,6 +359,7 @@ func set_armour(a):
 	if armour < 0:
 		armour = 0;
 	if armour == 0:
+		Core.outsideWorldSim.ship_death()
 		emit_signal('ship_death', self)
 
 func get_armour(): return armour;
@@ -416,6 +417,7 @@ func teleport(to, pos):
 
 func _jump_out():
 	assert(currentSector)
+	Core.outsideWorldSim.ship_jump_out(self)
 	emit_signal('jump_out', self)
 	lastSector = currentSector
 	currentSector = null
@@ -424,8 +426,10 @@ func _jump_out():
 func _on_jump_in():
 	assert(hyperNavigating.to)
 	currentSector = hyperNavigating.to
+	Core.outsideWorldSim.ship_will_jump_in(self)
 	emit_signal('will_jump_in', self)
 	hyperNavigating = null;
+	Core.outsideWorldSim.ship_jumped_in(self)
 	emit_signal('jumped_in', self)
 
 #### Docking
@@ -452,22 +456,26 @@ class DockingData:
 func undock():
 	assert(dockedAt != null)
 	dockingProcess = DockingData.undock(dockedAt)
+	Core.outsideWorldSim.ship_will_undock(self)
 	emit_signal('will_undock', self)
 
 func dock(to):
 	dockingProcess = DockingData.dock(to)
 	targetingSystem.reset()
+	Core.outsideWorldSim.ship_will_dock(self)
 	emit_signal("will_dock", self)
 
 func _on_dock():
 	dockedAt = dockingProcess.dock;
 	dockingConvo = null;
 	dockingProcess = null
+	Core.outsideWorldSim.ship_docked(self)
 	emit_signal('docked', self)
 
 func _on_undock():
 	dockedAt = null;
 	dockingProcess = null;
+	Core.outsideWorldSim.ship_undocked(self)
 	emit_signal('undocked', self)
 
 ##############################

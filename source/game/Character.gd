@@ -4,6 +4,10 @@ signal player_ship_changed(ship)
 
 var ship setget set_current_ship, get_current_ship
 
+var missions = []
+
+## TODO: transfer signals
+
 func set_current_ship(s):
 	if ship:
 		ship.ownerChar = null

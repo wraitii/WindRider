@@ -6,6 +6,7 @@ const EventPopup = preload('res://source/gui/EventPopup.tscn')
 
 func init(_d):
 	type = "NewGame"
+	return self
 
 func start():
 	Core.unload_scene()
@@ -17,7 +18,7 @@ func start():
 	sc.connect("event_ok_pressed", self, "_continue")
 	Core.load_scene(sc)
 
-func _continue(_a):
+func _continue(_scene):
 	Core.unload_scene()
 
 	Core.gameState.player = Core.societyMgr.create_resource({
@@ -84,7 +85,7 @@ Ay, seems there's nobody out there in Abysseus. I suppose it'll be as good a pla
 		finish()
 		return
 	sc.disconnect("event_ok_pressed", self, "_next")
-	sc.connect("event_ok_pressed", self, "_next", [sc, i + 1])
+	sc.connect("event_ok_pressed", self, "_next", [i + 1])
 
-func _next(_a, scene, i):
+func _next(scene, i):
 	call_deferred('next', scene, i)

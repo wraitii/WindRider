@@ -27,6 +27,12 @@ func add(ID, trait):
 	traits[ID] = trait
 	trait.parentSociety = parentSociety
 
+func has_type(t):
+	for trait in traits:
+		if traits[trait].type == t:
+			return true
+	return false
+
 ## TODO: unique adds, timestamped to galaxy or whatever
 # Regularly culling useless traits
 # simulating trait 'knowledge'

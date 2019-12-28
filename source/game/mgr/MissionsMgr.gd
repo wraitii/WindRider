@@ -20,8 +20,9 @@ func _init().('Missions', 'res://data/missions/'):
 
 func populate():
 	## Let's populate triggers
-	var triggers = Core.dataMgr.get('missions/triggers/')
-	print(triggers)
+	var trigs = Core.dataMgr.get_all('missions/triggers/')
+	for trigger in trigs:
+		triggers.append(Core.dataMgr.get(trigger))
 
 var counter = 0;
 func _uid():
@@ -37,9 +38,48 @@ func _instance(d):
 	var MissionType = load('res://source/game/missions/' + d['type'] + '.gd')
 	var item = MissionType.new();
 	item.ID = _uid();
-	item.init(d);
+	if !item.init(d):
+		return null
 	return item;
 
 func _on_big_time_pass(ms):
 	## TODO: review temporaries
 	return
+
+#### TODO: move this to a trigger evaluator?
+
+func _and(triggers, soc):
+	for trigger in triggers:
+		if 'trait' in trigger:
+			if !soc.traits.has_type(trigger['trait']['type']):
+				return false
+	return true
+
+func triggers_pass(triggers, soc):
+	## treat as AND for now
+	return _and(triggers, soc)
+
+func can_show(trigger, giver, receiver):
+	if !triggers_pass(trigger["giver"], giver):
+		return false
+	if !triggers_pass(trigger["receiver_to_show"], receiver):
+		return false
+	return true
+
+func can_accept(trigger, receiver):
+	return triggers_pass(trigger["receiver_to_accept"], receiver)
+
+func serialize():
+	var ret = {}
+	for ID in data:
+		if data[ID].should_serialize():
+			ret[ID] = data[ID].serialize()
+	return ret
+
+func deserialize(d):
+	for ID in d:
+		var MissionType = load('res://source/game/missions/' + d[ID]['type'] + '.gd')
+		var item = MissionType.new();
+		item.ID = ID;
+		item.deserialize(d[ID])
+		data[ID] = item

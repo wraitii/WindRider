@@ -12,6 +12,10 @@ func init(data):
 	_raw = data;
 	ID = _raw.ID
 
+	if 'landables' in _raw:
+		for l in _raw['landables']:
+			Core.landablesMgr.get(l).sectorID = ID
+
 	Core.systemsMgr.get(_raw["system"]).sectors.append(_raw["ID"])
 	var sys = Core.systemsMgr.get(_raw["system"])
 	var sys2 = Core.systemsMgr.get(_raw["system"])

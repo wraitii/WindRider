@@ -29,6 +29,9 @@ func create_resource(d, path = null):
 		return null
 
 	var obj = _instance(d)
+
+	if !obj:
+		return null
 	
 	# As a fallback for no-data resources, use the ID.
 	if path == null:
@@ -64,9 +67,10 @@ func _register(item, source, path):
 	paths[item.ID] = path;
 
 func _unregister(item):
-	data.erase(item.ID);
-	raw_data.erase(item.ID);
-	paths.erase(item.ID);
+	var id = item.ID
+	raw_data.erase(id);
+	paths.erase(id);
+	data.erase(id);
 
 # Functions below are virtual
 

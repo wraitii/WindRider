@@ -5,15 +5,10 @@ var landable
 const traitIcn = preload('res://source/graphics/TraitCtl.tscn')
 
 func _enter_tree():
-	Core.gameState.save_game();
 	landable = Core.landablesMgr.get(Core.gameState.playerShip.dockedAt);
 	$LandableName.text = landable.ID
 	_check_hyperfuel();
 	
-	$Submenus/Marketplace.init(landable)
-	$Submenus/Marketplace.connect('close', self, 'on_marketplace_closed')
-	
-	$Submenus/CommMarket.init(landable)
 	var admin = landable.administrator
 	$GeneralInfo.text = str(admin.get_opinion(Core.gameState.player))
 
@@ -22,6 +17,13 @@ func _enter_tree():
 		tctl.visible = true
 		$Traits.add_child(tctl)
 		tctl.hint_tooltip = landable.administrator.traits.traits[trait].describe()
+
+	$Submenus/Marketplace.init(landable)
+	$Submenus/Marketplace.connect('close', self, 'on_marketplace_closed')
+	
+	$Submenus/CommMarket.init(landable)
+
+	$Submenus/MissionBoard.init(landable)
 
 func _on_Undock_pressed():
 	Core.gameState.playerShip.undock()
@@ -42,3 +44,6 @@ func on_marketplace_closed():
 
 func _on_CommoditiesBtn_pressed():
 	$Submenus/CommMarket.visible = true
+
+func _on_MissionsBtn_pressed():
+	$Submenus/MissionBoard.visible = true

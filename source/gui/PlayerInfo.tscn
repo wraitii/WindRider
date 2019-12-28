@@ -59,6 +59,7 @@ margin_left = 10.0
 margin_top = 10.0
 margin_right = -10.0
 margin_bottom = -10.0
+autowrap = true
 __meta__ = {
 "_edit_use_anchors_": false
 }

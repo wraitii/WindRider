@@ -42,7 +42,6 @@ func _instance(sd):
 	var ship = Ship.instance();
 	sd.ID = _uid();
 	ship.init(sd);
-	_setup_connections(ship)
 	return ship;
 
 func serialize():
@@ -57,24 +56,11 @@ func deserialize(d):
 		s.deserialize(d[id])
 		s.ID = id
 		data[s.ID] = s
-		_setup_connections(s)
 		
 		if s.dockedAt:
 			Utils.safe_push(_shipIDsDockedAt, s.dockedAt, s.ID)
 		elif s.currentSector:
 			Utils.safe_push(_shipIDsInSector, s.currentSector, s.ID)
-
-func _setup_connections(ship):
-	ship.connect('will_dock', self, 'ship_will_dock')
-	ship.connect('docked', self, 'ship_docked')
-	ship.connect('will_undock', self, 'ship_will_undock')
-	ship.connect('undocked', self, 'ship_undocked')
-
-	ship.connect('jump_out', self, 'ship_jump_out')
-	ship.connect('will_jump_in', self, 'ship_will_jump_in')
-	ship.connect('jumped_in', self, 'ship_jumped_in')
-
-	ship.connect('ship_death', self, 'ship_death')
 
 # Explicitly named alias for get
 func ship(ID):
@@ -159,6 +145,7 @@ func ship_docked(ship):
 	Utils.safe_push(_shipIDsDockedAt, docked_at, ship.ID)
 
 	if Core.gameState.playerShip == ship:
+		Core.gameState.save_game()
 		Core.load_scene()
 
 # Called right before a ship undocks

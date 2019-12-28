@@ -67,7 +67,6 @@ func load_save():
 	Core.landablesMgr.deserialize(savedData["landablesMgr"])
 	Core.systemsMgr.deserialize(savedData["systemsMgr"])
 	Core.sectorsMgr.deserialize(savedData["sectorsMgr"])
-	Core.missionsMgr.deserialize(savedData["missionsMgr"])
 	Core.outsideWorldSim.deserialize(savedData["outsideWorldSim"])
 
 	galacticTime = GalacticTime.new(0,0,0,0,0)
@@ -80,9 +79,14 @@ func load_save():
 			Core.outsideWorldSim.data[ID].ownerChar = owner
 			owner.ship = Core.outsideWorldSim.data[ID]
 
+	Core.missionsMgr.deserialize(savedData["missionsMgr"])
+
 	player = Core.societyMgr.get("player_character")
 	playerShip = player.ship
 
 	Core.load_scene()
+	
+	# Send a fake 'docked' signal as this is required for missions to fire and such.
+	playerShip.emit_signal('docked', playerShip)
 
 	return true
