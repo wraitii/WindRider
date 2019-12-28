@@ -99,6 +99,8 @@ func _bring_ship_in(ship):
 ########################################
 ## Load sector objects
 
+const FakePos = preload('res://source/graphics/FakePos.gd')
+
 func _parse_stars(sectorData):
 	var systemData = Core.systemsMgr.get(sectorData['system'])
 	if !("stars" in systemData):
@@ -108,8 +110,10 @@ func _parse_stars(sectorData):
 		var star = Star.instance()
 		add_child(star)
 		var pos = A2V._3(starDef['position']) - sectorData.position
-		star.pos = pos * 100
 		star.scale_object_local(Vector3(1,1,1) * starDef['scale'])
+		var fp = FakePos.new()
+		star.add_child(fp)
+		fp.pos = pos * 100
 		
 		star.get_node('Mesh').material.albedo_color = Color(starDef["star_color"][0], starDef["star_color"][1], starDef["star_color"][2])
 		

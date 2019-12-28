@@ -2,9 +2,14 @@ extends Node
 
 ### GalacticTime
 ## Godot has no date-time class so hand-roll one
-## Thankfully I don't deal with timezones so thous should be reasonably easy.
+## Thankfully I don't deal with timezones so this should be reasonably easy.
 ## No handling of bisextiles years for now.
 ## Month/Day are 0-indexed internally, and 1-indexed externally.
+
+## This signal is sent when at least one hour as passed
+## (nb: it gets sent every hour from regular time-play,
+## but it also gets sent if the game suddenly moves forward 10 years.)
+signal big_time_pass(ms_of_time)
 
 var year : int;
 var day : int;
@@ -31,6 +36,8 @@ func _init(y,m,d,h,mm):
 	day = _month_day_to_day(m-1, d-1);
 	ms = _hour_min_to_ms(h, mm);
 
+	connect('big_time_pass', Core.missionsMgr, "_on_big_time_pass")
+
 func serialize():
 	var ret = {}
 	ret.year = year;
@@ -46,7 +53,12 @@ func deserialize(t):
 func add_time(milliseconds):
 	var remaining = _add_years(milliseconds);
 	remaining = _add_days(remaining);
-	_add_ms(remaining);
+	if remaining != milliseconds:
+		emit_signal("big_time_pass", milliseconds)
+	var ch = _ms_to_hours(ms)
+	_add_ms(remaining)
+	if _ms_to_hours(ms) != ch:
+		emit_signal("big_time_pass", milliseconds)
 
 func add_years(y):
 	add_time(y*DAYS_IN_YEAR*DAY_LENGTH);

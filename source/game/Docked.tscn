@@ -40,7 +40,7 @@ align = 1
 
 [node name="RBCon" type="VBoxContainer" parent="."]
 anchor_left = 0.8
-anchor_top = 0.5
+anchor_top = 0.35
 anchor_right = 1.0
 anchor_bottom = 0.9
 margin_left = 30.0
@@ -50,9 +50,21 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="CommoditiesBtn" type="Button" parent="RBCon"]
+[node name="MissionsBtn" type="Button" parent="RBCon"]
 margin_right = 200.0
-margin_bottom = 77.0
+margin_bottom = 84.0
+grow_horizontal = 0
+grow_vertical = 0
+size_flags_vertical = 7
+text = "Mission Board"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="CommoditiesBtn" type="Button" parent="RBCon"]
+margin_top = 88.0
+margin_right = 200.0
+margin_bottom = 172.0
 grow_horizontal = 0
 grow_vertical = 0
 size_flags_vertical = 7
@@ -62,9 +74,9 @@ __meta__ = {
 }
 
 [node name="MarketplaceBtn" type="Button" parent="RBCon"]
-margin_top = 81.0
+margin_top = 176.0
 margin_right = 200.0
-margin_bottom = 158.0
+margin_bottom = 260.0
 grow_horizontal = 0
 grow_vertical = 0
 size_flags_vertical = 7
@@ -74,9 +86,9 @@ __meta__ = {
 }
 
 [node name="Refuel" type="Button" parent="RBCon"]
-margin_top = 162.0
+margin_top = 264.0
 margin_right = 200.0
-margin_bottom = 239.0
+margin_bottom = 348.0
 grow_horizontal = 0
 grow_vertical = 0
 size_flags_vertical = 7
@@ -86,9 +98,9 @@ __meta__ = {
 }
 
 [node name="Undock" type="Button" parent="RBCon"]
-margin_top = 243.0
+margin_top = 352.0
 margin_right = 200.0
-margin_bottom = 320.0
+margin_bottom = 440.0
 grow_horizontal = 0
 grow_vertical = 0
 size_flags_vertical = 7
@@ -133,6 +145,7 @@ mouse_filter = 1
 [node name="CommMarket" parent="Submenus" instance=ExtResource( 3 )]
 visible = false
 mouse_filter = 1
+[connection signal="pressed" from="RBCon/MissionsBtn" to="." method="_on_CommoditiesBtn_pressed"]
 [connection signal="pressed" from="RBCon/CommoditiesBtn" to="." method="_on_CommoditiesBtn_pressed"]
 [connection signal="pressed" from="RBCon/MarketplaceBtn" to="." method="_on_MarketplaceBtn_pressed"]
 [connection signal="pressed" from="RBCon/Refuel" to="." method="_on_Refuel_pressed"]

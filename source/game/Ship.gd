@@ -131,6 +131,7 @@ func deserialize(ret):
 	autopilot = get_node('Autopilot')
 	weaponsSystem = get_node('WeaponsSystem');
 	shipStats = get_node('ShipStats')
+	AI = get_node('AI');
 	hold = get_node('Hold')
 	
 	hold.deserialize(ret.hold)

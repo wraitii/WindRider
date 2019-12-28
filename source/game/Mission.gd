@@ -1,7 +1,14 @@
-extends Node
+extends Reference
 
 ## Mission-data holder, similar to Nova or Endless Sky missions.
 ## These hold all narratives.
 
-func _finish():
-	NodeHelpers.queue_delete(self)
+var type = "GenericMission"
+# Auto-generated
+var ID
+
+func init(_data):
+	return
+
+func finish():
+	Core.missionsMgr.unregister(ID)

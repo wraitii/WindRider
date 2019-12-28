@@ -19,7 +19,8 @@ var techLevel = 0
 var societyPresence = {};
 
 func _enter_tree():
-	add_to_group('Landables', true)
+	add_to_group('Landables')
+	add_to_group('obstacle')
 
 	var LandableGraphics = load('res://data/art/landables/' + _raw['graphics'] + '/' + _raw['graphics'] + '.tscn')
 	graphics = LandableGraphics.instance()

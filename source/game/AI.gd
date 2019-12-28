@@ -1,4 +1,4 @@
-extends Node
+extends Spatial
 
 enum MODE { MOVE, KILL, EVADE }
 
@@ -7,10 +7,9 @@ var objective = null;
 
 var mode = MODE.MOVE;
 
-# Store nodes for AI ships only (TODO: improve this)
-var ai_only = []
-
 var evade_rand_vec
+
+var rcast
 
 ## TODO: figure this out.
 func _enter_tree():
@@ -18,25 +17,18 @@ func _enter_tree():
 	if ship == Core.gameState.playerShip:
 		return
 
-	var collisionWarning = BoxShape.new();
-	collisionWarning.extents = Vector3(5,5,50)
-	var cs = CollisionShape.new()
-	cs.shape = collisionWarning
-
-	var area = Area.new()
-	area.add_child(cs)
-	area.translation = Vector3(0,0,-50)
-	area.connect('body_entered', self, 'on_collision_warning')
-	ai_only.append(area)
-	ship.call_deferred("add_child", area)
+	rcast = RayCast.new()
+	rcast.enabled = true
+	rcast.cast_to = Vector3(0,0,-250)
+	rcast.add_exception(get_parent())
+	call_deferred("add_child", rcast)
 
 func _exit_tree():
 	ship = null;
 	var c = get_children()
-	for i in ai_only:
+	for i in c:
 		if i.get_parent():
 			NodeHelpers.call_deferred("queue_delete", i)
-	ai_only = []
 
 func random_point():
 	return Vector3((randf() - 0.5) * 5000, (randf() - 0.5) * 5000, (randf() - 0.5) * 5000)
@@ -49,6 +41,10 @@ func do_ai():
 	
 	comms.commands += ship.autopilot.autothrust()
 	ship.autopilot.autorailroad()
+	
+	if rcast.is_colliding() and get_parent().linear_velocity.length() > 10:
+		comms.commands.append([ship, 'rotate_up'])
+		return
 
 	if objective == null:
 		var behaviour = randf();
@@ -65,7 +61,7 @@ func do_ai():
 
 	for threatID in ship.targetingSystem.threats:
 		var threat = Core.outsideWorldSim.ship(threatID)
-		if threat.translation.distance_to(ship.translation) < 1000:
+		if mode != MODE.KILL and threat.translation.distance_to(ship.translation) < 1000:
 			mode = MODE.EVADE
 			objective = weakref(threat)
 			_pick_random_evade_vector()

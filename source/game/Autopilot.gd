@@ -122,6 +122,12 @@ func _nav():
 		targetSpeed = min(1, (tgnode.translation - ship.translation).length_squared() / (400*400))
 		return [[ship, ['follow_vector', [get_interception_vector(tgnode.translation)]]]]
 
+	## Navigating through a jumpzone.
+	## We have to cross it in a specific direction.
+	
+	## Two steps to the process -> First is getting to the proper point in the "cylinder",
+	# then crossing the barriers.
+
 	assert(target.type == target.TARGET_TYPE.JUMPZONE)
 	var dis = (tgnode.translation - ship.translation).length()
 	# TODO: cleverer, this gets stuck if we mess up inside the zone.

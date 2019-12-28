@@ -7,6 +7,7 @@ const SocietyMgr = preload('game/mgr/SocietyMgr.gd')
 const SystemsMgr = preload('game/mgr/SystemsMgr.gd')
 const SectorsMgr = preload('game/mgr/SectorsMgr.gd')
 const LandableMgr = preload('game/mgr/LandableMgr.gd')
+const MissionsMgr = preload('game/mgr/MissionsMgr.gd')
 const OutsideWorldSim = preload('game/OutsideWorldSimulator.gd')
 
 const DamageMgr = preload('game/DamageMgr.gd')
@@ -26,6 +27,7 @@ var societyMgr = SocietyMgr.new()
 var systemsMgr = SystemsMgr.new()
 var sectorsMgr = SectorsMgr.new()
 var landablesMgr = LandableMgr.new()
+var missionsMgr = MissionsMgr.new()
 var outsideWorldSim = OutsideWorldSim.new()
 var damageMgr = DamageMgr.new()
 
@@ -37,14 +39,15 @@ func create_new_game():
 	landablesMgr.populate()
 	systemsMgr.populate()
 	sectorsMgr.populate()
-
+	missionsMgr.populate()
+	
 	NodeHelpers.queue_delete(get_node('/root/MainMenu'))
 	
 	gameState = GameStatus.new()
 	
 	gameState.galacticTime = GalacticTime.new(3065, 04, 12, 13, 48)
 
-	var start = load('res://data/missions/NewGame.gd').new()
+	var start = load('res://source/game/missions/NewGame.gd').new()
 	start.start()
 
 func load_saved_game():

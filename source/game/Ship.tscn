@@ -26,8 +26,11 @@ script = ExtResource( 5 )
 [node name="WeaponsSystem" type="Spatial" parent="."]
 script = ExtResource( 2 )
 
-[node name="AI" type="Node" parent="."]
+[node name="AI" type="Spatial" parent="."]
 script = ExtResource( 6 )
+
+[node name="RayCast" type="RayCast" parent="AI"]
+cast_to = Vector3( 0, 0, -1 )
 
 [node name="Hold" type="Node" parent="."]
 script = ExtResource( 7 )
