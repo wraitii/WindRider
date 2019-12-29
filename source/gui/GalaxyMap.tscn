@@ -50,3 +50,5 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 [connection signal="pressed" from="CloseMap" to="." method="_on_CloseMap_pressed"]
+
+[editable path="ViewportContainer/Viewport/GalaxyMap"]

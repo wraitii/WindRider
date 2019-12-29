@@ -1,16 +1,25 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=8 format=2]
 
 [ext_resource path="res://source/graphics/GalaxyMap.gd" type="Script" id=1]
+[ext_resource path="res://data/art/ui/GalaxyMap/GalaxyBackground.tres" type="Environment" id=2]
+[ext_resource path="res://data/art/ui/GalaxyMap/galaxy_background.png" type="Texture" id=3]
 
-[sub_resource type="Environment" id=1]
-background_mode = 1
+[sub_resource type="SpatialMaterial" id=1]
+flags_transparent = true
+flags_unshaded = true
+params_blend_mode = 1
+albedo_texture = ExtResource( 3 )
 
-[sub_resource type="SpatialMaterial" id=2]
+[sub_resource type="PlaneMesh" id=2]
+material = SubResource( 1 )
+size = Vector2( 1000, 1000 )
+
+[sub_resource type="SpatialMaterial" id=3]
 flags_transparent = true
 flags_unshaded = true
 albedo_color = Color( 1, 0, 0, 0.352941 )
 
-[sub_resource type="SpatialMaterial" id=3]
+[sub_resource type="SpatialMaterial" id=4]
 flags_transparent = true
 flags_unshaded = true
 albedo_color = Color( 0, 0.0156863, 1, 0.352941 )
@@ -24,12 +33,15 @@ __meta__ = {
 
 [node name="Camera" type="Camera" parent="."]
 transform = Transform( 0.810071, 0.300799, -0.503293, 0, 0.858377, 0.513019, 0.586331, -0.415582, 0.695347, -200, 200, 200 )
-environment = SubResource( 1 )
+environment = ExtResource( 2 )
 current = true
 fov = 60.0
 size = 200.0
 near = 2.0
-far = 1000.0
+far = 2000.0
+
+[node name="Background" type="CSGMesh" parent="."]
+mesh = SubResource( 2 )
 
 [node name="Lines" type="CSGCombiner" parent="."]
 
@@ -37,12 +49,12 @@ far = 1000.0
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 7.5, 0, 0 )
 width = 15.0
 height = 0.1
-material = SubResource( 2 )
+material = SubResource( 3 )
 
 [node name="LineZ" type="CSGBox" parent="Lines"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 7.5 )
 height = 0.1
 depth = 15.0
-material = SubResource( 3 )
+material = SubResource( 4 )
 
 [node name="Objects" type="Node" parent="."]

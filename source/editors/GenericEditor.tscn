@@ -71,18 +71,18 @@ __meta__ = {
 }
 
 [node name="Validate" type="Button" parent="GUI"]
-anchor_top = 0.2
+anchor_top = 0.15
 anchor_right = 0.4
-anchor_bottom = 0.2
+anchor_bottom = 0.15
 margin_left = 20.0
 margin_top = -20.0
 text = "Validate"
 
 [node name="Save" type="Button" parent="GUI"]
 anchor_left = 0.6
-anchor_top = 0.2
+anchor_top = 0.15
 anchor_right = 1.0
-anchor_bottom = 0.2
+anchor_bottom = 0.15
 margin_top = -20.0
 margin_right = -20.0
 text = "Save"
@@ -92,9 +92,9 @@ __meta__ = {
 
 [node name="New" type="Button" parent="GUI"]
 anchor_left = 0.6
-anchor_top = 0.97
+anchor_top = 0.95
 anchor_right = 1.0
-anchor_bottom = 0.97
+anchor_bottom = 0.95
 margin_top = -6.0
 margin_right = -20.0
 margin_bottom = 6.0
@@ -104,13 +104,16 @@ __meta__ = {
 }
 
 [node name="Reload" type="Button" parent="GUI"]
-anchor_top = 0.97
+anchor_top = 0.95
 anchor_right = 0.4
-anchor_bottom = 0.97
+anchor_bottom = 0.95
 margin_left = 20.0
 margin_top = -6.0
 margin_bottom = 6.0
 text = "Reload"
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="Graphics" type="Control" parent="."]
 anchor_right = 0.8

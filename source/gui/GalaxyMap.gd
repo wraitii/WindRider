@@ -18,6 +18,10 @@ func _input(event):
 	if visible and may_hide and event.is_action_released("default_escape_action"):
 		hide()
 		accept_event()
+	
+	if event.is_action_released("switch_camera"):
+		$ViewportContainer/Viewport/GalaxyMap.switch = ($ViewportContainer/Viewport/GalaxyMap.switch + 1) % 3
+
 
 func _process(delta):
 	# TODO: check if we can be opened

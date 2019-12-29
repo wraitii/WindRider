@@ -5,7 +5,10 @@ const HyperLink = preload('GMjump.tscn')
 
 const JumpZone = preload('../game/JumpZone.gd')
 
-const look = Vector3(-1, 2, 1) * 100
+const look = [Vector3(-1, 2, 1) * 100, Vector3(0,250,0), Vector3(0,500,0)]
+const up = [Vector3(0,1,0),Vector3(-1,0,0),Vector3(-1,0,0)]
+const show_labels = [true, true, false]
+var switch = 0
 
 ### Galaxy Map
 ## This file is responsible for graphics of the galaxy map
@@ -25,7 +28,7 @@ func _ready():
 	if Core.gameState and Core.gameState.playerShip:
 		sys = Core.sectorsMgr.get(Core.gameState.playerShip.currentSector).system
 	sys = Core.systemsMgr.get(sys)
-	$Camera.look_at_from_position(A2V._3(sys.position) + look, A2V._3(sys.position), Vector3(0,1,0))
+	$Camera.look_at_from_position(A2V._3(sys.position) + look[switch], A2V._3(sys.position), up[switch])
 	init()
 
 func init():
@@ -58,7 +61,7 @@ func init():
 			var target = Core.systemsMgr.get(neighbor)
 			var dir = A2V._3(target.position) - system.translation;
 			var hl = HyperLink.instance()
-			hl.look_at_from_position(system.translation, A2V._3(target.position), Vector3(0,1,0))
+			hl.look_at_from_position(system.translation, A2V._3(target.position), up[switch])
 			hl.scale = Vector3(1,1,dir.length())
 			$Objects.add_child(hl)
 		
@@ -66,6 +69,7 @@ func init():
 		label[0].text = name
 		var pos = get_node('Camera').unproject_position(system.transform.origin)
 		label[0].rect_position = pos
+		label[0].visible = show_labels[switch]
 		
 		sys[system] = label
 		$Objects.add_child(label[0])
@@ -73,7 +77,7 @@ func init():
 func _on_input_event(a, input_event, c, d, e, system):
 	if input_event.is_action_released('click_main'):
 		emit_signal('system_selected', system)
-		$Camera.look_at_from_position(A2V._3(system.position) + look, A2V._3(system.position), Vector3(0,1,0))
+		$Camera.look_at_from_position(A2V._3(system.position) + look[switch], A2V._3(system.position), up[switch])
 		init()
 
 
