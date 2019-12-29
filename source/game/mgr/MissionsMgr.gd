@@ -24,6 +24,10 @@ func populate():
 	for trigger in trigs:
 		triggers.append(Core.dataMgr.get(trigger))
 
+func validation(d, _path):
+	assert('provider' in d)
+	return true
+
 var counter = 0;
 func _uid():
 	var id = 'mission_' + str(counter) + '_' + str(OS.get_system_time_msecs());
@@ -38,6 +42,7 @@ func _instance(d):
 	var MissionType = load('res://source/game/missions/' + d['type'] + '.gd')
 	var item = MissionType.new();
 	item.ID = _uid();
+	item.provider = d['provider']
 	if !item.init(d):
 		return null
 	return item;
@@ -77,6 +82,7 @@ func serialize():
 	return ret
 
 func deserialize(d):
+	populate()
 	for ID in d:
 		var MissionType = load('res://source/game/missions/' + d[ID]['type'] + '.gd')
 		var item = MissionType.new();

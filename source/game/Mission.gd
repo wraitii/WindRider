@@ -10,14 +10,25 @@ var ID
 
 # Used to show in the mission board and the player ongoing missions.
 var mission_title = "Generic Mission"
-# must be a character
+
+# Society that offers the mission
+var provider = null setget set_provider, get_provider
+
+func set_provider(p):
+	p.providing_missions.append(self)
+	provider = p
+
+func get_provider():
+	return provider
+
+# Character (! society) carrying the mission out.
 var custodian = null setget set_custodian, get_custodian
 
 func set_custodian(c):
 	if c != null:
-		c.missions.append(self)
+		c.ongoing_missions.append(self)
 	elif custodian != null:
-		custodian.missions.erase(self)
+		custodian.ongoing_missions.erase(self)
 	custodian = c
 
 func get_custodian():
@@ -26,7 +37,8 @@ func get_custodian():
 ## Not intended to be overloaded, or at least parent must be called at the end.
 func finish():
 	if custodian:
-		custodian.missions.erase(self)
+		custodian.ongoing_missions.erase(self)
+	provider.providing_missions.erase(self)
 	Core.missionsMgr.call_deferred("_unregister", self)
 
 #### These are intended to be overloaded
@@ -44,15 +56,18 @@ func should_serialize():
 	return true
 
 func serialize():
-	return {
+	var ret = {
 		'ID': ID,
 		'type': type,
-		'custodian': custodian.ID
+		'provider': provider.ID
 	}
+	if custodian != null:
+		ret['custodian'] = custodian.ID
+	return ret
 
 func deserialize(d):
 	ID = d['ID']
 	type = d['type']
-	if d['custodian']:
-		custodian = Core.societyMgr.get(d['custodian'])
-		custodian.missions.append(self)
+	if 'custodian' in d:
+		set_custodian(Core.societyMgr.get(d['custodian']))
+	set_provider(Core.societyMgr.get(d['provider']))

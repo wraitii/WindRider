@@ -15,6 +15,12 @@ var opinions = {};
 var outfits = [];
 var credits = 10000;
 
+# Missions that are currently being offered by this society.
+var providing_missions = [];
+
+const StatsHelper = preload('StatsHelper.gd')
+var stats : StatsHelper;
+
 var traits
 
 func init(d):
@@ -28,9 +34,16 @@ func init(d):
 			var r = Opinion.new(self, tgt);
 			r.core_opinion = rel['core_opinion'];
 			opinions[rel['target']] = r
+	update_stats()
 
 func get_opinion(target):
 	return 0
+
+func update_stats():
+	var sts = []
+	for ID in traits.traits:
+		sts += traits.traits[ID].get_stats_effects()
+	stats = StatsHelper.new(sts)
 
 func serialize():
 	var ret = {}
@@ -54,3 +67,4 @@ func deserialize(data):
 	traits.deserialize(data.traits)
 	for op in data.opinions_:
 		opinions[op] = Opinion.deserialize(data.opinions[op])
+	update_stats()

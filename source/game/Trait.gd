@@ -16,6 +16,10 @@ func describe():
 func load_from_data(_data):
 	return
 
+# Traits can have an impact on stats by returning a list of stat-modifier
+func get_stats_effects():
+	return []
+
 func should_serialize():
 	return false
 

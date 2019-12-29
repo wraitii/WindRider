@@ -5,6 +5,14 @@ var statsCache = {}
 func _init(specs):
 	_compute_stats(specs)
 
+func _get(key):
+	if key == 'statsList':
+		return statsList
+	if key == 'statsCache':
+		return statsCache
+	
+	return statsCache[key]
+
 func _stat_order_value(a):
 	if 'order' in a:
 		return a['order']

@@ -58,6 +58,7 @@ func init(data):
 			var t = load('res://source/game/traits/' + data['traits'][trait]['type'] + '.gd').new()
 			administrator.traits.add(trait, t)
 			t.load_from_data(data['traits'][trait])
+			administrator.update_stats()
 
 ################
 ################
