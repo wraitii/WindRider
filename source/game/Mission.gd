@@ -9,13 +9,14 @@ var type = "GenericMission"
 var ID
 
 # Used to show in the mission board and the player ongoing missions.
-var mission_title = "Generic Mission"
+var missionTitle = "Generic Mission"
+var description = ""
 
 # Society that offers the mission
 var provider = null setget set_provider, get_provider
 
 func set_provider(p):
-	p.providing_missions.append(self)
+	p.providingMissions.append(self)
 	provider = p
 
 func get_provider():
@@ -26,9 +27,9 @@ var custodian = null setget set_custodian, get_custodian
 
 func set_custodian(c):
 	if c != null:
-		c.ongoing_missions.append(self)
+		c.ongoingMissions.append(self)
 	elif custodian != null:
-		custodian.ongoing_missions.erase(self)
+		custodian.ongoingMissions.erase(self)
 	custodian = c
 
 func get_custodian():
@@ -37,14 +38,17 @@ func get_custodian():
 ## Not intended to be overloaded, or at least parent must be called at the end.
 func finish():
 	if custodian:
-		custodian.ongoing_missions.erase(self)
-	provider.providing_missions.erase(self)
+		custodian.ongoingMissions.erase(self)
+	provider.providingMissions.erase(self)
 	Core.missionsMgr.call_deferred("_unregister", self)
 
 #### These are intended to be overloaded
 
 func init(_data):
 	return
+
+func do_replacements(text):
+	return text
 
 func on_accept(parentScene):
 	start()

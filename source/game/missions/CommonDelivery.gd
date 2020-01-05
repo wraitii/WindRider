@@ -6,14 +6,26 @@ extends "res://source/game/Mission.gd"
 
 var from_landable
 var to_ID
+var reward = 0
 
 func init(d):
 	type = "CommonDelivery"
 	from_landable = d.from
 	
-	determine_target()
+	if !determine_target():
+		return null
 	
-	mission_title = "Shipment to " + to_ID
+	var datafile = Core.dataMgr.get('missions/' + d.data.datafile)
+	# TODO: random
+	datafile = datafile['random'][len(datafile['random'])-1]
+	
+	reward = datafile['reward']
+	
+	missionTitle = do_replacements(datafile.title)
+	if 'description' in datafile:
+		description = do_replacements(datafile.description)
+	else:
+		description = do_replacements('Land on {to_id} to collect {reward} credits.')
 	
 	return self
 
@@ -22,18 +34,24 @@ func should_serialize():
 
 func serialize():
 	var ret = .serialize()
-	ret['title'] = mission_title
+	ret['title'] = missionTitle
 	ret['from'] = from_landable.ID
 	ret['to'] = to_ID
 	return ret
 
 func deserialize(d):
 	.deserialize(d)
-	mission_title = d['title']
+	missionTitle = d['title']
 	from_landable = Core.landablesMgr.get(d['from'])
 	to_ID = d['to']
 	if custodian:
 		_watch()
+
+func do_replacements(text):
+	var out = text.replace("{to_id}", to_ID)
+	out = out.replace("{provider}", provider._raw.short_name)
+	out = out.replace("{reward}", reward)
+	return out
 
 func determine_target():
 	## TODO: determine a friendly system to go to.
@@ -48,12 +66,14 @@ func determine_target():
 		return null
 	i = randi() % len(sector_to['landables'])
 	to_ID = sector_to['landables'][i]
+	
+	return to_ID
 
 const EventPopup = preload('res://source/gui/EventPopup.tscn')
 
 func on_accept(scene):
 	var sc = EventPopup.instance()
-	sc.get_node('Title').text = mission_title
+	sc.get_node('Title').text = missionTitle
 	sc.get_node('Text').text = "Your mission, should you accept it, is to finish this text."
 	sc.anchor_left = 0.2
 	sc.anchor_right = 0.8
@@ -78,11 +98,11 @@ func _on_docked(ship):
 	if ship.dockedAt != to_ID:
 		return
 
-	custodian.credits += 5000
+	custodian.credits += reward
 
 	var sc = EventPopup.instance()
-	sc.get_node('Title').text = mission_title
-	sc.get_node('Text').text = "You have completed the mission. Credits + 5000"
+	sc.get_node('Title').text = missionTitle
+	sc.get_node('Text').text = "You have completed the mission. Credits + " + str(reward)
 	sc.anchor_left = 0.2
 	sc.anchor_right = 0.8
 	sc.anchor_top = 0.2

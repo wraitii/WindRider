@@ -5,8 +5,8 @@ func _ready():
 	
 	var st = "Credits: " + str(Core.gameState.player.credits)
 	
-	for miss in Core.gameState.player.ongoing_missions:
-		st += '\n' + miss.mission_title
+	for miss in Core.gameState.player.ongoingMissions:
+		st += '\n' + miss.missionTitle
 	
 	for j in Core.gameState.playerShip.shipStats.stats.statsCache:
 		st += '\n' + j + ':' + str(Core.gameState.playerShip.shipStats.stats.statsCache[j])

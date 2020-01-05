@@ -34,7 +34,19 @@ func create_new_game():
 
 	galacticTime = GalacticTime.new(3065, 04, 12, 13, 48)
 
-	var start = Core.missionsMgr.create_resource({ 'type': 'NewGame' })
+	# Missions need a provider, so rather than special-casing everything,
+	# let's have a universe society.
+	# Further it might be fun to have the universe occasionally hate your guts.
+	var universe = Core.societyMgr.create_resource({
+		"ID": "__universe__",
+		"short_name": "The Universe",
+		"type": "character"
+	})
+	
+	var start = Core.missionsMgr.create_resource({
+		'type': 'NewGame',
+		'provider': universe
+		})
 	start.start()
 
 #### Serialization

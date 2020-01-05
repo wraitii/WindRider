@@ -100,6 +100,10 @@ func on_item_pressed(item):
 func on_buy():
 	var player = ship.ownerChar
 
+	if !focusedItem:
+		$Chat.add_message("Nothing selected")
+		return
+
 	var item = Core.dataMgr.get(focusedItem.key)
 
 	if !('buy_price' in item):
@@ -131,7 +135,11 @@ func on_buy():
 
 func on_sell():
 	var player = ship.ownerChar
-	
+
+	if !focusedItem:
+		$Chat.add_message("Nothing selected")
+		return
+
 	if focusedItem.owned == 0:
 		$Chat.add_message("Nothing to sell")
 		return

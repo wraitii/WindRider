@@ -16,7 +16,10 @@ var outfits = [];
 var credits = 10000;
 
 # Missions that are currently being offered by this society.
-var providing_missions = [];
+var providingMissions = [];
+# Keeps track of how many missions this offered recently, so that we don't
+# offer new missions too often.
+var missionCooldown = 0
 
 const StatsHelper = preload('StatsHelper.gd')
 var stats : StatsHelper;
@@ -27,6 +30,7 @@ func init(d):
 	ID = d.ID
 	type = d.type
 	_raw = d
+
 	traits = TraitsMgr.new(ID)
 	if 'relations' in d:
 		for rel in d['relations']:

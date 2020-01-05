@@ -4,7 +4,7 @@ signal player_ship_changed(ship)
 
 var ship setget set_current_ship, get_current_ship
 
-var ongoing_missions = []
+var ongoingMissions = []
 
 ## TODO: transfer signals
 

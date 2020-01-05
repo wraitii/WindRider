@@ -13,7 +13,7 @@ extends "res://source/lib/EntityMgr.gd"
 var temporaries = []
 
 ## Holds a list of mission triggers that may or may not create missions
-var triggers = []
+var triggers = {}
 
 func _init().('Missions', 'res://data/missions/'):
 	pass
@@ -22,7 +22,7 @@ func populate():
 	## Let's populate triggers
 	var trigs = Core.dataMgr.get_all('missions/triggers/')
 	for trigger in trigs:
-		triggers.append(Core.dataMgr.get(trigger))
+		triggers[trigger] = Core.dataMgr.get(trigger)
 
 func validation(d, _path):
 	assert('provider' in d)
@@ -44,6 +44,7 @@ func _instance(d):
 	item.ID = _uid();
 	item.provider = d['provider']
 	if !item.init(d):
+		item.finish()
 		return null
 	return item;
 
